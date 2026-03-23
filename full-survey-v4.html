@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atelier Analysis — Seoul Skin Atelier</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:#FAF7F2; --ink:#1C1410; --rose:#C97B63; --blush:#E8C4B0;
+  --muted:#8C7B6E; --sand:#F0E8DF; --sage:#7A9E8E; --sage-light:#C8DDD6;
+  --gold:#B8935A; --warn:#C45A3A;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);min-height:100vh;}
+
+/* NAV */
+.nav{padding:16px 32px;display:flex;justify-content:space-between;align-items:center;border-bottom:.5px solid rgba(28,20,16,.1);background:var(--cream);position:sticky;top:0;z-index:50;}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:500;letter-spacing:2px;text-transform:uppercase;}
+.nav-step{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+
+/* PROGRESS */
+.progress-wrap{background:var(--cream);padding:0;}
+.progress-info{display:flex;align-items:center;justify-content:space-between;padding:10px 32px 8px;}
+.progress-step-label{font-size:10px;font-weight:500;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;}
+.progress-pct{font-size:11px;font-weight:600;color:var(--rose);}
+.progress-bar{height:6px;background:rgba(28,20,16,.08);margin:0;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blush),var(--rose));transition:width .5s cubic-bezier(.4,0,.2,1);border-radius:0 3px 3px 0;}
+
+/* SCREEN */
+.screen{display:none;animation:fadeUp .3s ease;}
+.screen.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+.hero{background:var(--ink);padding:44px 32px 40px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:260px;height:260px;background:radial-gradient(circle,rgba(201,123,99,.15) 0%,transparent 70%);border-radius:50%;}
+.hero-eye{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--blush);opacity:.7;margin-bottom:12px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,5vw,42px);font-weight:400;font-style:italic;color:#FAF7F2;line-height:1.15;margin-bottom:10px;}
+.hero-title span{color:var(--blush);}
+.hero-sub{font-size:13px;font-weight:300;color:rgba(250,247,242,.5);line-height:1.7;max-width:440px;}
+
+/* MAIN */
+.main{max-width:600px;margin:0 auto;padding:36px 24px 80px;}
+
+/* STEP COMMON */
+.step-eye{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--rose);font-weight:500;margin-bottom:10px;}
+.step-q{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:400;line-height:1.35;color:var(--ink);margin-bottom:6px;}
+.step-hint{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.5;}
+
+/* OPTIONS */
+.opts{display:flex;flex-direction:column;gap:9px;margin-bottom:24px;}
+.opt{display:flex;align-items:center;gap:14px;padding:13px 16px;background:white;border:1.5px solid rgba(28,20,16,.08);border-radius:13px;cursor:pointer;transition:all .2s;font-size:14px;color:var(--ink);text-align:left;font-family:'DM Sans',sans-serif;}
+.opt:hover{border-color:var(--blush);background:rgba(232,196,176,.06);transform:translateX(3px);}
+.opt.selected{border-color:var(--rose);background:rgba(201,123,99,.07);font-weight:500;}
+.opt-icon{font-size:18px;flex-shrink:0;width:26px;text-align:center;}
+.opt-text{flex:1;}
+.opt-text strong{display:block;font-size:14px;font-weight:500;}
+.opt-text span{font-size:12px;color:var(--muted);}
+.opt-check{width:18px;height:18px;border:1.5px solid rgba(28,20,16,.2);border-radius:50%;flex-shrink:0;position:relative;transition:all .2s;}
+.opt.selected .opt-check{background:var(--rose);border-color:var(--rose);}
+.opt.selected .opt-check::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:white;font-size:10px;font-weight:700;}
+.opt.multi .opt-check{border-radius:5px;}
+.opt-priority{width:22px;height:22px;border-radius:50%;background:var(--rose);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;animation:pop .25s cubic-bezier(.34,1.56,.64,1);}
+.opt.secondary .opt-priority{background:var(--sage);}
+.opt.secondary .opt-check{background:var(--sage);border-color:var(--sage);}
+.opt.secondary{border-color:var(--sage);background:rgba(122,158,142,.07);}
+
+/* NAV ROW */
+.nav-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:8px;}
+.btn-back{background:none;border:none;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);cursor:pointer;padding:8px 4px;}
+.btn-back:disabled{opacity:0;pointer-events:none;}
+.btn-next{flex:1;max-width:200px;background:linear-gradient(135deg,var(--blush),var(--rose));border:none;border-radius:12px;padding:13px 24px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:white;cursor:pointer;transition:opacity .2s;}
+.btn-next:hover{opacity:.88;}
+.btn-next:disabled{opacity:.35;cursor:not-allowed;}
+
+/* INSIGHT BANNER */
+.insight-banner{background:linear-gradient(135deg,rgba(232,196,176,.2),rgba(122,158,142,.12));border:1px solid rgba(232,196,176,.4);border-radius:12px;padding:12px 16px;margin-bottom:20px;display:none;}
+.ib-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--rose);font-weight:600;margin-bottom:3px;}
+.ib-text{font-size:13px;color:var(--ink);line-height:1.5;}
+
+/* PAYWALL */
+.paywall-card{background:var(--ink);border-radius:20px;padding:36px;position:relative;overflow:hidden;margin-bottom:20px;}
+.paywall-card::before{content:'';position:absolute;bottom:-50px;right:-50px;width:200px;height:200px;background:radial-gradient(circle,rgba(201,123,99,.2) 0%,transparent 70%);border-radius:50%;}
+.pw-eye{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--blush);opacity:.6;margin-bottom:12px;}
+.pw-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-style:italic;color:#FAF7F2;line-height:1.2;margin-bottom:8px;}
+.pw-sub{font-size:13px;color:rgba(250,247,242,.45);line-height:1.6;margin-bottom:24px;}
+.pw-compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px;}
+.pw-col-label{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+.pw-col.free .pw-col-label{color:rgba(250,247,242,.3);}
+.pw-col.paid .pw-col-label{color:var(--blush);}
+.pw-item{font-size:12px;padding:6px 0;border-bottom:.5px solid rgba(250,247,242,.06);display:flex;align-items:center;gap:7px;line-height:1.4;}
+.pw-col.free .pw-item{color:rgba(250,247,242,.3);}
+.pw-col.paid .pw-item{color:rgba(250,247,242,.85);}
+.pw-item::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.pw-col.free .pw-item::before{background:rgba(250,247,242,.2);}
+.pw-col.paid .pw-item::before{background:var(--blush);}
+.pw-price{display:flex;align-items:baseline;gap:8px;margin-bottom:16px;}
+.pw-amount{font-family:'Cormorant Garamond',serif;font-size:38px;color:#FAF7F2;}
+.pw-period{font-size:13px;color:rgba(250,247,242,.35);}
+.pw-btn{width:100%;background:linear-gradient(135deg,var(--blush),var(--rose));border:none;border-radius:13px;padding:16px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;color:white;cursor:pointer;transition:opacity .2s;position:relative;}
+.pw-btn:hover{opacity:.9;}
+.pw-note{text-align:center;font-size:11px;color:rgba(250,247,242,.25);margin-top:10px;}
+.pw-free-btn{width:100%;background:none;border:1.5px solid rgba(250,247,242,.12);border-radius:13px;padding:13px;font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(250,247,242,.4);cursor:pointer;margin-top:10px;transition:all .2s;}
+.pw-free-btn:hover{border-color:rgba(250,247,242,.25);color:rgba(250,247,242,.6);}
+
+/* PAID SECTION */
+.section-tag{font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-tag::after{content:'';flex:1;height:.5px;background:rgba(28,20,16,.08);}
+
+/* PROMISE CARD */
+.promise-card{background:var(--ink);border-radius:16px;padding:24px 28px;margin-bottom:20px;position:relative;overflow:hidden;}
+.promise-card::before{content:'';position:absolute;bottom:-30px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(201,123,99,.18) 0%,transparent 70%);border-radius:50%;}
+.pc-eye{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--blush);opacity:.6;margin-bottom:8px;}
+.pc-text{font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:#FAF7F2;line-height:1.6;}
+.pc-sig{font-size:11px;color:rgba(250,247,242,.3);margin-top:8px;font-style:italic;}
+
+/* SKIP */
+.skip-link{display:inline-block;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline;text-underline-offset:3px;margin-bottom:20px;}
+
+/* TEXTAREA */
+.ta-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:block;}
+textarea{width:100%;padding:13px 16px;border:1.5px solid rgba(28,20,16,.1);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);background:white;outline:none;resize:vertical;min-height:72px;transition:border-color .2s;line-height:1.5;margin-bottom:12px;}
+textarea:focus{border-color:var(--rose);}
+textarea::placeholder{color:var(--muted);}
+
+/* PRODUCT SHELF */
+.accuracy-bar{background:white;border:.5px solid rgba(28,20,16,.08);border-left:3px solid var(--sage);border-radius:0 12px 12px 0;padding:12px 16px;margin-bottom:20px;}
+.acc-title{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--sage);margin-bottom:6px;}
+.acc-text{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:8px;}
+.acc-meter{display:flex;align-items:center;gap:10px;}
+.meter-track{flex:1;height:4px;background:rgba(28,20,16,.08);border-radius:4px;overflow:hidden;}
+.meter-fill{height:100%;background:var(--sage);border-radius:4px;transition:width .5s ease;width:0%;}
+.meter-lbl{font-size:11px;color:var(--sage);font-weight:500;white-space:nowrap;}
+
+.tips-card{background:var(--sand);border-radius:12px;padding:14px 16px;margin-bottom:18px;}
+.tips-title{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.tip{font-size:12px;color:var(--ink);display:flex;gap:7px;line-height:1.5;margin-bottom:4px;}
+.tip::before{content:'✦';color:var(--rose);flex-shrink:0;font-size:9px;margin-top:3px;}
+
+.add-form{background:white;border:.5px solid rgba(28,20,16,.08);border-radius:14px;padding:18px;margin-bottom:16px;}
+.add-form-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
+.product-input{width:100%;padding:12px 14px;border:1.5px solid rgba(28,20,16,.1);border-radius:11px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--cream);outline:none;transition:border-color .2s;margin-bottom:12px;}
+.product-input:focus{border-color:var(--rose);background:white;}
+.product-input::placeholder{color:var(--muted);}
+.timing-row{display:flex;gap:8px;margin-bottom:12px;}
+.timing-btn{flex:1;padding:9px 6px;border:1.5px solid rgba(28,20,16,.1);border-radius:10px;background:white;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .2s;text-align:center;}
+.timing-btn.am.sel{border-color:var(--gold);background:rgba(184,147,90,.08);color:#7A5C20;}
+.timing-btn.pm.sel{border-color:#534AB7;background:rgba(83,74,183,.06);color:#3C3489;}
+.timing-btn.both.sel{border-color:var(--rose);background:rgba(201,123,99,.08);color:var(--rose);}
+.cat-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+.cat-chip{padding:5px 11px;border-radius:20px;border:1.5px solid rgba(28,20,16,.08);background:white;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .2s;}
+.cat-chip.sel{border-color:var(--rose);background:rgba(201,123,99,.08);color:var(--rose);}
+.add-btn{width:100%;background:var(--ink);border:none;border-radius:11px;padding:12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:white;cursor:pointer;transition:opacity .2s;}
+.add-btn:disabled{opacity:.3;cursor:not-allowed;}
+.add-btn:hover:not(:disabled){opacity:.85;}
+
+.shelf-items{display:flex;flex-direction:column;gap:7px;margin-bottom:8px;}
+.shelf-item{background:white;border:.5px solid rgba(122,158,142,.25);border-radius:11px;padding:10px 14px;display:flex;align-items:center;gap:10px;animation:slideIn .25s ease;}
+@keyframes slideIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.si-time{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:20px;flex-shrink:0;}
+.si-time.am{background:rgba(184,147,90,.1);color:#7A5C20;}
+.si-time.pm{background:rgba(83,74,183,.07);color:#3C3489;}
+.si-time.both{background:rgba(201,123,99,.1);color:var(--rose);}
+.si-cat{font-size:9px;font-weight:600;color:var(--sage);background:var(--sage-light);padding:2px 7px;border-radius:20px;flex-shrink:0;}
+.si-name{font-size:13px;font-weight:500;color:var(--ink);flex:1;}
+.si-rm{background:none;border:none;color:rgba(28,20,16,.2);cursor:pointer;font-size:17px;padding:0 3px;flex-shrink:0;}
+.si-rm:hover{color:var(--rose);}
+
+/* DONE */
+.done-wrap{text-align:center;padding:40px 0 20px;}
+.done-icon{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--blush),var(--rose));margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:22px;animation:pop .4s cubic-bezier(.34,1.56,.64,1);}
+@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.done-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic;color:var(--ink);margin-bottom:10px;}
+.done-sub{font-size:13px;color:var(--muted);line-height:1.7;max-width:380px;margin:0 auto 28px;}
+.done-philosophy{background:var(--ink);border-radius:18px;padding:28px 32px;text-align:left;position:relative;overflow:hidden;}
+.done-philosophy::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(201,123,99,.18) 0%,transparent 70%);border-radius:50%;}
+.dp-eye{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--blush);opacity:.55;margin-bottom:10px;}
+.dp-msg{font-family:'Cormorant Garamond',serif;font-size:19px;font-style:italic;color:#FAF7F2;line-height:1.65;margin-bottom:8px;}
+.dp-sig{font-size:11px;color:rgba(250,247,242,.28);font-style:italic;}
+
+.email-input{width:100%;padding:13px 16px;border:1.5px solid rgba(28,20,16,.12);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:white;outline:none;transition:border-color .2s;margin-bottom:12px;}
+.email-input:focus{border-color:var(--rose);}
+.email-input::placeholder{color:var(--muted);}
+.submit-btn{width:100%;background:linear-gradient(135deg,var(--blush),var(--rose));border:none;border-radius:12px;padding:16px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;color:white;cursor:pointer;transition:opacity .2s;margin-bottom:8px;}
+.submit-btn:hover{opacity:.88;}
+.privacy-note{font-size:11px;color:var(--muted);text-align:center;}
+
+@media(max-width:600px){
+  .nav,.hero,.main{padding-left:16px;padding-right:16px;}
+  .pw-compare{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-brand">Seoul Skin Atelier</div>
+  <div class="nav-step" id="navStep">Atelier Analysis</div>
+</div>
+<div id="progressWrap" class="progress-wrap">
+  <div class="progress-info">
+    <div class="progress-step-label" id="progressLabel">Step 1 of 7</div>
+    <div class="progress-pct" id="progressPct">7%</div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:7%"></div></div>
+</div>
+
+
+<!-- ═══ FREE: STEP 1 — CONCERNS ═══ -->
+<div class="screen active" id="s1">
+  <div class="hero">
+    <div class="hero-eye">Step 1 of 8 — Current Concerns</div>
+    <div class="hero-title">What's bothering<br><span>your skin right now?</span></div>
+    <div class="hero-sub">Pick up to 3 — be honest. This is where we start.</div>
+  </div>
+  <div class="main">
+    <div class="opts" id="opts2">
+      <button class="opt multi" data-val="acne" onclick="pickMulti(this,'opts2',3)"><span class="opt-icon">😤</span><span class="opt-text"><strong>Acne & Breakouts</strong><span>Pimples, congestion, whiteheads</span></span><span class="opt-check"></span></button>
+      <button class="opt multi" data-val="pore" onclick="pickMulti(this,'opts2',3)"><span class="opt-icon">🔬</span><span class="opt-text"><strong>Pores & Oiliness</strong><span>Enlarged pores, excess shine</span></span><span class="opt-check"></span></button>
+      <button class="opt multi" data-val="aging" onclick="pickMulti(this,'opts2',3)"><span class="opt-icon">⏳</span><span class="opt-text"><strong>Fine Lines & Firmness</strong><span>Early aging, loss of bounce</span></span><span class="opt-check"></span></button>
+      <button class="opt multi" data-val="bright" onclick="pickMulti(this,'opts2',3)"><span class="opt-icon">🌟</span><span class="opt-text"><strong>Dullness & Dark Spots</strong><span>Uneven tone, hyperpigmentation</span></span><span class="opt-check"></span></button>
+      <button class="opt multi" data-val="redness" onclick="pickMulti(this,'opts2',3)"><span class="opt-icon">🌸</span><span class="opt-text"><strong>Redness & Sensitivity</strong><span>Flushing, reactive, easily irritated</span></span><span class="opt-check"></span></button>
+      <button class="opt multi" data-val="dry" onclick="pickMulti(this,'opts2',3)"><span class="opt-icon">💧</span><span class="opt-text"><strong>Dryness & Dehydration</strong><span>Tight, flaky, thirsty skin</span></span><span class="opt-check"></span></button>
+      <button class="opt multi" data-val="barrier" onclick="pickMulti(this,'opts2',3)"><span class="opt-icon">🛡️</span><span class="opt-text"><strong>Damaged Barrier</strong><span>Stings with everything, always reactive</span></span><span class="opt-check"></span></button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" disabled>← Back</button>
+      <button class="btn-next" id="n1" disabled onclick="go('1b')">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FREE: STEP 1B — GOALS (1A + 1B) ═══ -->
+<div class="screen" id="s1b">
+  <div class="hero">
+    <div class="hero-eye">Step 2 of 8 — Your Goal</div>
+    <div class="hero-title">Now — what do you<br><span>most want to fix?</span></div>
+    <div class="hero-sub">Pick your top priority. Your curator will tackle this first.</div>
+  </div>
+  <div class="main">
+
+    <div style="background:var(--ink);border-radius:14px;padding:16px 20px;margin-bottom:20px;position:relative;overflow:hidden;">
+      <div style="position:absolute;bottom:-20px;right:-20px;width:100px;height:100px;background:radial-gradient(circle,rgba(201,123,99,.2) 0%,transparent 70%);border-radius:50%;"></div>
+      <div style="font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--blush);opacity:.6;margin-bottom:7px;">Your curator says</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:#FAF7F2;line-height:1.6;">"Even if you have multiple concerns, solving them one at a time is the only approach that actually works. Your #1 takes the lead — and everything else follows step by step."</div>
+    </div>
+
+    <div style="font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:12px;">Tap once for <span style="color:var(--rose);font-weight:600;">priority 1</span>, tap again for <span style="color:var(--sage);font-weight:600;">priority 2</span></div>
+
+    <div class="opts" id="opts1b">
+      <button class="opt" data-val="acne" onclick="pick1b(this)">
+        <span class="opt-icon">🫧</span>
+        <span class="opt-text"><strong>Blemish-Free Skin</strong><span>Clear up acne, breakouts, congestion</span></span>
+        <div class="opt-priority" id="pri-acne" style="display:none">1</div>
+        <div class="opt-priority" id="pri2-acne" style="display:none;background:var(--sage)">2</div>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-val="bright" onclick="pick1b(this)">
+        <span class="opt-icon">✨</span>
+        <span class="opt-text"><strong>Bright & Even Tone</strong><span>Fade dark spots, get that glow</span></span>
+        <div class="opt-priority" id="pri-bright" style="display:none">1</div>
+        <div class="opt-priority" id="pri2-bright" style="display:none;background:var(--sage)">2</div>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-val="pore" onclick="pick1b(this)">
+        <span class="opt-icon">🪞</span>
+        <span class="opt-text"><strong>Smooth Texture</strong><span>Minimize pores, control oil, refine skin</span></span>
+        <div class="opt-priority" id="pri-pore" style="display:none">1</div>
+        <div class="opt-priority" id="pri2-pore" style="display:none;background:var(--sage)">2</div>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-val="barrier" onclick="pick1b(this)">
+        <span class="opt-icon">🌿</span>
+        <span class="opt-text"><strong>Calm & Repair</strong><span>Restore barrier, reduce redness, sensitivity</span></span>
+        <div class="opt-priority" id="pri-barrier" style="display:none">1</div>
+        <div class="opt-priority" id="pri2-barrier" style="display:none;background:var(--sage)">2</div>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-val="aging" onclick="pick1b(this)">
+        <span class="opt-icon">💎</span>
+        <span class="opt-text"><strong>Firm & Youthful</strong><span>Smooth fine lines, restore bounce</span></span>
+        <div class="opt-priority" id="pri-aging" style="display:none">1</div>
+        <div class="opt-priority" id="pri2-aging" style="display:none;background:var(--sage)">2</div>
+        <span class="opt-check"></span>
+      </button>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn-back" onclick="go(1)">← Back</button>
+      <button class="btn-next" id="n1b" disabled onclick="go(2)">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FREE: STEP 2 — SKIN TYPE ═══ -->
+<div class="screen" id="s2">
+  <div class="hero">
+    <div class="hero-eye">Step 3 of 8 — Skin Type</div>
+    <div class="hero-title">How does your<br><span>skin feel by midday?</span></div>
+    <div class="hero-sub">After your morning routine, around noon.</div>
+  </div>
+  <div class="main">
+    <div class="insight-banner" id="banner3">
+      <div class="ib-label">✦ Your curator is building your profile</div>
+      <div class="ib-text" id="bannerText"></div>
+    </div>
+    <div class="opts" id="opts2b">
+      <button class="opt" data-val="oily" onclick="pick(this,'s2','n2')"><span class="opt-icon">💦</span><span class="opt-text"><strong>Oily all over</strong><span>Shiny everywhere by noon</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="combo" onclick="pick(this,'s2','n2')"><span class="opt-icon">🎭</span><span class="opt-text"><strong>T-zone oily, cheeks fine</strong><span>Mixed behavior throughout the day</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="dry" onclick="pick(this,'s2','n2')"><span class="opt-icon">🏜️</span><span class="opt-text"><strong>Dry & Tight</strong><span>Parched even after moisturizer</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="sensitive" onclick="pick(this,'s2','n2')"><span class="opt-icon">🌷</span><span class="opt-text"><strong>Normal but reactive</strong><span>Mostly fine, occasionally flares</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="unknown" onclick="pick(this,'s2','n2')"><span class="opt-icon">🤔</span><span class="opt-text"><strong>Not sure</strong><span>Help me figure it out</span></span><span class="opt-check"></span></button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="go('1b')">← Back</button>
+      <button class="btn-next" id="n2" disabled onclick="goFromS2()">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FREE: STEP 3B — NOT SURE BRANCH ═══ -->
+<div class="screen" id="s3b">
+  <div class="hero">
+    <div class="hero-eye">Step 3 of 7 — Quick Check</div>
+    <div class="hero-title">After cleansing,<br><span>how does skin feel?</span></div>
+    <div class="hero-sub">No moisturizer. Just cleansed skin. 30 minutes later.</div>
+  </div>
+  <div class="main">
+    <div class="opts">
+      <button class="opt" data-val="dry" onclick="pick(this,'s3b','n3b')"><span class="opt-icon">😣</span><span class="opt-text"><strong>Tight & uncomfortable</strong><span>Needs something immediately</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="combo" onclick="pick(this,'s3b','n3b')"><span class="opt-icon">😐</span><span class="opt-text"><strong>T-zone gets shiny</strong><span>Forehead/nose oils up</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="oily" onclick="pick(this,'s3b','n3b')"><span class="opt-icon">😅</span><span class="opt-text"><strong>Whole face oily fast</strong><span>Shiny everywhere within minutes</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="sensitive" onclick="pick(this,'s3b','n3b')"><span class="opt-icon">😖</span><span class="opt-text"><strong>Redness or stinging</strong><span>Skin feels irritated</span></span><span class="opt-check"></span></button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="go(2)">← Back</button>
+      <button class="btn-next" id="n3b" disabled onclick="go(4)">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FREE: STEP 4 ═══ -->
+<div class="screen" id="s4">
+  <div class="hero">
+    <div class="hero-eye">Step 4 of 7 — Routine Level</div>
+    <div class="hero-title">What does your<br><span>current routine look like?</span></div>
+    <div class="hero-sub">Honest answers = smarter curation.</div>
+  </div>
+  <div class="main">
+    <div class="opts">
+      <button class="opt" data-val="beginner" onclick="pick(this,'s4','n4')"><span class="opt-icon">👋</span><span class="opt-text"><strong>Barely any routine</strong><span>Just cleansing, maybe nothing</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="basic" onclick="pick(this,'s4','n4')"><span class="opt-icon">🧴</span><span class="opt-text"><strong>Cleanser + moisturizer</strong><span>The basics, done consistently</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="mid" onclick="pick(this,'s4','n4')"><span class="opt-icon">🧪</span><span class="opt-text"><strong>3–5 step routine</strong><span>Toner, serum, the works</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="advanced" onclick="pick(this,'s4','n4')"><span class="opt-icon">🔬</span><span class="opt-text"><strong>Full routine + actives</strong><span>7+ steps, I know my ingredients</span></span><span class="opt-check"></span></button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="go(2)">← Back</button>
+      <button class="btn-next" id="n4" disabled onclick="go(5)">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FREE: STEP 5 ═══ -->
+<div class="screen" id="s5">
+  <div class="hero">
+    <div class="hero-eye">Step 5 of 7 — Sensitivity</div>
+    <div class="hero-title">How does skin react<br><span>to new products?</span></div>
+    <div class="hero-sub">This filters ingredients safely for you.</div>
+  </div>
+  <div class="main">
+    <div class="opts">
+      <button class="opt" data-val="low" onclick="pick(this,'s5','n5')"><span class="opt-icon">😎</span><span class="opt-text"><strong>Rarely reacts</strong><span>I can try most things</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="mid" onclick="pick(this,'s5','n5')"><span class="opt-icon">🤏</span><span class="opt-text"><strong>Sometimes breaks out or reddens</strong><span>I patch test when I remember</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="high" onclick="pick(this,'s5','n5')"><span class="opt-icon">⚠️</span><span class="opt-text"><strong>Often reacts — I check every ingredient</strong><span>Fragrance-free, minimal formulas only</span></span><span class="opt-check"></span></button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="go(4)">← Back</button>
+      <button class="btn-next" id="n5" disabled onclick="go(6)">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FREE: STEP 6 ═══ -->
+<div class="screen" id="s6">
+  <div class="hero">
+    <div class="hero-eye">Step 6 of 7 — Budget</div>
+    <div class="hero-title">What's your monthly<br><span>skincare budget?</span></div>
+    <div class="hero-sub">We'll curate products that fit your range.</div>
+  </div>
+  <div class="main">
+    <div class="opts">
+      <button class="opt" data-val="low" onclick="pick(this,'s6','n6')"><span class="opt-icon">💰</span><span class="opt-text"><strong>Under $20</strong><span>Smart picks, maximum value</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="mid" onclick="pick(this,'s6','n6')"><span class="opt-icon">💳</span><span class="opt-text"><strong>$20 – $50</strong><span>Quality ingredients, balanced spend</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="high" onclick="pick(this,'s6','n6')"><span class="opt-icon">✨</span><span class="opt-text"><strong>$50+</strong><span>Best of K-beauty, no compromises</span></span><span class="opt-check"></span></button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="go(5)">← Back</button>
+      <button class="btn-next" id="n6" disabled onclick="go(7)">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FREE: STEP 7 — EMAIL ═══ -->
+<div class="screen" id="s7">
+  <div class="hero">
+    <div class="hero-eye">Step 7 of 7 — Almost done</div>
+    <div class="hero-title">Your Skin Archive<br><span>is ready. ✦</span></div>
+    <div class="hero-sub">One last step — tell us where to send it.</div>
+  </div>
+  <div class="main">
+    <div style="background:white;border:.5px solid rgba(28,20,16,.08);border-radius:16px;padding:24px;margin-bottom:20px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;">Your free report includes</div>
+      <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:24px;">
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;"><span style="color:var(--sage);font-weight:700;font-size:15px;">✓</span>Your skin type + concern profile</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;"><span style="color:var(--sage);font-weight:700;font-size:15px;">✓</span>What your skin actually needs right now</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;"><span style="color:var(--sage);font-weight:700;font-size:15px;">✓</span>Top 3 curated K-beauty picks</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;"><span style="color:var(--sage);font-weight:700;font-size:15px;">✓</span>3 ingredients to avoid right now</div>
+      </div>
+
+      <div style="border-top:.5px solid rgba(28,20,16,.08);padding-top:20px;">
+        <div style="font-size:13px;font-weight:500;color:var(--ink);margin-bottom:6px;">What should your curator call you?</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">Optional — first name or nickname is perfect</div>
+        <input class="email-input" type="text" id="nicknameInput" placeholder="e.g. Emma, Soph, K-beauty newbie..." style="margin-bottom:20px;" maxlength="30">
+
+        <div style="font-size:13px;font-weight:500;color:var(--ink);margin-bottom:6px;">Where should we send your Skin Archive?</div>
+        <input class="email-input" type="email" id="emailInput" placeholder="your@email.com" oninput="checkEmail()">
+        <button class="submit-btn" id="submitBtn" disabled onclick="go('done')">Get My Free Skin Reading →</button>
+        <p class="privacy-note">🔒 One report per email. No spam, ever. Unsubscribe anytime.</p>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="go(6)">← Back</button>
+      <div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAYWALL ═══ -->
+<div class="screen" id="spaywall">
+  <div class="hero">
+    <div class="hero-eye">Your free report is ready</div>
+    <div class="hero-title">Want the<br><span>full picture?</span></div>
+    <div class="hero-sub">Your curator has more to tell you.</div>
+  </div>
+  <div class="main">
+    <div class="paywall-card">
+      <div class="pw-eye">✦ Full Atelier Report</div>
+      <div class="pw-title">Everything your skin<br>has been waiting for.</div>
+      <div class="pw-sub">The free reading covers the essentials. The full report is where the real transformation begins.</div>
+      <div class="pw-compare">
+        <div class="pw-col free">
+          <div class="pw-col-label">You have this</div>
+          <div class="pw-item">Skin reading summary</div>
+          <div class="pw-item">3 product picks</div>
+          <div class="pw-item">Basic routine direction</div>
+          <div class="pw-item">3 ingredients to avoid</div>
+        </div>
+        <div class="pw-col paid">
+          <div class="pw-col-label">Unlock this</div>
+          <div class="pw-item">Ingredient conflict report</div>
+          <div class="pw-item">Full 8-step AM/PM routine</div>
+          <div class="pw-item">4-week challenge plan</div>
+          <div class="pw-item">Curator's notes PDF</div>
+          <div class="pw-item">Monthly Archive entry</div>
+        </div>
+      </div>
+      <div class="pw-price"><div class="pw-amount">$9.99</div><div class="pw-period">one-time · instant delivery</div></div>
+      <button class="pw-btn" onclick="go('p1')">Unlock My Full Report →</button>
+      <div class="pw-note">Delivered to inbox within 2 minutes.</div>
+      <button class="pw-free-btn" onclick="go('done')">No thanks — free report is enough for now</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAID: PART 1 — DETAIL LEVEL ═══ -->
+<div class="screen" id="sp1">
+  <div class="hero">
+    <div class="hero-eye">Almost there — Part 1 of 6</div>
+    <div class="hero-title">How detailed<br><span>should your report be?</span></div>
+    <div class="hero-sub">Your curator will tailor the depth accordingly.</div>
+  </div>
+  <div class="main">
+    <div class="opts">
+      <button class="opt" data-val="essential" onclick="pick(this,'sp1','pn1')"><span class="opt-icon">✦</span><span class="opt-text"><strong>Essential</strong><span>Core routine + top picks. Clean and simple.</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="detailed" onclick="pick(this,'sp1','pn1')"><span class="opt-icon">✦✦</span><span class="opt-text"><strong>Detailed</strong><span>Ingredient analysis + environment-aware routine.</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="deep" onclick="pick(this,'sp1','pn1')"><span class="opt-icon">✦✦✦</span><span class="opt-text"><strong>Deep Dive</strong><span>Everything — conflicts, lifestyle, makeup, full AM/PM.</span></span><span class="opt-check"></span></button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="go('paywall')">← Back</button>
+      <button class="btn-next" id="pn1" disabled onclick="go('p2')">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAID: PART 2 — PRODUCTS ═══ -->
+<div class="screen" id="sp2">
+  <div class="hero">
+    <div class="hero-eye">Part 2 of 6 — Your Shelf</div>
+    <div class="hero-title">Do you want your curator<br><span>to analyze what you own?</span></div>
+    <div class="hero-sub">Your report becomes significantly more accurate with your current products.</div>
+  </div>
+  <div class="main">
+    <div class="opts" style="margin-bottom:20px">
+      <div class="opt" onclick="showShelf(true)" id="intentYes" style="cursor:pointer"><span class="opt-icon">🔍</span><span class="opt-text"><strong>Yes — check what I already own</strong><span>Detect conflicts, gaps, and what's working against you</span></span><span class="opt-check"></span></div>
+      <div class="opt" onclick="showShelf(false)" id="intentNo" style="cursor:pointer"><span class="opt-icon">✨</span><span class="opt-text"><strong>No — design from scratch</strong><span>Build my routine purely from my skin profile</span></span><span class="opt-check"></span></div>
+    </div>
+
+    <div id="shelfSection" style="display:none">
+      <div class="accuracy-bar">
+        <div class="acc-title">Report accuracy</div>
+        <div class="acc-text">Every product you add is analyzed for ingredient conflicts and routine gaps. The more complete, the more precise.</div>
+        <div class="acc-meter"><div class="meter-track"><div class="meter-fill" id="mFill"></div></div><div class="meter-lbl" id="mLbl">0 products</div></div>
+      </div>
+      <div class="tips-card">
+        <div class="tips-title">Tips for best analysis</div>
+        <div class="tip">Use the full product name — "COSRX Advanced Snail 96 Mucin" not "COSRX serum"</div>
+        <div class="tip">Include basics too — your cleanser and SPF matter for conflict detection</div>
+        <div class="tip">Any brand works — CeraVe, The Ordinary, La Roche-Posay all analyzed</div>
+      </div>
+      <div class="add-form">
+        <div class="add-form-label">Add a product</div>
+        <input class="product-input" id="pInput" placeholder="e.g. COSRX Advanced Snail 96 Mucin Power Essence" oninput="updateAddBtn()">
+        <div style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">When do you use it?</div>
+        <div class="timing-row">
+          <button class="timing-btn am" id="t-am" onclick="selTiming('am')">☀️ Morning</button>
+          <button class="timing-btn pm" id="t-pm" onclick="selTiming('pm')">🌙 Evening</button>
+          <button class="timing-btn both" id="t-both" onclick="selTiming('both')">☀️🌙 Both</button>
+        </div>
+        <div style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Category <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">(optional)</span></div>
+        <div class="cat-row" id="catRow">
+          <div class="cat-chip" onclick="selCat(this)">Cleanser</div>
+          <div class="cat-chip" onclick="selCat(this)">Toner</div>
+          <div class="cat-chip" onclick="selCat(this)">Essence</div>
+          <div class="cat-chip" onclick="selCat(this)">Serum</div>
+          <div class="cat-chip" onclick="selCat(this)">Moisturizer</div>
+          <div class="cat-chip" onclick="selCat(this)">SPF</div>
+          <div class="cat-chip" onclick="selCat(this)">Eye Cream</div>
+          <div class="cat-chip" onclick="selCat(this)">Treatment</div>
+          <div class="cat-chip" onclick="selCat(this)">Oil Cleanser</div>
+          <div class="cat-chip" onclick="selCat(this)">Sleeping Mask</div>
+          <div class="cat-chip" onclick="selCat(this)">Face Oil</div>
+        </div>
+        <button class="add-btn" id="addBtn" disabled onclick="addProduct()">+ Add to shelf</button>
+      </div>
+      <div class="shelf-items" id="shelfItems"></div>
+    </div>
+
+    <div class="nav-row" style="margin-top:20px">
+      <button class="btn-back" onclick="go('p1')">← Back</button>
+      <button class="btn-next" id="pn2" onclick="go('p3')">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAID: PART 3 — INGREDIENT KNOWLEDGE ═══ -->
+<div class="screen" id="sp3">
+  <div class="hero">
+    <div class="hero-eye">Part 3 of 6 — Ingredient Knowledge</div>
+    <div class="hero-title">How familiar are you<br><span>with skincare ingredients?</span></div>
+    <div class="hero-sub">Your curator will speak your language.</div>
+  </div>
+  <div class="main">
+    <div class="opts">
+      <button class="opt" data-val="none" onclick="pick(this,'sp3','pn3'); checkIngLevel()"><span class="opt-icon">🌱</span><span class="opt-text"><strong>Just starting out</strong><span>I just use what feels nice</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="some" onclick="pick(this,'sp3','pn3'); checkIngLevel()"><span class="opt-icon">🌿</span><span class="opt-text"><strong>I know a few</strong><span>Niacinamide, Hyaluronic Acid... the basics</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="good" onclick="pick(this,'sp3','pn3'); checkIngLevel()"><span class="opt-icon">🌳</span><span class="opt-text"><strong>Pretty knowledgeable</strong><span>I read ingredient lists before buying</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="expert" onclick="pick(this,'sp3','pn3'); checkIngLevel()"><span class="opt-icon">🔬</span><span class="opt-text"><strong>Ingredient nerd</strong><span>INCI names, conflict charts — I know my stuff</span></span><span class="opt-check"></span></button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="go('p2')">← Back</button>
+      <button class="btn-next" id="pn3" disabled onclick="goFromP3()">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAID: PART 3B — PROMISE ═══ -->
+<div class="screen" id="sp3b">
+  <div class="hero">
+    <div class="hero-eye">A note from your curator</div>
+    <div class="hero-title">You're in<br><span>the right place.</span></div>
+    <div class="hero-sub">Everyone starts somewhere.</div>
+  </div>
+  <div class="main">
+    <div class="promise-card">
+      <div class="pc-eye">Your curator says</div>
+      <div class="pc-text">"You don't need to know your ingredients yet.<br><br>By the time your curator is done with you, you will.<br><br>That's the Seoul Skin Atelier promise."</div>
+      <div class="pc-sig">— Your Seoul Skin Curator</div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="go('p3')">← Back</button>
+      <button class="btn-next" onclick="go('p5')">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAID: PART 4 — INGREDIENT HISTORY ═══ -->
+<div class="screen" id="sp4">
+  <div class="hero">
+    <div class="hero-eye">Part 4 of 6 — Ingredient History</div>
+    <div class="hero-title">Any ingredients your<br><span>skin loves or hates?</span></div>
+    <div class="hero-sub">Even partial info helps your curator avoid costly mistakes.</div>
+  </div>
+  <div class="main">
+    <span class="skip-link" onclick="go('p5')">Skip this part →</span>
+    <label class="ta-label">Worked really well for me</label>
+    <textarea placeholder="e.g. Niacinamide, Centella, Ceramide..."></textarea>
+    <label class="ta-label">Caused breakouts or irritation</label>
+    <textarea placeholder="e.g. Fragrance, Retinol, Coconut Oil..."></textarea>
+    <div class="nav-row">
+      <button class="btn-back" onclick="go('p3')">← Back</button>
+      <button class="btn-next" onclick="go('p5')">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAID: PART 5 — TRIGGERS ═══ -->
+<div class="screen" id="sp5">
+  <div class="hero">
+    <div class="hero-eye">Part 5 of 6 — Skin Triggers</div>
+    <div class="hero-title">Does your skin<br><span>change with these?</span></div>
+    <div class="hero-sub">Select all that apply — shapes your monthly Archive updates.</div>
+  </div>
+  <div class="main">
+    <span class="skip-link" onclick="go('p6')">Skip this part →</span>
+    <div class="opts" id="opts5" style="margin-bottom:24px">
+      <button class="opt multi" data-val="season" onclick="pickMulti(this,'opts5',6)"><span class="opt-icon">🍂</span><span class="opt-text"><strong>Season & weather</strong><span>Skin shifts with the climate</span></span><span class="opt-check"></span></button>
+      <button class="opt multi" data-val="hormonal" onclick="pickMulti(this,'opts5',6)"><span class="opt-icon">🌙</span><span class="opt-text"><strong>Hormonal cycle</strong><span>Breakouts before/during period</span></span><span class="opt-check"></span></button>
+      <button class="opt multi" data-val="stress" onclick="pickMulti(this,'opts5',6)"><span class="opt-icon">⚡</span><span class="opt-text"><strong>Stress levels</strong><span>Skin reacts when life gets hectic</span></span><span class="opt-check"></span></button>
+      <button class="opt multi" data-val="sleep" onclick="pickMulti(this,'opts5',6)"><span class="opt-icon">💤</span><span class="opt-text"><strong>Sleep quality</strong><span>Bad sleep shows up on skin</span></span><span class="opt-check"></span></button>
+      <button class="opt multi" data-val="diet" onclick="pickMulti(this,'opts5',6)"><span class="opt-icon">🥗</span><span class="opt-text"><strong>Diet</strong><span>Dairy, sugar trigger reactions</span></span><span class="opt-check"></span></button>
+      <button class="opt multi" data-val="none" onclick="pickMulti(this,'opts5',6)"><span class="opt-icon">—</span><span class="opt-text"><strong>None of the above</strong></span><span class="opt-check"></span></button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="go('p4')">← Back</button>
+      <button class="btn-next" onclick="go('p6')">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAID: PART 6 — LIFESTYLE & SUN ═══ -->
+<div class="screen" id="sp6">
+  <div class="hero">
+    <div class="hero-eye">Part 6 of 7 — Lifestyle & Sun</div>
+    <div class="hero-title">How much time do you<br><span>spend outdoors?</span></div>
+    <div class="hero-sub">This directly shapes your SPF recommendation and routine strength.</div>
+  </div>
+  <div class="main">
+    <span class="skip-link" onclick="go('p7')">Skip this part →</span>
+
+    <div class="step-eye" style="margin-bottom:8px">Daily outdoor time</div>
+    <div class="step-hint">On a typical day, how long are you outside?</div>
+    <div class="opts" style="margin-bottom:24px">
+      <button class="opt" data-val="indoor" onclick="pick(this,'outdoor','pn6a')">
+        <span class="opt-icon">🏢</span>
+        <span class="opt-text"><strong>Mostly indoors</strong><span>Under 1 hour outside — office or WFH</span></span>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-val="moderate" onclick="pick(this,'outdoor','pn6a')">
+        <span class="opt-icon">🚶</span>
+        <span class="opt-text"><strong>A few hours outside</strong><span>Commute, lunch walks — 1 to 3 hours</span></span>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-val="active" onclick="pick(this,'outdoor','pn6a')">
+        <span class="opt-icon">🏃</span>
+        <span class="opt-text"><strong>Active outdoors</strong><span>Sports, errands, outdoor work — 3 to 5 hours</span></span>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-val="veryactive" onclick="pick(this,'outdoor','pn6a')">
+        <span class="opt-icon">🏖️</span>
+        <span class="opt-text"><strong>Very active outdoors</strong><span>Hiking, beach, sports daily — 5+ hours</span></span>
+        <span class="opt-check"></span>
+      </button>
+    </div>
+
+    <div class="step-eye" style="margin-bottom:8px">Your climate</div>
+    <div class="step-hint">Where do you live? Climate shapes your whole routine.</div>
+    <div class="opts" style="margin-bottom:24px">
+      <button class="opt" data-val="dry" onclick="pick(this,'climate','pn6a')">
+        <span class="opt-icon">☀️</span>
+        <span class="opt-text"><strong>Dry & sunny</strong><span>LA, Phoenix, Denver, Las Vegas</span></span>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-val="humid" onclick="pick(this,'climate','pn6a')">
+        <span class="opt-icon">💧</span>
+        <span class="opt-text"><strong>Humid & warm</strong><span>Miami, Houston, Atlanta, New Orleans</span></span>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-val="cold" onclick="pick(this,'climate','pn6a')">
+        <span class="opt-icon">❄️</span>
+        <span class="opt-text"><strong>Cold & dry</strong><span>Chicago, Minneapolis, Boston, Denver winter</span></span>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-val="mild" onclick="pick(this,'climate','pn6a')">
+        <span class="opt-icon">🌤️</span>
+        <span class="opt-text"><strong>Mild & temperate</strong><span>San Francisco, Seattle, Portland, NYC</span></span>
+        <span class="opt-check"></span>
+      </button>
+    </div>
+
+    <div class="step-eye" style="margin-bottom:8px">Indoor air exposure</div>
+    <div class="step-hint">AC and heating dry out skin faster than most actives can fix.</div>
+    <div class="opts">
+      <button class="opt" data-val="most" onclick="pick(this,'indoor_air','pn6a')">
+        <span class="opt-text"><strong>Most of the day</strong><span>Office or home AC/heating all day</span></span>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-val="some" onclick="pick(this,'indoor_air','pn6a')">
+        <span class="opt-text"><strong>A few hours</strong><span>Mixed — some AC, some fresh air</span></span>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-val="rare" onclick="pick(this,'indoor_air','pn6a')">
+        <span class="opt-text"><strong>Rarely</strong><span>Mostly natural ventilation</span></span>
+        <span class="opt-check"></span>
+      </button>
+    </div>
+
+    <div class="nav-row" style="margin-top:20px">
+      <button class="btn-back" onclick="go('p5')">← Back</button>
+      <button class="btn-next" id="pn6" onclick="go('p7')">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAID: PART 7 — MAKEUP ═══ -->
+<div class="screen" id="sp7">
+  <div class="hero">
+    <div class="hero-eye">Part 7 of 7 — Makeup</div>
+    <div class="hero-title">Do you wear<br><span>makeup regularly?</span></div>
+    <div class="hero-sub">Your AM routine and cleansing method will be designed around this.</div>
+  </div>
+  <div class="main">
+    <span class="skip-link" onclick="openPaidReport()">Skip — submit without makeup info →</span>
+    <div class="opts" style="margin-bottom:16px">
+      <button class="opt" data-val="none" onclick="pick(this,'sp7','pn7'); toggleCleansing(false)"><span class="opt-text"><strong>No — I prefer bare skin</strong></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="light" onclick="pick(this,'sp7','pn7'); toggleCleansing(true)"><span class="opt-text"><strong>Light coverage</strong><span>BB cream or tinted SPF</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="medium" onclick="pick(this,'sp7','pn7'); toggleCleansing(true)"><span class="opt-text"><strong>Medium coverage</strong><span>Foundation + concealer</span></span><span class="opt-check"></span></button>
+      <button class="opt" data-val="full" onclick="pick(this,'sp7','pn7'); toggleCleansing(true)"><span class="opt-text"><strong>Full coverage</strong><span>Primer + foundation + setting</span></span><span class="opt-check"></span></button>
+    </div>
+    <div id="cleansingWrap" style="display:none">
+      <div class="step-eye" style="margin-bottom:8px">How do you remove makeup?</div>
+      <div class="step-hint">This is one of the most important steps — and the most commonly done wrong.</div>
+      <div class="opts">
+        <button class="opt" data-val="micellar" onclick="pick(this,'cleansing','pn7')"><span class="opt-text"><strong>Micellar water only</strong></span><span class="opt-check"></span></button>
+        <button class="opt" data-val="oil" onclick="pick(this,'cleansing','pn7')"><span class="opt-text"><strong>Cleansing oil or balm</strong></span><span class="opt-check"></span></button>
+        <button class="opt" data-val="wash" onclick="pick(this,'cleansing','pn7')"><span class="opt-text"><strong>Regular face wash only</strong></span><span class="opt-check"></span></button>
+        <button class="opt" data-val="double" onclick="pick(this,'cleansing','pn7')"><span class="opt-text"><strong>Double cleanse</strong><span>Oil first, then foam — the K-beauty way</span></span><span class="opt-check"></span></button>
+      </div>
+    </div>
+    <div class="nav-row" style="margin-top:20px">
+      <button class="btn-back" onclick="go('p6')">← Back</button>
+      <button class="btn-next" id="pn7" disabled onclick="openPaidReport()">Submit to my curator →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DONE ═══ -->
+<!-- ═══ PAID DONE — 유료 리포트 완료 ═══ -->
+<div class="screen" id="spaid-done">
+  <div class="hero">
+    <div class="hero-eye">Your full report is being prepared</div>
+    <div class="hero-title">Your curator<br><span>is on it. ✦</span></div>
+    <div class="hero-sub">Check your inbox — your Full Atelier Report arrives within 2 minutes.</div>
+  </div>
+  <div class="main">
+
+    <!-- 완료 아이콘 -->
+    <div style="text-align:center;padding:32px 0 24px;">
+      <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--blush),var(--rose));margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:26px;animation:pop .4s cubic-bezier(.34,1.56,.64,1);">✦</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-style:italic;color:var(--ink);margin-bottom:8px;">Archive Entry No.001 is open.</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7;max-width:320px;margin:0 auto;">Your Full Atelier Report is being generated right now. It will land in your inbox within 2 minutes.</div>
+    </div>
+
+    <!-- 리포트에 포함된 것 -->
+    <div style="background:white;border-radius:18px;padding:22px;margin-bottom:14px;border:.5px solid rgba(28,20,16,.08);">
+      <div style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--rose);margin-bottom:14px;">What's in your report</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:28px;height:28px;border-radius:8px;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">📊</div>
+          <div><div style="font-size:13px;font-weight:500;margin-bottom:1px;">Skin Diagnosis + Routine Score</div><div style="font-size:12px;color:var(--muted);">Your current products analyzed. Conflicts flagged.</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:28px;height:28px;border-radius:8px;background:#FFF0EC;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">🗺</div>
+          <div><div style="font-size:13px;font-weight:500;margin-bottom:1px;">Priority Map — Phase 1 · 2 · 3</div><div style="font-size:12px;color:var(--muted);">Your roadmap to the skin you want.</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:28px;height:28px;border-radius:8px;background:#C8DDD6;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">🌅</div>
+          <div><div style="font-size:13px;font-weight:500;margin-bottom:1px;">AM / PM / Makeup Routine</div><div style="font-size:12px;color:var(--muted);">Step-by-step with Amazon links. Just follow it.</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:28px;height:28px;border-radius:8px;background:#FAEEDA;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">⚗️</div>
+          <div><div style="font-size:13px;font-weight:500;margin-bottom:1px;">Ingredient Intelligence</div><div style="font-size:12px;color:var(--muted);">6 power ingredients + 4 to avoid + conflict guide.</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:28px;height:28px;border-radius:8px;background:#EEEDFE;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">📋</div>
+          <div><div style="font-size:13px;font-weight:500;margin-bottom:1px;">4-Week Challenge Plan</div><div style="font-size:12px;color:var(--muted);">Interactive checklist. Week by week.</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:28px;height:28px;border-radius:8px;background:#F0E8DF;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">✨</div>
+          <div><div style="font-size:13px;font-weight:500;margin-bottom:1px;">Special Care + Aftercare</div><div style="font-size:12px;color:var(--muted);">K-beauty treatments + D3 · D14 · D28 curator check-ins.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 애프터케어 타임라인 -->
+    <div style="background:rgba(28,20,16,.03);border-radius:14px;padding:16px 18px;margin-bottom:14px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--rose);margin-bottom:12px;">Your curator check-in schedule</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;gap:10px;align-items:center;">
+          <span style="font-size:10px;font-weight:500;padding:3px 10px;border-radius:10px;background:#FFF0EC;color:#993C1D;flex-shrink:0;white-space:nowrap;">Day 3</span>
+          <span style="font-size:12px;color:var(--muted);">Purchase check-in — what did you get?</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <span style="font-size:10px;font-weight:500;padding:3px 10px;border-radius:10px;background:#FFF0EC;color:#993C1D;flex-shrink:0;white-space:nowrap;">Day 14</span>
+          <span style="font-size:12px;color:var(--muted);">2-week skin feedback — is it working?</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <span style="font-size:10px;font-weight:500;padding:3px 10px;border-radius:10px;background:#C8DDD6;color:#085041;flex-shrink:0;white-space:nowrap;">Day 28</span>
+          <span style="font-size:12px;color:var(--muted);">Archive Entry No.002 begins → routine evolves</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 구독 전환 CTA -->
+    <div style="background:var(--ink);border-radius:18px;padding:24px;margin-bottom:14px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:radial-gradient(circle,rgba(201,123,99,.2) 0%,transparent 70%);border-radius:50%;"></div>
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(232,196,176,.5);margin-bottom:8px;position:relative;">Want to keep going?</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:#FAF7F2;margin-bottom:6px;position:relative;line-height:1.3;">Monthly Archive — your skin,<br>systematically improving.</div>
+      <div style="font-size:12px;color:rgba(250,247,242,.35);margin-bottom:16px;position:relative;line-height:1.6;">New Entry every 4 weeks. Score tracked over time.<br>Skip one latte. Get a routine that evolves.</div>
+      <button style="width:100%;background:transparent;border:1px solid var(--rose);border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--rose);cursor:pointer;position:relative;">
+        Subscribe to Archive — $14.99/mo →
+      </button>
+      <div style="text-align:center;font-size:10px;color:rgba(250,247,242,.15);margin-top:8px;position:relative;">Cancel anytime · Your data stays with you</div>
+    </div>
+
+    <!-- 브랜드 철학 -->
+    <div class="done-philosophy">
+      <div class="dp-eye">Before you go</div>
+      <div class="dp-msg">"Consistency beats intensity — always.<br><br>Your skin didn't change overnight, and real results don't either.<br><br>We'll be with you every step of the way."</div>
+      <div class="dp-sig">— Seoul Skin Atelier</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="screen" id="sdone">
+  <div class="hero">
+    <div class="hero-eye">Your Free Skin Reading</div>
+    <div class="hero-title">Here's what<br><span>we found. ✦</span></div>
+    <div class="hero-sub">Based on your answers — personalized to you.</div>
+  </div>
+  <div class="main">
+
+    <!-- Routine Score -->
+    <div style="background:white;border-radius:20px;padding:24px;margin-bottom:14px;border:.5px solid rgba(28,20,16,.08);">
+      <div style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#C97B63;margin-bottom:12px;">Your Routine Score</div>
+      <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px;">
+        <div id="freeScore" style="font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:400;color:#B8935A;line-height:1;">42</div>
+        <div style="font-size:16px;color:#8C7B6E;">/ 100</div>
+        <div style="margin-left:auto;text-align:right;">
+          <div style="font-size:11px;color:#8C7B6E;">potential</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;color:#7A9E8E;">85</div>
+        </div>
+      </div>
+      <div style="height:6px;background:rgba(28,20,16,.07);border-radius:3px;overflow:hidden;margin-bottom:10px;">
+        <div id="freeScoreBar" style="height:100%;width:42%;background:linear-gradient(90deg,#C45A3A,#B8935A);border-radius:3px;transition:width 1.2s ease;"></div>
+      </div>
+      <div style="font-size:12px;color:#8C7B6E;line-height:1.6;" id="freeScoreComment">Solid foundation. 2 key fixes and you could reach 85.</div>
+    </div>
+
+    <!-- Skin Diagnosis Cards -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+      <div style="background:rgba(28,20,16,.03);border-radius:14px;padding:14px;">
+        <div style="font-size:10px;color:#8C7B6E;margin-bottom:4px;letter-spacing:.5px;">Skin Type</div>
+        <div style="font-size:17px;font-weight:500;" id="freeSkinType">Combo</div>
+        <div style="font-size:11px;color:#8C7B6E;margin-top:2px;" id="freeSkinNote">T-zone oily · cheeks dry</div>
+      </div>
+      <div style="background:rgba(28,20,16,.03);border-radius:14px;padding:14px;">
+        <div style="font-size:10px;color:#8C7B6E;margin-bottom:4px;letter-spacing:.5px;">Main Concern</div>
+        <div style="font-size:17px;font-weight:500;" id="freeConcern">Acne & Breakouts</div>
+        <div style="font-size:11px;color:#8C7B6E;margin-top:2px;" id="freeConcernNote">Dehydration is the root cause</div>
+      </div>
+      <div style="background:rgba(28,20,16,.03);border-radius:14px;padding:14px;">
+        <div style="font-size:10px;color:#8C7B6E;margin-bottom:4px;letter-spacing:.5px;">Barrier Status</div>
+        <div style="font-size:17px;font-weight:500;color:#C45A3A;">Moderate — Caution</div>
+        <div style="font-size:11px;color:#8C7B6E;margin-top:2px;">Needs recovery before actives</div>
+      </div>
+      <div style="background:rgba(28,20,16,.03);border-radius:14px;padding:14px;">
+        <div style="font-size:10px;color:#8C7B6E;margin-bottom:4px;letter-spacing:.5px;">Time to Goal</div>
+        <div style="font-size:17px;font-weight:500;color:#7A9E8E;">About 8 weeks</div>
+        <div style="font-size:11px;color:#8C7B6E;margin-top:2px;">Possible with routine fix</div>
+      </div>
+    </div>
+
+    <!-- Curator Insight -->
+    <div style="background:rgba(28,20,16,.03);border-left:3px solid #C97B63;border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:14px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#C97B63;margin-bottom:6px;">CURATOR INSIGHT</div>
+      <div style="font-size:13px;color:#1C1410;line-height:1.7;" id="freeInsight">Using foam cleanser alone doesn't fully remove your morning SPF. That residue builds up in your pores and drives your breakout cycle. One oil cleanser fixes it.</div>
+    </div>
+
+    <!-- DO THIS NOW 3items -->
+    <div style="background:white;border-radius:20px;padding:20px;margin-bottom:14px;border:.5px solid rgba(28,20,16,.08);">
+      <div style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#C97B63;margin-bottom:14px;">DO THIS NOW</div>
+      <div style="display:flex;gap:12px;padding:10px 0;border-bottom:.5px solid rgba(28,20,16,.06);">
+        <div style="width:26px;height:26px;border-radius:50%;background:#1C1410;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0;">1</div>
+        <div>
+          <div style="font-size:13px;font-weight:500;margin-bottom:2px;">Add an oil cleanser at night</div>
+          <div style="font-size:12px;color:#8C7B6E;line-height:1.5;">First cleanse before foam. Removes SPF residue completely.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;padding:10px 0;border-bottom:.5px solid rgba(28,20,16,.06);">
+        <div style="width:26px;height:26px;border-radius:50%;background:#1C1410;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0;">2</div>
+        <div>
+          <div style="font-size:13px;font-weight:500;margin-bottom:2px;">Never skip SPF</div>
+          <div style="font-size:12px;color:#8C7B6E;line-height:1.5;">Prevents post-breakout marks from turning into dark spots.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;padding:10px 0;">
+        <div style="width:26px;height:26px;border-radius:50%;background:#1C1410;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0;">3</div>
+        <div>
+          <div style="font-size:13px;font-weight:500;margin-bottom:2px;">Start hydration layering with toner</div>
+          <div style="font-size:12px;color:#8C7B6E;line-height:1.5;">Directly addresses AC dehydration. Breaks the oil cycle.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ingredients - 1 revealed + locked -->
+    <div style="background:white;border-radius:20px;padding:20px;margin-bottom:14px;border:.5px solid rgba(28,20,16,.08);">
+      <div style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#C97B63;margin-bottom:14px;">YOUR KEY INGREDIENTS — 1 revealed</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <!-- Revealed -->
+        <div style="background:white;border:.5px solid rgba(28,20,16,.08);border-radius:12px;padding:12px;">
+          <div style="width:32px;height:32px;border-radius:9px;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:14px;margin-bottom:7px;">🧪</div>
+          <div style="font-size:9px;font-weight:500;padding:2px 7px;border-radius:10px;background:#FFF0EC;color:#993C1D;display:inline-block;margin-bottom:5px;">Phase 1 Essential</div>
+          <div style="font-size:14px;font-weight:500;margin-bottom:2px;">BHA</div>
+          <div style="font-size:10px;color:#8C7B6E;margin-bottom:5px;">Salicylic Acid</div>
+          <div style="font-size:12px;color:#8C7B6E;line-height:1.4;">Dissolves sebum directly inside pores.</div>
+        </div>
+        <!-- Locked x5 -->
+        <div style="position:relative;border-radius:12px;overflow:hidden;">
+          <div style="background:rgba(28,20,16,.03);border:.5px solid rgba(28,20,16,.06);border-radius:12px;padding:12px;filter:blur(3px);opacity:.4;">
+            <div style="width:32px;height:32px;border-radius:9px;background:#C8DDD6;margin-bottom:7px;"></div>
+            <div style="height:8px;background:#8C7B6E;border-radius:4px;width:60%;margin-bottom:5px;"></div>
+            <div style="height:6px;background:#8C7B6E;border-radius:3px;width:80%;"></div>
+          </div>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(250,247,242,.85);border-radius:12px;">
+            <div style="text-align:center;">
+              <div style="font-size:16px;margin-bottom:4px;">🔒</div>
+              <div style="font-size:10px;color:#8C7B6E;font-weight:500;">+5 more</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:11px;color:#8C7B6E;margin-top:10px;">4 ingredients to avoid + conflict guide in full report</div>
+    </div>
+
+    <!-- UNLOCK CTA -->
+    <div style="background:#1C1410;border-radius:20px;padding:28px 24px;margin-bottom:14px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-40px;right:-40px;width:150px;height:150px;background:radial-gradient(circle,rgba(201,123,99,.2) 0%,transparent 70%);border-radius:50%;"></div>
+      <div style="font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(232,196,176,.55);margin-bottom:10px;position:relative;">LOCKED IN FULL REPORT</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:#FAF7F2;margin-bottom:14px;position:relative;line-height:1.3;">It's all ready.<br>Just unlock it.</div>
+      <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:20px;position:relative;">
+        <div style="display:flex;gap:8px;font-size:12px;color:rgba(250,247,242,.6);">
+          <span style="color:#C97B63;">✦</span> AM / PM / Makeup routine + Amazon links
+        </div>
+        <div style="display:flex;gap:8px;font-size:12px;color:rgba(250,247,242,.6);">
+          <span style="color:#C97B63;">✦</span> 6 ingredients + full conflict guide
+        </div>
+        <div style="display:flex;gap:8px;font-size:12px;color:rgba(250,247,242,.6);">
+          <span style="color:#C97B63;">✦</span> 4-week interactive challenge plan
+        </div>
+        <div style="display:flex;gap:8px;font-size:12px;color:rgba(250,247,242,.6);">
+          <span style="color:#C97B63;">✦</span> 4 K-beauty special care treatments
+        </div>
+        <div style="display:flex;gap:8px;font-size:12px;color:rgba(250,247,242,.6);">
+          <span style="color:#C97B63;">✦</span> D3 · D14 · D28 curator check-ins
+        </div>
+      </div>
+      <button onclick="showPaywallModal()" style="width:100%;background:linear-gradient(135deg,#E8C4B0,#C97B63);border:none;border-radius:12px;padding:16px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;color:white;cursor:pointer;position:relative;margin-bottom:8px;">
+        Unlock Full Report — $9.99 →
+      </button>
+      <div style="text-align:center;font-size:11px;color:rgba(250,247,242,.2);position:relative;">One-time · No subscription · Instant delivery</div>
+    </div>
+
+    <!-- Email Notice -->
+    <div style="background:rgba(28,20,16,.03);border-radius:14px;padding:16px;text-align:center;margin-bottom:20px;">
+      <div style="font-size:12px;color:#8C7B6E;line-height:1.7;">
+        📩 Your free reading has been sent to your inbox.<br>
+        Check your inbox.
+      </div>
+    </div>
+
+    <!-- Brand Philosophy -->
+    <div class="done-philosophy">
+      <div class="dp-eye">Before you go</div>
+      <div class="dp-msg">"Consistency beats intensity — always.<br><br>Your skin didn't change overnight, and real results don't either.<br><br>We'll be with you every step of the way."</div>
+      <div class="dp-sig">— Seoul Skin Atelier</div>
+    </div>
+
+  </div>
+</div>
+
+<script id="free-result-logic">
+// Update free result page based on survey answers
+function updateFreeResult() {
+  const concerns = A.concerns || [];
+  const skinType = A.skinType || '';
+  const sensitivity = A.sensitivity || '';
+
+  // Skin type label
+  const typeMap = {
+    'oily': {label:'Oily', note:'T-zone + cheeks both oily'},
+    'dry': {label:'Dry', note:'Overall dry and tight'},
+    'combo': {label:'Combo', note:'T-zone oily · cheeks dry'},
+    'normal': {label:'Normal', note:'Well-balanced skin'},
+    'sensitive': {label:'Sensitive', note:'Reactive to new products'},
+  };
+  const typeInfo = typeMap[skinType] || {label:'Combo', note:'T-zone oily · cheeks dry'};
+  document.getElementById('freeSkinType').textContent = typeInfo.label;
+  document.getElementById('freeSkinNote').textContent = typeInfo.note;
+
+  // Main Concern
+  const concernMap = {
+    'acne': {label:'Acne & Breakouts', note:'Dehydration is the root cause'},
+    'dryness': {label:'Dryness', note:'Barrier strengthening needed'},
+    'fine_lines': {label:'Fine Lines', note:'Time to consider retinol'},
+    'dullness': {label:'Dullness', note:'Brightening ingredients needed'},
+    'redness': {label:'Redness', note:'Calming care comes first'},
+    'pores': {label:'Pores', note:'BHA + Niacinamide combo'},
+    'barrier': {label:'Damaged Barrier', note:'Minimal routine to recover first'},
+  };
+  const mainConcern = concerns[0] || 'acne';
+  const concernInfo = concernMap[mainConcern] || {label:'Acne & Breakouts', note:'Dehydration is the root cause'};
+  document.getElementById('freeConcern').textContent = concernInfo.label;
+  document.getElementById('freeConcernNote').textContent = concernInfo.note;
+
+  // Score calculation
+  let score = 42;
+  if(skinType === 'normal') score += 5;
+  if(sensitivity === 'low') score += 5;
+  if(sensitivity === 'high') score -= 8;
+  if(concerns.includes('barrier')) score -= 6;
+  score = Math.max(25, Math.min(65, score));
+
+  document.getElementById('freeScore').textContent = score;
+  document.getElementById('freeScoreBar').style.width = score + '%';
+
+  const potential = score + Math.floor(Math.random() * 10) + 35;
+  const scoreComments = {
+    low: 'Some things need to change right away. Let\'s start with the essentials.',
+    mid: 'Solid foundation. 2 key fixes away from 85.',
+    high: 'You\'re doing well. Fine-tuning is all it takes.',
+  };
+  const commentKey = score < 35 ? 'low' : score < 55 ? 'mid' : 'high';
+  document.getElementById('freeScoreComment').textContent = scoreComments[commentKey];
+
+  // Score bar animation
+  setTimeout(() => {
+    document.getElementById('freeScoreBar').style.width = score + '%';
+  }, 300);
+}
+</script>
+
+<script>
+const A = {};
+let ingLevel = 'none';
+let timing = null;
+let cat = null;
+const shelf = [];
+
+const SCREENS = {
+  1:'s1','1b':'s1b',2:'s2','2b':'s3b',3:'s4',4:'s4',5:'s5',6:'s6',7:'s7',
+  paywall:'spaywall',p1:'sp1',p2:'sp2',p3:'sp3','p3b':'sp3b',
+  p4:'sp4',p5:'sp5',p6:'sp6',p7:'sp7',done:'sdone','paid-done':'spaid-done'
+};
+const PROGRESS = {
+  1:7,'1b':14,2:21,'2b':21,3:28,4:35,5:42,6:49,7:56,
+  paywall:56,p1:63,p2:70,p3:77,'p3b':77,p4:82,p5:87,p6:92,p7:97,done:100,'paid-done':100
+};
+const NAV_LABELS = {
+  1:'Step 1 of 7','1b':'Step 2 of 7',2:'Step 3 of 7','2b':'Step 3 of 7',
+  3:'Step 4 of 7',4:'Step 4 of 7',5:'Step 5 of 7',6:'Step 6 of 7',7:'Step 7 of 7',
+  paywall:'Your free report is ready',
+  p1:'Part 1 of 7',p2:'Part 2 of 7',p3:'Part 3 of 7','p3b':'Part 3 of 7',
+  p4:'Part 4 of 7',p5:'Part 5 of 7',p6:'Part 6 of 7',p7:'Part 7 of 7',done:'Complete','paid-done':'Report Ready'
+};
+
+function go(id) {
+  Object.values(SCREENS).forEach(s => {
+    const el = document.getElementById(s);
+    if(el) el.classList.remove('active');
+  });
+  const target = document.getElementById(SCREENS[id]);
+  if(target){ target.classList.add('active'); }
+  const pct = PROGRESS[id]||0;
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressPct').textContent = pct+'%';
+  document.getElementById('progressLabel').textContent = NAV_LABELS[id]||'';
+  document.getElementById('navStep').textContent = '';
+  // progress-wrap을 active screen의 .main 바로 앞으로 이동
+  if(target){
+    const mainEl = target.querySelector('.main');
+    const pw = document.getElementById('progressWrap');
+    if(mainEl && pw) mainEl.parentNode.insertBefore(pw, mainEl);
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id === 'done') { setTimeout(updateFreeResult, 200); }
+  if(id===2) showBanner();
+  if(id==='paywall'||id==='done') personalizeScreens();
+}
+
+function pick(el, group, nextId) {
+  const parent = el.closest('.opts');
+  if(parent) parent.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  A[group] = el.dataset.val;
+  if(nextId){ const nb = document.getElementById(nextId); if(nb) nb.disabled=false; }
+}
+
+// Step 1: concerns multi-select → enable next
+function pickMulti(el, containerId, max) {
+  const container = document.getElementById(containerId);
+  if(!container) return;
+  if(el.classList.contains('selected')){ el.classList.remove('selected'); }
+  else {
+    const selected = container.querySelectorAll('.opt.selected');
+    if(selected.length < max) el.classList.add('selected');
+  }
+  const now = container.querySelectorAll('.opt.selected');
+  A[containerId] = Array.from(now).map(o=>o.dataset.val);
+  // Step 1 uses opts2 → enable n1
+  if(containerId==='opts2'){
+    const n1 = document.getElementById('n1');
+    if(n1) n1.disabled = now.length === 0;
+  }
+}
+
+// Step 1B: priority toggle — tap once = 1, tap again = 2, tap again = deselect
+const priorities = {};
+
+function pick1b(el) {
+  const val = el.dataset.val;
+  const current = priorities[val] || 0;
+  if(current === 0) {
+    // set as priority 1, demote existing p1 to p2 if needed
+    const oldP1key = Object.keys(priorities).find(k=>priorities[k]===1);
+    if(oldP1key) {
+      const oldP2key = Object.keys(priorities).find(k=>priorities[k]===2);
+      if(oldP2key){ priorities[oldP2key]=0; updateBadge(oldP2key); }
+      priorities[oldP1key]=2; updateBadge(oldP1key);
+    }
+    priorities[val]=1;
+  } else if(current===1) {
+    // demote to 2
+    const oldP2key = Object.keys(priorities).find(k=>priorities[k]===2);
+    if(oldP2key){ priorities[oldP2key]=0; updateBadge(oldP2key); }
+    priorities[val]=2;
+  } else {
+    // deselect
+    priorities[val]=0;
+  }
+  updateBadge(val);
+  A['s1'] = Object.keys(priorities).find(k=>priorities[k]===1)||null;
+  A['s1b'] = Object.keys(priorities).find(k=>priorities[k]===2)||null;
+  const nb = document.getElementById('n1b');
+  if(nb) nb.disabled = !A['s1'];
+}
+
+function updateBadge(val) {
+  const p = priorities[val]||0;
+  const opt = document.querySelector(`#opts1b [data-val="${val}"]`);
+  if(!opt) return;
+  const b1 = document.getElementById('pri-'+val);
+  const b2 = document.getElementById('pri2-'+val);
+  const chk = opt.querySelector('.opt-check');
+  opt.classList.remove('selected','secondary');
+  if(b1) b1.style.display='none';
+  if(b2) b2.style.display='none';
+  if(chk) chk.style.display='flex';
+  if(p===1){
+    opt.classList.add('selected');
+    if(b1){ b1.style.display='flex'; if(chk) chk.style.display='none'; }
+  } else if(p===2){
+    opt.classList.add('selected','secondary');
+    if(b2){ b2.style.display='flex'; if(chk) chk.style.display='none'; }
+  }
+}
+
+function goFromS2() {
+  if(A['s2']==='unknown'){ go('2b'); } else { go(3); }
+}
+
+function goFromS3() {
+  go(3);
+}
+
+function showBanner() {
+  const concerns = A['opts2']||[];
+  if(!concerns.length) return;
+  const msgs = {
+    acne:'BHA-based routine coming your way.',
+    bright:'Niacinamide + Vitamin C curation ahead.',
+    pore:'Pore-refining layering is key for your profile.',
+    redness:'Cica & Centella will be your new best friends.',
+    aging:'Peptide + Retinol routine in your report.',
+    dry:'K-beauty hydration layering was made for you.',
+    barrier:'Ceramide + Panthenol barrier repair ahead.'
+  };
+  const top = concerns[0];
+  const goalMap = {acne:'Blemish-Free',bright:'Bright & Even',pore:'Smooth Texture',barrier:'Calm & Repair',aging:'Firm & Youthful'};
+  const goal1 = goalMap[A['s1']]||'Your goal';
+  const goal2 = A['s1b'] ? ' + '+(goalMap[A['s1b']]||'') : '';
+  const banner = document.getElementById('banner3');
+  const txt = document.getElementById('bannerText');
+  if(banner && txt){
+    txt.textContent = goal1+goal2+' — '+(msgs[top]||'Personalized routine taking shape.');
+    banner.style.display='block';
+  }
+}
+
+function checkEmail() {
+  const v = document.getElementById('emailInput').value;
+  document.getElementById('submitBtn').disabled = v.length < 4;
+  // save nickname as typed
+  const nick = document.getElementById('nicknameInput');
+  if(nick) A['nickname'] = nick.value.trim() || null;
+}
+
+function getNickname() {
+  return A['nickname'] || null;
+}
+
+function personalizeScreens() {
+  const name = getNickname();
+  if(!name) return;
+  // personalize paywall
+  const pwSub = document.querySelector('#spaywall .pw-sub');
+  if(pwSub) pwSub.textContent = name + ', the free reading covers the essentials. The full report is where the real transformation begins.';
+  // personalize done screen
+  const doneTitle = document.querySelector('#sdone .done-title');
+  if(doneTitle) doneTitle.textContent = name + ', your Skin Archive is open.';
+}
+
+function pick1a(el){} // unused, kept for safety
+
+function checkIngLevel() {
+  ingLevel = A['sp3']||'none';
+}
+function goFromP3() {
+  if(ingLevel==='none'){ go('p3b'); } else { go('p4'); }
+}
+
+function showShelf(show) {
+  document.getElementById('intentYes').classList.toggle('selected', show);
+  document.getElementById('intentNo').classList.toggle('selected', !show);
+  document.getElementById('shelfSection').style.display = show ? 'block' : 'none';
+}
+
+function selTiming(t) {
+  timing = t;
+  ['am','pm','both'].forEach(x => document.getElementById('t-'+x).classList.toggle('sel', x===t));
+  updateAddBtn();
+}
+
+function selCat(el) {
+  document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  cat = el.textContent;
+}
+
+function updateAddBtn() {
+  const name = document.getElementById('pInput').value.trim();
+  document.getElementById('addBtn').disabled = !(name && timing);
+}
+
+function addProduct() {
+  const name = document.getElementById('pInput').value.trim();
+  if(!name||!timing) return;
+  shelf.push({id:Date.now(), name, timing, cat});
+  document.getElementById('pInput').value='';
+  timing=null; cat=null;
+  ['am','pm','both'].forEach(x=>document.getElementById('t-'+x).classList.remove('sel'));
+  document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('sel'));
+  document.getElementById('addBtn').disabled=true;
+  renderShelf(); updateMeter();
+}
+
+function removeShelfItem(id) {
+  const i = shelf.findIndex(p=>p.id===id);
+  if(i>-1) shelf.splice(i,1);
+  renderShelf(); updateMeter();
+}
+
+function renderShelf() {
+  const el = document.getElementById('shelfItems');
+  if(!el) return;
+  el.innerHTML = shelf.map(p=>`
+    <div class="shelf-item">
+      <span class="si-time ${p.timing}">${p.timing==='both'?'AM+PM':p.timing.toUpperCase()}</span>
+      ${p.cat?`<span class="si-cat">${p.cat}</span>`:''}
+      <span class="si-name">${p.name}</span>
+      <button class="si-rm" onclick="removeShelfItem(${p.id})">×</button>
+    </div>
+  `).join('') || '<div style="font-size:13px;color:var(--muted);padding:8px 0">No products yet — add your first above.</div>';
+}
+
+function updateMeter() {
+  const c = shelf.length;
+  document.getElementById('mFill').style.width = Math.min(c*14,100)+'%';
+  const lbls = ['0 products','1 — keep going','2 — getting better','3 — good start','4 — solid','5 — great coverage','6 — excellent','7+ — full analysis ready'];
+  document.getElementById('mLbl').textContent = lbls[Math.min(c,7)];
+}
+
+function toggleCleansing(show) {
+  document.getElementById('cleansingWrap').style.display = show ? 'block' : 'none';
+  if(!show) { document.getElementById('pn7').disabled = false; }
+}
+
+document.getElementById('submitBtn').disabled = true;
+
+// 초기 로드: progress-wrap을 첫 screen의 main 앞으로 이동
+(function(){
+  const firstScreen = document.getElementById('s1');
+  const mainEl = firstScreen ? firstScreen.querySelector('.main') : null;
+  const pw = document.getElementById('progressWrap');
+  if(mainEl && pw) mainEl.parentNode.insertBefore(pw, mainEl);
+})();
+function openPaidReport() {
+  // paid-done 화면 잠깐 보여줬다가 리포트로 이동
+  go('paid-done');
+  setTimeout(() => {
+    window.location.href = 'paid_report_v1.html';
+  }, 1800);
+}
+
+</script>
+
+<!-- PAYWALL MODAL -->
+<div id="paywallModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(28,20,16,.7);backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;">
+  <div style="background:var(--cream);border-radius:24px 24px 0 0;padding:28px 24px 40px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;animation:slideUp .3s ease;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--rose);">Full Atelier Report</div>
+      <button onclick="hidePaywallModal()" style="background:rgba(28,20,16,.07);border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;color:var(--muted);">✕</button>
+    </div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-style:italic;color:var(--ink);margin-bottom:6px;line-height:1.2;">It's all ready.<br>Just unlock it.</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:20px;line-height:1.6;">Built from your answers. Delivered to your inbox within 2 minutes of payment.</div>
+    <div style="background:rgba(28,20,16,.04);border-radius:14px;padding:16px;margin-bottom:20px;">
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;gap:8px;font-size:13px;color:var(--ink);"><span style="color:var(--rose);">✦</span> AM / PM / Makeup routine + Amazon links</div>
+        <div style="display:flex;gap:8px;font-size:13px;color:var(--ink);"><span style="color:var(--rose);">✦</span> 6 ingredients + full conflict guide</div>
+        <div style="display:flex;gap:8px;font-size:13px;color:var(--ink);"><span style="color:var(--rose);">✦</span> 4-week interactive challenge plan</div>
+        <div style="display:flex;gap:8px;font-size:13px;color:var(--ink);"><span style="color:var(--rose);">✦</span> 4 K-beauty special care treatments</div>
+        <div style="display:flex;gap:8px;font-size:13px;color:var(--ink);"><span style="color:var(--rose);">✦</span> D3 · D14 · D28 curator check-ins</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:16px;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:400;color:var(--ink);">$9<span style="font-size:20px;">.99</span></div>
+      <div style="font-size:12px;color:var(--muted);">One-time · No subscription</div>
+    </div>
+    <button onclick="go('p1');hidePaywallModal();" style="width:100%;background:linear-gradient(135deg,var(--blush),var(--rose));border:none;border-radius:14px;padding:17px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;color:white;cursor:pointer;margin-bottom:10px;">
+      Unlock Full Report — $9.99 →
+    </button>
+    <button onclick="hidePaywallModal()" style="width:100%;background:none;border:none;padding:10px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--muted);cursor:pointer;">
+      Maybe later
+    </button>
+    <div style="text-align:center;font-size:10px;color:var(--muted);margin-top:6px;line-height:1.7;">Delivered within 2 min · Secure payment via Gumroad</div>
+  </div>
+</div>
+
+<style>
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+</style>
+
+<script>
+function showPaywallModal(){
+  const m = document.getElementById('paywallModal');
+  m.style.display='flex';
+  document.body.style.overflow='hidden';
+}
+function hidePaywallModal(){
+  const m = document.getElementById('paywallModal');
+  m.style.display='none';
+  document.body.style.overflow='';
+}
+document.getElementById('paywallModal').addEventListener('click', function(e){
+  if(e.target === this) hidePaywallModal();
+});
+</script>
+
+</body>
+</html>

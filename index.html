@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seoul Skin Atelier — Stop Researching. Start Following The Plan.</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1C1410;--cream:#FAF7F2;--rose:#C97B63;--blush:#E8C4B0;
+  --muted:#8C7B6E;--sand:#F0E8DF;--sage:#7A9E8E;--sage-light:#C8DDD6;
+  --gold:#B8935A;--warn:#C45A3A;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);overflow-x:hidden;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 48px;display:flex;align-items:center;justify-content:space-between;transition:all .3s;}
+nav.scrolled{background:rgba(250,247,242,.96);backdrop-filter:blur(12px);border-bottom:.5px solid rgba(28,20,16,.08);}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-size:15px;letter-spacing:3px;text-transform:uppercase;color:#FAF7F2;transition:color .3s;}
+nav.scrolled .nav-brand{color:var(--ink);}
+.nav-cta{font-size:12px;font-weight:500;padding:8px 20px;border-radius:20px;background:var(--rose);color:white;text-decoration:none;transition:opacity .2s;}
+.nav-cta:hover{opacity:.85;}
+
+/* ── HERO ── */
+.hero{background:var(--ink);min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 48px 80px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-200px;right:-200px;width:700px;height:700px;background:radial-gradient(circle,rgba(201,123,99,.1) 0%,transparent 60%);border-radius:50%;pointer-events:none;}
+.hero::after{content:'';position:absolute;bottom:-100px;left:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(122,158,142,.07) 0%,transparent 70%);border-radius:50%;pointer-events:none;}
+.hero-inner{max-width:860px;position:relative;}
+
+.hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:36px;animation:fadeUp .6s ease .1s both;}
+.hbadge{font-size:10px;letter-spacing:1.5px;padding:5px 14px;border:1px solid rgba(250,247,242,.12);border-radius:20px;color:rgba(250,247,242,.4);}
+.hbadge.on{border-color:rgba(232,196,176,.4);color:var(--blush);}
+
+.hero-setup{font-size:clamp(16px,2.2vw,22px);color:rgba(250,247,242,.35);line-height:1.8;margin-bottom:20px;animation:fadeUp .6s ease .2s both;font-weight:300;}
+.hero-setup span{display:block;}
+
+.hero-divider{width:40px;height:1px;background:var(--rose);margin-bottom:20px;animation:fadeUp .6s ease .25s both;}
+
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,6.5vw,80px);font-weight:400;color:#FAF7F2;line-height:1.05;margin-bottom:28px;animation:fadeUp .6s ease .3s both;}
+.hero-title em{font-style:italic;color:var(--blush);}
+
+.hero-sub{font-size:clamp(14px,1.6vw,17px);color:rgba(250,247,242,.4);line-height:1.9;margin-bottom:36px;max-width:520px;animation:fadeUp .6s ease .4s both;font-weight:300;}
+.hero-sub strong{color:rgba(250,247,242,.7);font-weight:400;}
+
+.hero-actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap;animation:fadeUp .6s ease .5s both;}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--blush),var(--rose));color:white;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;padding:16px 32px;border-radius:12px;text-decoration:none;transition:transform .2s,opacity .2s;}
+.btn-primary:hover{transform:translateY(-1px);opacity:.92;}
+.arrow{transition:transform .2s;}
+.btn-primary:hover .arrow{transform:translateX(3px);}
+.hero-note{font-size:11px;color:rgba(250,247,242,.2);letter-spacing:.5px;}
+
+.feed-skin{margin-top:28px;animation:fadeUp .6s ease .6s both;}
+.feed-skin-text{font-family:'Cormorant Garamond',serif;font-size:clamp(15px,1.8vw,19px);font-style:italic;color:rgba(250,247,242,.3);line-height:1.5;}
+.feed-skin-text strong{color:var(--blush);font-style:normal;}
+
+/* ── PAIN POINTS ── */
+.pain{background:white;padding:80px 48px;border-bottom:.5px solid rgba(28,20,16,.06);}
+.pain-inner{max-width:900px;margin:0 auto;}
+.section-eye{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--rose);margin-bottom:10px;}
+.pain-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3.5vw,44px);font-weight:400;font-style:italic;color:var(--ink);margin-bottom:40px;line-height:1.2;}
+.pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;}
+.pain-card{background:var(--sand);border-radius:18px;padding:28px 24px;position:relative;overflow:hidden;}
+.pain-card::before{content:attr(data-emoji);position:absolute;top:-8px;right:12px;font-size:52px;opacity:.12;line-height:1;}
+.pain-q{font-size:14px;color:var(--ink);line-height:1.7;margin-bottom:16px;font-style:italic;}
+.pain-q::before{content:'"';}
+.pain-q::after{content:'"';}
+.pain-divider{height:.5px;background:rgba(28,20,16,.1);margin-bottom:14px;}
+.pain-a{font-size:12px;color:var(--muted);line-height:1.6;}
+.pain-a strong{color:var(--rose);font-weight:500;display:block;margin-bottom:3px;}
+.pain-bottom{text-align:center;font-family:'Cormorant Garamond',serif;font-size:clamp(20px,2.5vw,28px);font-style:italic;color:var(--ink);}
+.pain-bottom em{color:var(--rose);}
+
+/* ── STATS ── */
+.stats{background:var(--ink);padding:60px 48px;}
+.stats-inner{max-width:900px;margin:0 auto;}
+.stats-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(250,247,242,.25);margin-bottom:28px;text-align:center;}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.stat{text-align:center;padding:24px 16px;border-radius:14px;background:rgba(250,247,242,.04);border:.5px solid rgba(250,247,242,.07);}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,4vw,50px);font-weight:400;color:#FAF7F2;line-height:1;margin-bottom:8px;}
+.stat-num sup{font-size:.45em;color:var(--rose);}
+.stat-desc{font-size:10px;color:rgba(250,247,242,.3);line-height:1.6;letter-spacing:.3px;}
+.stat-desc strong{display:block;color:rgba(250,247,242,.6);font-size:11px;margin-bottom:3px;font-weight:500;}
+
+/* ── HOW ── */
+.how{padding:100px 48px;background:var(--cream);}
+.how-inner{max-width:900px;margin:0 auto;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,4vw,50px);font-weight:400;font-style:italic;color:var(--ink);line-height:1.15;margin-bottom:48px;}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.step{background:white;border-radius:20px;padding:32px 28px;border:.5px solid rgba(28,20,16,.07);position:relative;overflow:hidden;}
+.step-num{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:300;color:rgba(28,20,16,.04);position:absolute;top:-12px;right:14px;line-height:1;}
+.step-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:16px;}
+.step-title{font-size:16px;font-weight:500;color:var(--ink);margin-bottom:8px;}
+.step-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px;}
+.step-callout{font-size:12px;color:var(--rose);font-style:italic;line-height:1.5;padding-top:12px;border-top:.5px solid rgba(28,20,16,.06);}
+.step-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;}
+.stag{font-size:10px;padding:3px 9px;border-radius:10px;background:var(--sand);color:var(--muted);}
+.stag.on{background:rgba(201,123,99,.1);color:var(--rose);}
+
+/* ── PRICING ── */
+.pricing{background:var(--ink);padding:100px 48px;position:relative;overflow:hidden;}
+.pricing::before{content:'';position:absolute;top:-200px;left:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(201,123,99,.07) 0%,transparent 60%);border-radius:50%;pointer-events:none;}
+.pricing-inner{max-width:900px;margin:0 auto;position:relative;}
+.pricing .section-eye{color:rgba(232,196,176,.5);}
+.pricing .section-title{color:#FAF7F2;}
+
+.pricing-hook{margin-bottom:36px;}
+.pricing-hook-main{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2.5vw,26px);font-style:italic;color:rgba(250,247,242,.5);line-height:1.7;margin-bottom:8px;}
+.pricing-hook-main em{color:var(--blush);font-style:normal;}
+.pricing-hook-sub{font-size:13px;color:rgba(250,247,242,.2);line-height:1.7;}
+.pricing-hook-sub strong{color:rgba(250,247,242,.5);font-weight:400;}
+
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.plan{background:rgba(250,247,242,.04);border:.5px solid rgba(250,247,242,.08);border-radius:20px;padding:28px 24px;}
+.plan.featured{border:1.5px solid var(--rose);background:rgba(201,123,99,.06);}
+.plan-badge{font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:10px;background:var(--rose);color:white;margin-bottom:14px;display:inline-block;}
+.plan-price{font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:400;color:#FAF7F2;line-height:1;margin-bottom:4px;}
+.plan-price sub{font-size:16px;}
+.plan-reframe{font-size:12px;color:var(--blush);margin-bottom:6px;font-style:italic;}
+.plan-reframe2{font-size:11px;color:rgba(250,247,242,.2);margin-bottom:18px;line-height:1.5;}
+.plan-divider{height:.5px;background:rgba(250,247,242,.08);margin-bottom:18px;}
+.plan-items{list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:22px;}
+.plan-items li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:rgba(250,247,242,.55);line-height:1.5;}
+.plan-items li.on{color:rgba(250,247,242,.88);}
+.plan-items li::before{content:'✦';font-size:8px;color:var(--rose);flex-shrink:0;margin-top:3px;}
+.plan-items li.off{color:rgba(250,247,242,.18);}
+.plan-items li.off::before{content:'—';color:rgba(250,247,242,.12);}
+.plan-btn{display:block;text-align:center;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:12px 20px;border-radius:10px;text-decoration:none;transition:all .2s;}
+.plan-btn.free{border:.5px solid rgba(250,247,242,.15);color:rgba(250,247,242,.4);}
+.plan-btn.free:hover{border-color:rgba(250,247,242,.3);color:rgba(250,247,242,.7);}
+.plan-btn.paid{background:linear-gradient(135deg,var(--blush),var(--rose));color:white;}
+.plan-btn.paid:hover{opacity:.9;}
+.plan-btn.sub{border:.5px solid var(--rose);color:var(--rose);}
+.plan-btn.sub:hover{background:rgba(201,123,99,.1);}
+
+.pricing-bottom{margin-top:28px;text-align:center;}
+.pb-line{font-size:12px;color:rgba(250,247,242,.18);line-height:2;}
+
+/* ── REPORT PREVIEW ── */
+.preview{padding:100px 48px;background:var(--sand);}
+.preview-inner{max-width:900px;margin:0 auto;}
+.preview-sub{font-size:14px;color:var(--muted);margin-bottom:36px;line-height:1.6;max-width:540px;}
+.preview-sub em{color:var(--ink);font-style:normal;font-weight:500;}
+.preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.pcard{background:white;border-radius:16px;padding:20px;border:.5px solid rgba(28,20,16,.07);}
+.pcard-eye{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--rose);margin-bottom:5px;}
+.pcard-title{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:12px;}
+.pcard-body{background:var(--sand);border-radius:8px;padding:12px;}
+.score-row{display:flex;align-items:baseline;gap:8px;margin-bottom:6px;}
+.score-big{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:400;color:var(--gold);}
+.score-arrow{font-size:16px;color:var(--sage);}
+.score-target{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:400;color:var(--sage);}
+.score-note{font-size:11px;color:var(--muted);margin-top:4px;}
+.score-bar{height:4px;background:rgba(28,20,16,.08);border-radius:2px;overflow:hidden;margin-top:8px;}
+.score-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--warn),var(--gold));width:42%;}
+.ptag-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;}
+.ptag{font-size:10px;padding:3px 9px;border-radius:8px;}
+.ptag.g{background:#E1F5EE;color:#085041;}
+.ptag.w{background:#FFF0EC;color:#993C1D;}
+.ptag.b{background:#FCEBEB;color:#791F1F;}
+.step-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:.5px solid rgba(28,20,16,.05);font-size:12px;color:var(--ink);}
+.step-row:last-child{border-bottom:none;}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--rose);flex-shrink:0;}
+.sbadge{font-size:10px;padding:2px 7px;border-radius:8px;margin-left:auto;flex-shrink:0;}
+.week-row{display:flex;gap:8px;align-items:center;padding:5px 0;border-bottom:.5px solid rgba(28,20,16,.05);font-size:12px;}
+.week-row:last-child{border-bottom:none;}
+.wnum{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0;}
+.ac-row{display:flex;gap:10px;align-items:center;padding:5px 0;}
+.ac-day{font-size:10px;font-weight:500;padding:3px 10px;border-radius:10px;flex-shrink:0;}
+
+/* ── REVIEWS ── */
+.reviews{padding:100px 48px;background:white;}
+.reviews-inner{max-width:900px;margin:0 auto;}
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px;}
+.review{background:var(--cream);border-radius:20px;padding:28px 24px;border:.5px solid rgba(28,20,16,.06);}
+.review-stars{color:var(--gold);font-size:12px;margin-bottom:14px;letter-spacing:3px;}
+.review-text{font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:var(--ink);line-height:1.6;margin-bottom:16px;}
+.review-author{font-size:12px;color:var(--muted);}
+.review-author strong{display:block;font-weight:500;color:var(--ink);margin-bottom:2px;}
+.review-score{display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:var(--sage-light);padding:4px 12px;border-radius:20px;font-size:11px;color:#085041;font-weight:500;}
+.review-notice{text-align:center;font-size:11px;color:var(--muted);margin-top:20px;font-style:italic;opacity:.7;}
+
+/* ── FINAL CTA ── */
+.final{background:var(--ink);padding:120px 48px;text-align:center;position:relative;overflow:hidden;}
+.final::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(201,123,99,.08) 0%,transparent 55%);border-radius:50%;pointer-events:none;}
+.final-inner{max-width:580px;margin:0 auto;position:relative;}
+.final .section-eye{color:rgba(232,196,176,.5);margin-bottom:16px;}
+.final-title{font-family:'Cormorant Garamond',serif;font-size:clamp(38px,6vw,66px);font-weight:300;color:#FAF7F2;line-height:1.1;margin-bottom:16px;}
+.final-title em{font-style:italic;color:var(--blush);}
+.final-sub{font-size:14px;color:rgba(250,247,242,.3);line-height:1.9;margin-bottom:14px;font-weight:300;}
+.final-sub em{color:rgba(250,247,242,.55);font-style:normal;}
+.final-feed{font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2vw,20px);font-style:italic;color:rgba(250,247,242,.25);margin-bottom:32px;line-height:1.6;}
+.final-feed strong{color:var(--blush);font-style:normal;}
+.final-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--blush),var(--rose));color:white;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;padding:18px 40px;border-radius:14px;text-decoration:none;margin-bottom:14px;transition:transform .2s,opacity .2s;}
+.final-btn:hover{transform:translateY(-2px);opacity:.92;}
+.final-note{font-size:11px;color:rgba(250,247,242,.15);line-height:2;}
+.final-disclaimer{font-size:10px;color:rgba(250,247,242,.1);margin-top:20px;line-height:1.8;max-width:440px;margin-left:auto;margin-right:auto;}
+
+/* ── FOOTER ── */
+footer{background:var(--ink);border-top:.5px solid rgba(250,247,242,.05);padding:28px 48px;display:flex;align-items:center;justify-content:space-between;}
+.footer-brand{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:rgba(250,247,242,.2);}
+.footer-links{display:flex;gap:24px;}
+.footer-links a{font-size:11px;color:rgba(250,247,242,.15);text-decoration:none;}
+.footer-links a:hover{color:rgba(250,247,242,.35);}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:.1s;}
+.reveal-delay-2{transition-delay:.2s;}
+.reveal-delay-3{transition-delay:.3s;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  nav{padding:16px 20px;}
+  .hero{padding:100px 20px 60px;}
+  .pain,.stats,.how,.pricing,.preview,.reviews,.final{padding-left:20px;padding-right:20px;}
+  .pain-grid,.steps,.plans,.reviews-grid{grid-template-columns:1fr;}
+  .preview-grid{grid-template-columns:1fr;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  footer{flex-direction:column;gap:14px;text-align:center;padding:20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-brand">Seoul Skin Atelier</div>
+  <a href="full-survey-v4.html" onclick="showComingSoon(event)" class="nav-cta">Free Skin Report →</a>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-inner">
+
+    <div class="hero-badges">
+      <span class="hbadge on">17 Concern Categories</span>
+      <span class="hbadge on">6,200+ Ingredient Combinations</span>
+      <span class="hbadge">50+ Curated K-beauty Products</span>
+    </div>
+
+    <div class="hero-setup">
+      <span>You've watched the videos.</span>
+      <span>You've read the reviews.</span>
+      <span>You've bought the products.</span>
+    </div>
+
+    <div class="hero-divider"></div>
+
+    <h1 class="hero-title">
+      Stop researching.<br>
+      <em>Start following the plan.</em>
+    </h1>
+
+    <p class="hero-sub">
+      We analyze your skin, your current products,
+      and <strong>6,200+ ingredient combinations</strong> —
+      then give you one routine to follow.<br>
+      No more guessing. No more tabs.<br>
+      <strong>Just open the report and start.</strong>
+    </p>
+
+    <div class="hero-actions">
+      <a href="full-survey-v4.html" onclick="showComingSoon(event)" class="btn-primary">
+        Get Your Free Skin Report
+        <span class="arrow">→</span>
+      </a>
+      <span class="hero-note">3 minutes · No credit card</span>
+    </div>
+
+    <div class="feed-skin">
+      <div class="feed-skin-text">
+        You feed yourself every day.<br>
+        When did you last <strong>feed your skin?</strong>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ PAIN POINTS ═══ -->
+<section class="pain reveal">
+  <div class="pain-inner">
+    <div class="section-eye">Sound Familiar?</div>
+    <h2 class="pain-title">You're not doing it wrong.<br>You just don't have the right plan yet.</h2>
+    <div class="pain-grid">
+
+      <div class="pain-card" data-emoji="📱">
+        <div class="pain-q">I've watched 50 skincare videos and I'm more confused than when I started.</div>
+        <div class="pain-divider"></div>
+        <div class="pain-a">
+          <strong>We've done the research.</strong>
+          17 concern categories, 6,200+ ingredient combinations — already analyzed for your skin. You just follow the plan.
+        </div>
+      </div>
+
+      <div class="pain-card" data-emoji="💸">
+        <div class="pain-q">I've spent $200 on products that are just sitting on my shelf unused.</div>
+        <div class="pain-divider"></div>
+        <div class="pain-a">
+          <strong>We check your current products first.</strong>
+          What to keep. What to replace. What's secretly fighting each other. One report pays for itself the first time you don't buy the wrong thing.
+        </div>
+      </div>
+
+      <div class="pain-card" data-emoji="😮‍💨">
+        <div class="pain-q">I know I should have a routine. I just don't know where to start or what order to use anything in.</div>
+        <div class="pain-divider"></div>
+        <div class="pain-a">
+          <strong>3 minutes. Then just follow the plan.</strong>
+          AM routine. PM routine. 4-week challenge. Product links. No more tabs. No more guessing.
+        </div>
+      </div>
+
+    </div>
+    <div class="pain-bottom">
+      <em>One report fixes all three.</em>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STATS ═══ -->
+<section class="stats reveal">
+  <div class="stats-inner">
+    <div class="stats-label">Built on data. Delivered like a service.</div>
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-num">17</div>
+        <div class="stat-desc"><strong>피부 고민 분류</strong>Concern categories analyzed per report</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">6,200<sup>+</sup></div>
+        <div class="stat-desc"><strong>성분 조합 분석</strong>Ingredient combinations in our database</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">50<sup>+</sup></div>
+        <div class="stat-desc"><strong>K-뷰티 큐레이션</strong>Expert-selected products, all tested</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" style="font-size:clamp(24px,2.8vw,38px);padding-top:6px;">D3·14·28</div>
+        <div class="stat-desc"><strong>애프터케어 시스템</strong>Curator check-ins after every report</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<section class="how reveal">
+  <div class="how-inner">
+    <div class="section-eye">How It Works</div>
+    <h2 class="section-title">Three steps.<br>Then you just follow the plan.</h2>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-icon" style="background:#FFF0EC;">🔍</div>
+        <div class="step-title">Tell us everything.</div>
+        <div class="step-desc">7 questions. What actually matters — your skin, your products, your environment, your budget. Your current routine, included.</div>
+        <div class="step-callout">Takes 3 minutes. Less time than your skincare routine.</div>
+        <div class="step-tags">
+          <span class="stag on">7 questions</span>
+          <span class="stag">3 minutes</span>
+          <span class="stag">Current products analyzed</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-icon" style="background:#C8DDD6;">⚗️</div>
+        <div class="step-title">We do the work.</div>
+        <div class="step-desc">17 concern categories. 6,200+ ingredient combinations checked. Your current products reviewed for conflicts you didn't know existed.</div>
+        <div class="step-callout">We do the research you've been putting off for months.</div>
+        <div class="step-tags">
+          <span class="stag on">17 categories</span>
+          <span class="stag on">6,200+ combos</span>
+          <span class="stag">Conflict detection</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-icon" style="background:#FAEEDA;">📋</div>
+        <div class="step-title">You get a plan. You follow it.</div>
+        <div class="step-desc">AM routine. PM routine. 4-week challenge plan. Products with direct purchase links. No more tabs. Just open and start.</div>
+        <div class="step-callout">And we check back on Day 3, 14, and 28.</div>
+        <div class="step-tags">
+          <span class="stag on">Routine score</span>
+          <span class="stag on">4-week plan</span>
+          <span class="stag">D3 · D14 · D28</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRICING ═══ -->
+<section class="pricing reveal">
+  <div class="pricing-inner">
+    <div class="section-eye">Simple Pricing</div>
+    <h2 class="section-title">Skip one DoorDash order.<br>Feed your skin instead.</h2>
+
+    <div class="pricing-hook">
+      <div class="pricing-hook-main">
+        You already spend <em>$50/month on skincare.</em><br>
+        $9.99 makes sure it's the right $50.
+      </div>
+      <div class="pricing-hook-sub">
+        The average skincare product costs $25. Most people buy 3–4 wrong ones before finding what works.<br>
+        <strong>One report. $9.99. No more wrong products.</strong>
+      </div>
+    </div>
+
+    <div class="plans">
+      <!-- FREE -->
+      <div class="plan">
+        <div class="plan-price">Free</div>
+        <div class="plan-reframe">Start here. No risk.</div>
+        <div class="plan-reframe2">See what your skin is actually telling you.</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-items">
+          <li class="on">Skin diagnosis + type</li>
+          <li class="on">Routine score (out of 100)</li>
+          <li class="on">3 immediate action steps</li>
+          <li class="on">1 key ingredient revealed</li>
+          <li class="off">Full routine proposal</li>
+          <li class="off">Ingredient conflict analysis</li>
+          <li class="off">4-week challenge plan</li>
+          <li class="off">Aftercare check-ins</li>
+        </ul>
+        <a href="full-survey-v4.html" onclick="showComingSoon(event)" class="plan-btn free">Get Free Report →</a>
+      </div>
+
+      <!-- PAID -->
+      <div class="plan featured">
+        <span class="plan-badge">Most Popular</span>
+        <div class="plan-price">$9<sub>.99</sub></div>
+        <div class="plan-reframe">Skip one takeout. Works 4 weeks.</div>
+        <div class="plan-reframe2">One-time · No subscription · Instant access</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-items">
+          <li class="on">Everything in Free</li>
+          <li class="on">Current products fully analyzed</li>
+          <li class="on">AM / PM / Makeup routine</li>
+          <li class="on">6 ingredients + conflict guide</li>
+          <li class="on">4-week interactive challenge</li>
+          <li class="on">K-beauty special care tips</li>
+          <li class="on">Amazon product links</li>
+          <li class="on">D3 · D14 · D28 check-ins</li>
+        </ul>
+        <a href="full-survey-v4.html?plan=paid" onclick="showComingSoon(event)" class="plan-btn paid">Get Full Report →</a>
+      </div>
+
+      <!-- SUBSCRIPTION -->
+      <div class="plan">
+        <div class="plan-price">$14<sub>.99/mo</sub></div>
+        <div class="plan-reframe">Skip one latte a month.</div>
+        <div class="plan-reframe2">Your skin, systematically improving every 4 weeks.</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-items">
+          <li class="on">Everything in Full Report</li>
+          <li class="on">New Archive Entry every 4 weeks</li>
+          <li class="on">Routine score tracked over time</li>
+          <li class="on">Seasonal routine updates</li>
+          <li class="on">Unlimited aftercare support</li>
+          <li class="on">Score history (42 → 68 → 79...)</li>
+          <li class="on">Priority new product curation</li>
+          <li class="on">Cancel anytime</li>
+        </ul>
+        <a href="full-survey-v4.html?plan=subscribe" onclick="showComingSoon(event)" class="plan-btn sub">Start Archive →</a>
+      </div>
+    </div>
+
+    <div class="pricing-bottom">
+      <div class="pb-line">No subscriptions required to start &nbsp;·&nbsp; No research required ever &nbsp;·&nbsp; Just follow the plan</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ REPORT PREVIEW ═══ -->
+<section class="preview reveal">
+  <div class="preview-inner">
+    <div class="section-eye">What $9.99 Looks Like</div>
+    <h2 class="section-title">Not a PDF.<br>A plan you actually follow.</h2>
+    <p class="preview-sub">Every section is built from your answers. Your products. Your skin. Your life. <em>Not a template. Yours.</em></p>
+    <div class="preview-grid">
+
+      <div class="pcard">
+        <div class="pcard-eye">Section 01</div>
+        <div class="pcard-title">Your Routine Score</div>
+        <div class="pcard-body">
+          <div class="score-row">
+            <span class="score-big">42</span>
+            <span class="score-arrow">→</span>
+            <span class="score-target">85</span>
+            <span style="font-size:11px;color:var(--muted);margin-left:4px;">potential</span>
+          </div>
+          <div class="score-bar"><div class="score-fill"></div></div>
+          <div class="score-note">2 fixes away from 85. Here's exactly what they are.</div>
+        </div>
+        <div class="ptag-row">
+          <span class="ptag g">CeraVe Cleanser ✓</span>
+          <span class="ptag w">Neutrogena SPF ↑</span>
+          <span class="ptag b">No oil cleanser !</span>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pcard-eye">Section 04</div>
+        <div class="pcard-title">Your AM Routine</div>
+        <div class="pcard-body">
+          <div class="step-row"><div class="sdot"></div>CeraVe Hydrating Cleanser<span class="sbadge" style="background:#E1F5EE;color:#085041;font-size:10px;padding:2px 7px;border-radius:8px;">Keep</span></div>
+          <div class="step-row"><div class="sdot"></div>Klairs Supple Preparation Toner<span class="sbadge" style="background:#FFF0EC;color:#993C1D;font-size:10px;padding:2px 7px;border-radius:8px;">New</span></div>
+          <div class="step-row"><div class="sdot"></div>CeraVe PM Lotion<span class="sbadge" style="background:#FFF0EC;color:#993C1D;font-size:10px;padding:2px 7px;border-radius:8px;">New</span></div>
+          <div class="step-row"><div class="sdot"></div>Beauty of Joseon SPF 50+<span class="sbadge" style="background:#FFF0EC;color:#993C1D;font-size:10px;padding:2px 7px;border-radius:8px;">Upgrade</span></div>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pcard-eye">Section 06 — Interactive</div>
+        <div class="pcard-title">4-Week Challenge Plan</div>
+        <div class="pcard-body">
+          <div class="week-row"><div class="wnum" style="background:#FFF8F6;color:#C97B63;">1</div><div style="font-size:12px;flex:1;">리셋 주간 — 3 checkboxes</div></div>
+          <div class="week-row"><div class="wnum" style="background:#F0FAF7;color:#7A9E8E;">2</div><div style="font-size:12px;flex:1;">수분 레이어링 — 3 checkboxes</div></div>
+          <div class="week-row"><div class="wnum" style="background:#FDF6EE;color:#B8935A;">3</div><div style="font-size:12px;flex:1;">트리트먼트 강화 — 3 checkboxes</div></div>
+          <div class="week-row"><div class="wnum" style="background:#F4F3FE;color:#534AB7;">4</div><div style="font-size:12px;flex:1;">평가 주간 — score review</div></div>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pcard-eye">After Care</div>
+        <div class="pcard-title">Your Curator Stays With You</div>
+        <div class="pcard-body" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="ac-row"><span class="ac-day" style="background:#FFF0EC;color:#993C1D;">Day 3</span><span style="font-size:12px;color:var(--muted);">구매 체크인 — what did you get?</span></div>
+          <div class="ac-row"><span class="ac-day" style="background:#FFF0EC;color:#993C1D;">Day 14</span><span style="font-size:12px;color:var(--muted);">2주 피드백 — is it working?</span></div>
+          <div class="ac-row"><span class="ac-day" style="background:#C8DDD6;color:#085041;">Day 28</span><span style="font-size:12px;color:var(--muted);">Archive No.002 시작 → score update</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ REVIEWS ═══ -->
+<section class="reviews reveal">
+  <div class="reviews-inner">
+    <div class="section-eye">Real Results</div>
+    <h2 class="section-title">Real people.<br>Real routines. Real scores.</h2>
+    <div class="reviews-grid">
+
+      <div class="review">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">"Finally someone told me WHY my skin was breaking out — not just what to buy."</div>
+        <div class="review-author">
+          <strong>Sarah L.</strong>
+          33 · Los Angeles · Oily skin
+        </div>
+        <div class="review-score">44 → 79 &nbsp;+35 points</div>
+      </div>
+
+      <div class="review">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">"I've been layering actives wrong for 2 years. The conflict analysis alone was worth every penny."</div>
+        <div class="review-author">
+          <strong>Mia K.</strong>
+          29 · New York · Combo skin
+        </div>
+        <div class="review-score">38 → 71 &nbsp;+33 points</div>
+      </div>
+
+      <div class="review">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">"The 42/100 wake-up call changed everything. I stopped guessing and just followed the plan."</div>
+        <div class="review-author">
+          <strong>Jamie P.</strong>
+          26 · Chicago · Dry skin
+        </div>
+        <div class="review-score">42 → 76 &nbsp;+34 points</div>
+      </div>
+
+    </div>
+    <p class="review-notice">* Representative examples from beta users. Individual results may vary.</p>
+  </div>
+</section>
+
+<!-- ═══ FINAL CTA ═══ -->
+<section class="final reveal" id="start">
+  <div class="final-inner">
+    <div class="section-eye">Start Now — It's Free</div>
+    <h2 class="final-title">Stop putting<br>it <em>off.</em></h2>
+    <p class="final-sub">
+      <em>3 minutes. 7 questions.</em><br>
+      You've been meaning to sort this out.<br>
+      You've been meaning to stop wasting money<br>
+      on products that don't work together.<br>
+      Today is 3 minutes.
+    </p>
+    <div class="final-feed">
+      You feed yourself every day.<br>
+      When did you last <strong>feed your skin?</strong>
+    </div>
+    <a href="full-survey-v4.html" onclick="showComingSoon(event)" class="final-btn">
+      Start Your Free Skin Report →
+    </a>
+    <div class="final-note">
+      No credit card &nbsp;·&nbsp; No commitment &nbsp;·&nbsp; Just answers.
+    </div>
+    <div class="final-disclaimer">
+      *This report contains affiliate links. Purchasing through our links supports Seoul Skin Atelier at no additional cost to you. This is not medical advice.
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Seoul Skin Atelier</div>
+  <div class="footer-links">
+    <a href="/pricing.html">Pricing</a>
+    <a href="/terms.html">Terms</a>
+    <a href="/privacy.html">Privacy</a>
+    <a href="/refund.html">Refund Policy</a>
+    <a href="mailto:hi@seoulskinatelier.com">Contact</a>
+  </div>
+</footer>
+
+<script>
+// Nav scroll
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) e.target.classList.add('visible');
+  });
+}, {threshold: 0.08});
+document.querySelectorAll('.reveal').forEach(r => observer.observe(r));
+</script>
+
+<!-- ═══ COMING SOON MODAL ═══ -->
+<div id="comingSoonModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(28,20,16,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:center;justify-content:center;">
+  <div style="background:#FAF7F2;border-radius:24px;padding:40px 36px;max-width:380px;width:90%;text-align:center;position:relative;animation:popIn .3s cubic-bezier(.34,1.56,.64,1);">
+    <button onclick="closeComingSoon()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:18px;color:#8C7B6E;cursor:pointer;line-height:1;">✕</button>
+    <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#E8C4B0,#C97B63);margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-size:22px;">✦</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#C97B63;margin-bottom:10px;">Coming Soon</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;font-style:italic;color:#1C1410;line-height:1.2;margin-bottom:12px;">Opening in<br><em style="color:#C97B63;">April 2026.</em></div>
+    <p style="font-size:13px;color:#8C7B6E;line-height:1.7;margin-bottom:22px;">We're putting the final touches on your personalized K-beauty experience. Leave your email and you'll be the first to know.</p>
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <input type="email" id="waitlistEmail" placeholder="your@email.com" style="flex:1;padding:12px 14px;border:.5px solid rgba(28,20,16,.2);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;background:white;outline:none;color:#1C1410;">
+      <button onclick="joinWaitlist()" style="padding:12px 16px;background:linear-gradient(135deg,#E8C4B0,#C97B63);color:white;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;">Notify me →</button>
+    </div>
+    <div id="waitlistMsg" style="font-size:12px;color:#7A9E8E;display:none;margin-bottom:8px;">✓ You're on the list! We'll be in touch soon.</div>
+    <div style="font-size:11px;color:rgba(28,20,16,.25);">No spam · Unsubscribe anytime</div>
+  </div>
+</div>
+
+<style>
+@keyframes popIn{from{transform:scale(.85);opacity:0;}to{transform:scale(1);opacity:1;}}
+</style>
+
+<script>
+function showComingSoon(e){
+  e.preventDefault();
+  const modal = document.getElementById('comingSoonModal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeComingSoon(){
+  document.getElementById('comingSoonModal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+function joinWaitlist(){
+  const email = document.getElementById('waitlistEmail').value.trim();
+  if(!email || !email.includes('@')){
+    document.getElementById('waitlistEmail').style.borderColor = '#C97B63';
+    return;
+  }
+  document.getElementById('waitlistMsg').style.display = 'block';
+  document.getElementById('waitlistEmail').style.display = 'none';
+  document.querySelector('[onclick="joinWaitlist()"]').style.display = 'none';
+}
+document.getElementById('comingSoonModal').addEventListener('click', function(e){
+  if(e.target === this) closeComingSoon();
+});
+</script>
+</body>
+</html>

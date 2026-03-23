@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>엠마님의 스킨 아카이브 — Seoul Skin Atelier</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FAF7F2;--ink:#1C1410;--rose:#C97B63;--blush:#E8C4B0;
+  --muted:#8C7B6E;--sand:#F0E8DF;--sage:#7A9E8E;--sage-light:#C8DDD6;
+  --gold:#B8935A;--warn:#C45A3A;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);font-size:14px;line-height:1.7;}
+
+/* COVER */
+.cover{background:var(--ink);min-height:85vh;display:flex;flex-direction:column;justify-content:flex-end;padding:52px 40px;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;top:-80px;right:-80px;width:420px;height:420px;background:radial-gradient(circle,rgba(201,123,99,.13) 0%,transparent 60%);border-radius:50%;}
+.cover-brand{position:absolute;top:40px;left:40px;font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:rgba(250,247,242,.3);}
+.cover-badge{position:absolute;top:40px;right:40px;font-size:10px;padding:4px 12px;border:1px solid rgba(250,247,242,.15);border-radius:20px;color:rgba(250,247,242,.3);letter-spacing:1px;}
+.cover-eye{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--blush);opacity:.6;margin-bottom:14px;}
+.cover-title{font-family:'Cormorant Garamond',serif;font-size:clamp(38px,6vw,68px);font-weight:400;font-style:italic;color:#FAF7F2;line-height:1.05;margin-bottom:18px;}
+.cover-title span{color:var(--blush);}
+.cover-meta{display:flex;gap:8px;flex-wrap:wrap;}
+.meta-pill{font-size:11px;padding:4px 12px;border:1px solid rgba(250,247,242,.13);border-radius:20px;color:rgba(250,247,242,.35);}
+.meta-pill.on{border-color:var(--blush);color:var(--blush);}
+
+/* SCORE BANNER */
+.score-banner{background:white;border-bottom:.5px solid rgba(28,20,16,.08);padding:20px 40px;display:flex;align-items:center;gap:20px;}
+.score-wrap{display:flex;align-items:baseline;gap:6px;}
+.score-num{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:500;color:var(--gold);line-height:1;}
+.score-denom{font-size:14px;color:var(--muted);}
+.score-divider{width:.5px;height:44px;background:rgba(28,20,16,.1);}
+.score-text{flex:1;}
+.score-label{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+.score-desc{font-size:13px;color:var(--ink);line-height:1.5;}
+.score-bar-wrap{flex:1;display:flex;flex-direction:column;gap:5px;}
+.score-bar-track{height:6px;background:rgba(28,20,16,.07);border-radius:3px;overflow:hidden;}
+.score-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--warn),var(--gold));transition:width 1.2s ease;}
+
+/* MAIN */
+.main{max-width:680px;margin:0 auto;padding:48px 28px 80px;}
+.section{margin-bottom:52px;}
+.sec-eye{font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--rose);margin-bottom:6px;}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,4vw,36px);font-weight:400;font-style:italic;color:var(--ink);margin-bottom:6px;line-height:1.15;}
+.sec-sub{font-size:13px;color:var(--muted);margin-bottom:24px;padding-bottom:16px;border-bottom:.5px solid rgba(28,20,16,.08);}
+
+/* CURATOR NOTE */
+.cn{background:var(--ink);border-radius:14px;padding:22px 26px;margin-bottom:20px;position:relative;overflow:hidden;}
+.cn::before{content:'';position:absolute;bottom:-24px;right:-24px;width:120px;height:120px;background:radial-gradient(circle,rgba(201,123,99,.2) 0%,transparent 70%);border-radius:50%;}
+.cn-eye{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--blush);opacity:.5;margin-bottom:7px;}
+.cn-text{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:#FAF7F2;line-height:1.7;}
+
+/* DIAGNOSIS CARDS */
+.diag-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px;}
+.diag-card{background:white;border:.5px solid rgba(28,20,16,.08);border-radius:12px;padding:14px;}
+.dc-label{font-size:10px;color:var(--muted);margin-bottom:4px;letter-spacing:.5px;}
+.dc-val{font-size:17px;font-weight:500;color:var(--ink);}
+.dc-note{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4;}
+.dc-insight{background:rgba(28,20,16,.03);border-left:2px solid var(--rose);border-radius:0 8px 8px 0;padding:10px 14px;font-size:12px;color:var(--ink);line-height:1.6;margin-bottom:8px;}
+.dc-insight strong{color:var(--rose);}
+
+/* ACTION STEPS */
+.action-step{display:flex;gap:14px;padding:16px 0;border-bottom:.5px solid rgba(28,20,16,.07);}
+.action-step:last-child{border-bottom:none;}
+.as-num{width:32px;height:32px;border-radius:50%;background:var(--ink);color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0;margin-top:1px;}
+.as-body{flex:1;}
+.as-title{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:3px;}
+.as-desc{font-size:12px;color:var(--muted);line-height:1.6;}
+.as-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;margin-top:5px;}
+.as-tag.do{background:#E1F5EE;color:#085041;}
+.as-tag.warn{background:#FFF0EC;color:#993C1D;}
+
+/* INGREDIENT PREVIEW */
+.ing-preview{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;}
+.ing-card{background:white;border:.5px solid rgba(28,20,16,.08);border-radius:12px;padding:13px;}
+.ing-card.locked{position:relative;overflow:hidden;}
+.ing-card.locked::after{content:'🔒 풀 리포트에서 확인';position:absolute;inset:0;background:rgba(250,247,242,.88);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--muted);backdrop-filter:blur(2px);}
+.ic-sym{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;margin-bottom:8px;}
+.ic-name{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:2px;}
+.ic-eng{font-size:10px;color:var(--muted);margin-bottom:5px;}
+.ic-why{font-size:12px;color:var(--muted);line-height:1.5;}
+.ic-badge{font-size:9px;font-weight:500;padding:2px 7px;border-radius:10px;margin-bottom:6px;display:inline-block;}
+
+/* PREVIEW LOCK SECTION */
+.preview-wrap{border:.5px solid rgba(28,20,16,.08);border-radius:16px;overflow:hidden;margin-bottom:8px;}
+.preview-header{background:rgba(28,20,16,.03);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:.5px solid rgba(28,20,16,.08);}
+.ph-title{font-size:13px;font-weight:500;color:var(--ink);}
+.ph-lock{font-size:11px;color:var(--muted);background:rgba(28,20,16,.06);padding:3px 10px;border-radius:20px;}
+.preview-body{padding:14px 16px;position:relative;}
+.preview-blur{filter:blur(4px);opacity:.4;pointer-events:none;user-select:none;}
+.preview-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.po-badge{background:white;border:.5px solid rgba(28,20,16,.12);border-radius:20px;padding:7px 16px;font-size:12px;font-weight:500;color:var(--muted);box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.preview-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:.5px solid rgba(28,20,16,.05);}
+.preview-row:last-child{border-bottom:none;}
+.pr-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.pr-text{font-size:13px;color:var(--ink);}
+.pr-tag{font-size:10px;padding:2px 8px;border-radius:10px;margin-left:auto;flex-shrink:0;}
+
+/* CTA */
+.cta-wrap{background:var(--ink);border-radius:20px;padding:36px 32px;text-align:center;position:relative;overflow:hidden;}
+.cta-wrap::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(201,123,99,.18) 0%,transparent 70%);border-radius:50%;}
+.cta-wrap::after{content:'';position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(122,158,142,.12) 0%,transparent 70%);border-radius:50%;}
+.cta-eye{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--blush);opacity:.6;margin-bottom:10px;}
+.cta-title{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,4vw,38px);font-style:italic;color:#FAF7F2;line-height:1.15;margin-bottom:10px;position:relative;}
+.cta-sub{font-size:13px;color:rgba(250,247,242,.4);margin-bottom:24px;line-height:1.7;position:relative;}
+.cta-what{background:rgba(250,247,242,.06);border-radius:12px;padding:16px 20px;margin-bottom:24px;text-align:left;position:relative;}
+.cta-what-title{font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:rgba(250,247,242,.35);margin-bottom:10px;}
+.cta-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px;color:rgba(250,247,242,.7);line-height:1.5;}
+.cta-item-dot{width:14px;height:14px;border-radius:50%;background:rgba(201,123,99,.25);display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--blush);flex-shrink:0;margin-top:2px;}
+.cta-btn{display:block;background:linear-gradient(135deg,var(--blush),var(--rose));color:white;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;padding:16px 28px;border-radius:13px;text-decoration:none;margin-bottom:8px;position:relative;}
+.cta-btn-sub{font-size:11px;color:rgba(250,247,242,.22);position:relative;}
+.cta-price{font-size:12px;color:rgba(250,247,242,.35);margin-top:14px;position:relative;padding-top:14px;border-top:.5px solid rgba(250,247,242,.08);}
+
+.disclaimer{font-size:11px;color:var(--muted);line-height:1.7;padding:18px;background:white;border-radius:12px;border:.5px solid rgba(28,20,16,.06);margin-top:24px;}
+
+@media(max-width:600px){
+  .cover,.score-banner{padding-left:20px;padding-right:20px;}
+  .cover-brand,.cover-badge{left:20px;top:28px;}
+  .cover-badge{right:20px;left:auto;}
+  .main{padding:36px 16px 60px;}
+  .ing-preview{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-brand">Seoul Skin Atelier</div>
+  <div class="cover-badge">Free Report</div>
+  <div class="cover-eye">Skin Archive — 스킨 진단 리포트</div>
+  <div class="cover-title">엠마님의<br>피부, <span>처음으로<br>제대로 읽혔어요.</span></div>
+  <div class="cover-meta">
+    <span class="meta-pill on">복합성 피부</span>
+    <span class="meta-pill on">트러블 고민</span>
+    <span class="meta-pill">2026년 3월</span>
+  </div>
+</div>
+
+<!-- SCORE BANNER -->
+<div class="score-banner">
+  <div class="score-wrap">
+    <div class="score-num" id="score-display">0</div>
+    <div class="score-denom">/ 100</div>
+  </div>
+  <div class="score-divider"></div>
+  <div class="score-text">
+    <div class="score-label">현재 루틴 점수</div>
+    <div class="score-desc">기초는 탄탄해요. 핵심 2가지만 바꾸면 <strong>85점</strong>까지 올라가요.</div>
+    <div class="score-bar-wrap" style="margin-top:8px;">
+      <div class="score-bar-track"><div class="score-bar-fill" id="score-bar" style="width:0%;"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- S1: 피부 진단 -->
+<div class="section" id="s1">
+  <div class="sec-eye">Section 01</div>
+  <div class="sec-title">엠마님의 피부 진단</div>
+  <div class="sec-sub">설문 답변을 분석한 결과예요. 생각보다 정확할 거예요.</div>
+
+  <div class="cn">
+    <div class="cn-eye">큐레이터의 한마디</div>
+    <div class="cn-text">"엠마님 피부의 진짜 문제는 트러블이 아니에요. 탈수예요. 사무실 에어컨이 매일 수분을 빼앗고, 피부가 방어 반응으로 피지를 과분비하고, 그게 트러블이 돼요. 수분부터 채우면 트러블도 같이 줄어요."</div>
+  </div>
+
+  <div class="diag-grid">
+    <div class="diag-card">
+      <div class="dc-label">피부 타입</div>
+      <div class="dc-val">탈수성 복합피부</div>
+      <div class="dc-note">T존 지성 + 볼 건성 — 동시에</div>
+    </div>
+    <div class="diag-card">
+      <div class="dc-label">장벽 상태</div>
+      <div class="dc-val" style="color:#C45A3A;">보통 — 주의</div>
+      <div class="dc-note">액티브 성분 전에 회복 필요</div>
+    </div>
+    <div class="diag-card">
+      <div class="dc-label">트러블 원인</div>
+      <div class="dc-val">SPF 잔여물</div>
+      <div class="dc-note">더블 클렌징 없는 것이 문제</div>
+    </div>
+    <div class="diag-card">
+      <div class="dc-label">피부 목표까지</div>
+      <div class="dc-val" style="color:#7A9E8E;">약 8주</div>
+      <div class="dc-note">루틴 픽스하면 충분히 가능해요</div>
+    </div>
+  </div>
+
+  <div class="dc-insight">
+    <strong>엠마님만의 인사이트</strong> — 저녁에 폼클렌저만 쓰면 아침에 바른 SPF가 완전히 제거되지 않아요. 이 잔여물이 모공에 쌓이면서 트러블 사이클을 만들고 있어요. 오일 클렌저 하나가 이 사이클을 끊어요.
+  </div>
+</div>
+
+<!-- S2: 지금 당장 할 것 -->
+<div class="section" id="s2">
+  <div class="sec-eye">Section 02</div>
+  <div class="sec-title">지금 당장 할 것 3가지</div>
+  <div class="sec-sub">복잡하게 생각하지 않아도 돼요. 이것만 먼저예요.</div>
+
+  <div class="action-step">
+    <div class="as-num">1</div>
+    <div class="as-body">
+      <div class="as-title">저녁에 오일 클렌저 추가하기</div>
+      <div class="as-desc">폼클렌저 전에 클렌징 밤 or 오일 클렌저로 1차 세안을 먼저 해요. SPF + 가벼운 메이크업을 완전히 녹여내요. 이것만 해도 트러블이 줄어요.</div>
+      <span class="as-tag do">저녁 매일</span>
+      <span class="as-tag warn">지금 가장 급한 것</span>
+    </div>
+  </div>
+
+  <div class="action-step">
+    <div class="as-num">2</div>
+    <div class="as-body">
+      <div class="as-title">SPF 절대 생략하지 않기</div>
+      <div class="as-desc">트러블 흔적이 다크스팟으로 굳는 걸 막는 유일한 방법이 SPF예요. 끈적이지 않는 K-뷰티 선크림으로 바꾸면 바르기가 훨씬 쉬워져요.</div>
+      <span class="as-tag do">아침 매일 · 예외 없음</span>
+    </div>
+  </div>
+
+  <div class="action-step">
+    <div class="as-num">3</div>
+    <div class="as-body">
+      <div class="as-title">토너로 수분 레이어링 시작하기</div>
+      <div class="as-desc">세안 후 바로 보습제로 가지 말고, 수분 토너를 한 겹 먼저 올려요. 에어컨 탈수를 직접 보완해줘요. 이게 피지 과분비 사이클을 끊는 시작이에요.</div>
+      <span class="as-tag do">아침 + 저녁</span>
+    </div>
+  </div>
+</div>
+
+<!-- S3: 성분 미리보기 -->
+<div class="section" id="s3">
+  <div class="sec-eye">Section 03</div>
+  <div class="sec-title">엠마님 피부에 맞는 성분</div>
+  <div class="sec-sub">지금 피부 상태에 맞는 성분 중 1개만 공개해요. 나머지 5개는 풀 리포트에서.</div>
+
+  <div class="ing-preview">
+    <!-- 공개 1개 -->
+    <div class="ing-card">
+      <div class="ic-sym" style="background:#E1F5EE;">🧪</div>
+      <span class="ic-badge" style="background:#FFF0EC;color:#993C1D;">Phase 1 핵심</span>
+      <div class="ic-name">BHA</div>
+      <div class="ic-eng">Salicylic Acid 0.5~2%</div>
+      <div class="ic-why">모공 속 피지를 직접 녹여요. 복합성 트러블 피부 1순위.</div>
+    </div>
+
+    <!-- 잠금 5개 -->
+    <div class="ing-card locked">
+      <div class="ic-sym" style="background:#C8DDD6;">🛡</div>
+      <div class="ic-name">세라마이드</div>
+      <div class="ic-eng">Ceramide 1, 3, 6</div>
+    </div>
+    <div class="ing-card locked">
+      <div class="ic-sym" style="background:#E6F1FB;">💧</div>
+      <div class="ic-name">히알루론산</div>
+      <div class="ic-eng">Hyaluronic Acid</div>
+    </div>
+    <div class="ing-card locked">
+      <div class="ic-sym" style="background:#FAEEDA;">✨</div>
+      <div class="ic-name">나이아신아마이드</div>
+      <div class="ic-eng">Niacinamide 5~10%</div>
+    </div>
+    <div class="ing-card locked">
+      <div class="ic-sym" style="background:#C8DDD6;">🌿</div>
+      <div class="ic-name">센텔라</div>
+      <div class="ic-eng">Centella Asiatica</div>
+    </div>
+    <div class="ing-card locked">
+      <div class="ic-sym" style="background:#E1F5EE;">🐌</div>
+      <div class="ic-name">달팽이 분비액</div>
+      <div class="ic-eng">Snail Secretion 96%</div>
+    </div>
+  </div>
+
+  <div style="background:rgba(28,20,16,.04);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--muted);text-align:center;">
+    + 나머지 성분 5개 · 피해야 할 성분 4개 · 성분 충돌 가이드는 풀 리포트에서 확인해요
+  </div>
+</div>
+
+<!-- S4: 풀 리포트 프리뷰 + CTA -->
+<div class="section" id="s4">
+  <div class="sec-eye">Section 04</div>
+  <div class="sec-title">피부에 맞는 성분부터<br>리포트 확인</div>
+  <div class="sec-sub">엠마님 데이터로 이미 만들어진 내용이에요. 지금 바로 열 수 있어요.</div>
+
+  <!-- 잠긴 섹션 미리보기 -->
+  <div class="preview-wrap" style="margin-bottom:10px;">
+    <div class="preview-header">
+      <div class="ph-title">맞춤 루틴 제안 — AM / PM / 메이크업 전</div>
+      <div class="ph-lock">🔒 잠김</div>
+    </div>
+    <div class="preview-body">
+      <div class="preview-blur">
+        <div class="preview-row"><div class="pr-dot" style="background:#C97B63;"></div><div class="pr-text">Step 1 — CeraVe Hydrating Cleanser</div><span class="pr-tag" style="background:#E1F5EE;color:#085041;">지금 쓰는 제품</span></div>
+        <div class="preview-row"><div class="pr-dot" style="background:#C97B63;"></div><div class="pr-text">Step 2 — Klairs Supple Preparation Toner</div><span class="pr-tag" style="background:#FFF0EC;color:#993C1D;">새로 추가</span></div>
+        <div class="preview-row"><div class="pr-dot" style="background:#C97B63;"></div><div class="pr-text">Step 3 — CeraVe PM Lotion + Amazon 링크</div><span class="pr-tag" style="background:#FFF0EC;color:#993C1D;">새로 추가</span></div>
+        <div class="preview-row"><div class="pr-dot" style="background:#C97B63;"></div><div class="pr-text">Step 4 — Beauty of Joseon Relief Sun</div><span class="pr-tag" style="background:#FFF0EC;color:#993C1D;">교체 추천</span></div>
+      </div>
+      <div class="preview-overlay"><div class="po-badge">풀 리포트에서 확인</div></div>
+    </div>
+  </div>
+
+  <div class="preview-wrap" style="margin-bottom:10px;">
+    <div class="preview-header">
+      <div class="ph-title">4주 챌린지 플랜 — 체크리스트</div>
+      <div class="ph-lock">🔒 잠김</div>
+    </div>
+    <div class="preview-body">
+      <div class="preview-blur">
+        <div class="preview-row"><div class="pr-dot" style="background:#7A9E8E;"></div><div class="pr-text">Week 1 — 리셋 주간 · 3가지 체크리스트</div></div>
+        <div class="preview-row"><div class="pr-dot" style="background:#7A9E8E;"></div><div class="pr-text">Week 2 — 수분 레이어링 · 3가지 체크리스트</div></div>
+        <div class="preview-row"><div class="pr-dot" style="background:#B8935A;"></div><div class="pr-text">Week 3 — 트리트먼트 강화 · BHA 빈도 증가</div></div>
+        <div class="preview-row"><div class="pr-dot" style="background:#534AB7;"></div><div class="pr-text">Week 4 — 평가 주간 · 엔트리 No.002 준비</div></div>
+      </div>
+      <div class="preview-overlay"><div class="po-badge">풀 리포트에서 확인</div></div>
+    </div>
+  </div>
+
+  <div class="preview-wrap" style="margin-bottom:24px;">
+    <div class="preview-header">
+      <div class="ph-title">스페셜 케어 제안 4가지</div>
+      <div class="ph-lock">🔒 잠김</div>
+    </div>
+    <div class="preview-body">
+      <div class="preview-blur">
+        <div class="preview-row"><div class="pr-dot" style="background:#C97B63;"></div><div class="pr-text">거즈 토너 마스크 — 에스테틱 시술 전 루틴</div><span class="pr-tag" style="background:#E6F1FB;color:#0C447C;">주 2~3회</span></div>
+        <div class="preview-row"><div class="pr-dot" style="background:#C97B63;"></div><div class="pr-text">여드름 패치 오버나이트 — 한국 SNS 바이럴</div><span class="pr-tag" style="background:#FAEEDA;color:#633806;">필요시마다</span></div>
+        <div class="preview-row"><div class="pr-dot" style="background:#C97B63;"></div><div class="pr-text">꿀 슬리핑 마스크 — 한국 전통 뷰티</div><span class="pr-tag" style="background:#FAEEDA;color:#633806;">주 1회</span></div>
+      </div>
+      <div class="preview-overlay"><div class="po-badge">풀 리포트에서 확인</div></div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-wrap">
+    <div class="cta-eye">Full Atelier Report</div>
+    <div class="cta-title">엠마님 데이터로<br>이미 다 만들어져 있어요.</div>
+    <div class="cta-sub">설문에 입력한 제품들, 피부 고민, 기후, 생활패턴 — 전부 반영됐어요.<br>지금 바로 열어볼 수 있어요.</div>
+    <div class="cta-what">
+      <div class="cta-what-title">풀 리포트에 포함된 것</div>
+      <div class="cta-item"><div class="cta-item-dot">+</div>현재 사용 제품 5개 전수 분석 (계속 쓸 것 / 교체 추천 / 충돌 발견)</div>
+      <div class="cta-item"><div class="cta-item-dot">+</div>AM / PM / 메이크업 전 맞춤 루틴 + Amazon 구매 링크</div>
+      <div class="cta-item"><div class="cta-item-dot">+</div>피해야 할 성분 4개 + 성분 충돌 가이드</div>
+      <div class="cta-item"><div class="cta-item-dot">+</div>4주 챌린지 플랜 인터랙티브 체크리스트</div>
+      <div class="cta-item"><div class="cta-item-dot">+</div>한국 에스테틱 스페셜 케어 4가지</div>
+      <div class="cta-item"><div class="cta-item-dot">+</div>D3 · D14 · D28 애프터케어 — 큐레이터가 계속 함께해요</div>
+    </div>
+    <a href="#" class="cta-btn">풀 리포트 열기 — $9.99</a>
+    <div class="cta-btn-sub">1회 결제 · 구독 아님 · 지금 바로 다운로드</div>
+    <div class="cta-price">또는 월간 아카이브 구독 $14.99 / 월 — 매달 새 리포트 + 애프터케어 포함</div>
+  </div>
+
+  <div class="disclaimer">
+    <strong>면책 조항:</strong> 이 리포트는 의학적 조언이 아닙니다. 추천 내용은 일반적인 스킨케어 원칙과 자가 보고된 피부 프로필을 바탕으로 합니다. 피부 관련 의학적 문제는 전문 피부과 의사와 상담하시기 바랍니다.
+  </div>
+</div>
+
+</div>
+
+<script>
+/* 점수 카운트 업 애니메이션 */
+const target = 42;
+const bar = document.getElementById('score-bar');
+const display = document.getElementById('score-display');
+let current = 0;
+const step = () => {
+  if (current < target) {
+    current = Math.min(current + 1, target);
+    display.textContent = current;
+    bar.style.width = (current) + '%';
+    setTimeout(step, 28);
+  }
+};
+setTimeout(step, 600);
+</script>
+</body>
+</html>

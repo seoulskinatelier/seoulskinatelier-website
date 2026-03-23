@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — Seoul Skin Atelier</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1C1410;--cream:#FAF7F2;--rose:#C97B63;--blush:#E8C4B0;--muted:#8C7B6E;--sand:#F0E8DF;--sage:#7A9E8E;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);}
+nav{padding:20px 48px;display:flex;justify-content:space-between;align-items:center;border-bottom:.5px solid rgba(28,20,16,.1);}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-size:15px;letter-spacing:3px;text-transform:uppercase;color:var(--ink);text-decoration:none;}
+.hero{background:var(--ink);padding:80px 48px 60px;text-align:center;}
+.eye{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--blush);opacity:.6;margin-bottom:12px;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,5vw,60px);font-weight:400;font-style:italic;color:#FAF7F2;line-height:1.1;margin-bottom:14px;}
+.hero h1 em{color:var(--blush);}
+.hero p{font-size:14px;color:rgba(250,247,242,.4);max-width:460px;margin:0 auto;}
+.main{max-width:1000px;margin:0 auto;padding:64px 24px 80px;}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:60px;}
+.plan{border-radius:20px;overflow:hidden;border:.5px solid rgba(28,20,16,.1);}
+.plan.featured{border:2px solid var(--rose);}
+.plan-head{padding:28px 24px 20px;}
+.plan-eye{font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:.6;}
+.plan-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;margin-bottom:4px;}
+.plan-price{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:300;line-height:1;margin-bottom:4px;}
+.plan-price sup{font-size:18px;vertical-align:super;}
+.plan-price sub{font-size:13px;color:var(--muted);}
+.plan-desc{font-size:12px;line-height:1.6;margin-top:8px;}
+.plan-body{padding:0 24px 24px;background:white;}
+.plan-divider{height:.5px;background:rgba(28,20,16,.08);margin-bottom:16px;}
+.plan-feature{display:flex;gap:8px;align-items:flex-start;padding:5px 0;font-size:13px;line-height:1.5;color:var(--ink);}
+.plan-feature::before{content:'✦';font-size:10px;color:var(--rose);flex-shrink:0;margin-top:3px;}
+.plan-cta{display:block;text-align:center;padding:13px;border-radius:10px;font-size:13px;font-weight:500;text-decoration:none;margin-top:16px;transition:opacity .2s;}
+.cta-free{background:rgba(28,20,16,.06);color:var(--ink);}
+.cta-paid{background:linear-gradient(135deg,var(--blush),var(--rose));color:white;}
+.cta-sub{background:var(--ink);color:#FAF7F2;}
+.badge{display:inline-block;font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:20px;background:var(--rose);color:white;margin-left:8px;vertical-align:middle;}
+.compare{margin-top:48px;}
+.compare h2{font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic;margin-bottom:24px;text-align:center;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{padding:10px 16px;text-align:left;font-weight:500;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);border-bottom:.5px solid rgba(28,20,16,.1);}
+td{padding:12px 16px;border-bottom:.5px solid rgba(28,20,16,.06);}
+td:not(:first-child){text-align:center;}
+.check{color:var(--sage);font-size:15px;}
+.cross{color:rgba(28,20,16,.2);font-size:15px;}
+.faq{margin-top:60px;}
+.faq h2{font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic;margin-bottom:24px;}
+.faq-item{border-bottom:.5px solid rgba(28,20,16,.08);padding:16px 0;}
+.faq-q{font-size:14px;font-weight:500;margin-bottom:6px;}
+.faq-a{font-size:13px;color:var(--muted);line-height:1.7;}
+footer{background:var(--ink);padding:32px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+.footer-brand{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:2px;text-transform:uppercase;color:rgba(250,247,242,.4);}
+.footer-links{display:flex;gap:20px;}
+.footer-links a{font-size:12px;color:rgba(250,247,242,.3);text-decoration:none;}
+.footer-links a:hover{color:var(--blush);}
+@media(max-width:640px){.plans{grid-template-columns:1fr;}nav{padding:16px 20px;}.hero{padding:60px 20px 40px;}.main{padding:40px 16px 60px;}footer{padding:24px 20px;flex-direction:column;text-align:center;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-brand">Seoul Skin Atelier</a>
+  <a href="/full-survey-v4.html" style="font-size:12px;font-weight:500;padding:8px 20px;border-radius:20px;background:var(--rose);color:white;text-decoration:none;">Get Free Analysis →</a>
+</nav>
+
+<div class="hero">
+  <div class="eye">Pricing</div>
+  <h1>Simple pricing.<br><em>Real results.</em></h1>
+  <p>Start free. Upgrade when you're ready. No hidden fees.</p>
+</div>
+
+<div class="main">
+  <div class="plans">
+
+    <!-- Free -->
+    <div class="plan">
+      <div class="plan-head" style="background:var(--sand);">
+        <div class="plan-eye" style="color:var(--muted);">Free</div>
+        <div class="plan-name">Skin Reading</div>
+        <div class="plan-price"><sup></sup>$0</div>
+        <div class="plan-desc" style="color:var(--muted);">Take the analysis. See your skin score and 3 immediate action steps.</div>
+      </div>
+      <div class="plan-body">
+        <div class="plan-divider"></div>
+        <div class="plan-feature">Skin type + barrier status diagnosis</div>
+        <div class="plan-feature">Routine score out of 100</div>
+        <div class="plan-feature">3 "Do This Now" action steps</div>
+        <div class="plan-feature">1 key ingredient revealed</div>
+        <div class="plan-feature">Curator insight</div>
+        <a href="/full-survey-v4.html" class="plan-cta cta-free">Get Free Analysis →</a>
+      </div>
+    </div>
+
+    <!-- Full Report -->
+    <div class="plan featured">
+      <div class="plan-head" style="background:var(--ink);">
+        <div class="plan-eye" style="color:var(--blush);">One-time <span class="badge">Most Popular</span></div>
+        <div class="plan-name" style="color:#FAF7F2;">Full Atelier Report</div>
+        <div class="plan-price" style="color:#FAF7F2;"><sup>$</sup>9<span style="font-size:28px;">.99</span></div>
+        <div class="plan-desc" style="color:rgba(250,247,242,.4);">Your complete K-beauty routine. Built from your answers. Delivered in 2 minutes.</div>
+      </div>
+      <div class="plan-body">
+        <div class="plan-divider"></div>
+        <div class="plan-feature">Everything in Free</div>
+        <div class="plan-feature">Full skin diagnosis + current product analysis</div>
+        <div class="plan-feature">AM / PM / Makeup routine with Amazon links</div>
+        <div class="plan-feature">6 key ingredients + 4 to avoid</div>
+        <div class="plan-feature">Full ingredient conflict guide</div>
+        <div class="plan-feature">4-week interactive challenge plan</div>
+        <div class="plan-feature">4 K-beauty special care treatments</div>
+        <div class="plan-feature">Day 3, 14, 28 curator check-ins</div>
+        <a href="/full-survey-v4.html" class="plan-cta cta-paid">Get My Full Report →</a>
+      </div>
+    </div>
+
+    <!-- Monthly Archive -->
+    <div class="plan">
+      <div class="plan-head" style="background:var(--rose);">
+        <div class="plan-eye" style="color:rgba(255,255,255,.6);">Monthly Subscription</div>
+        <div class="plan-name" style="color:white;">Monthly Archive</div>
+        <div class="plan-price" style="color:white;"><sup>$</sup>14<span style="font-size:28px;">.99</span><sub style="color:rgba(255,255,255,.6);">/mo</sub></div>
+        <div class="plan-desc" style="color:rgba(255,255,255,.6);">Your skin, systematically improving. New entry every 4 weeks.</div>
+      </div>
+      <div class="plan-body">
+        <div class="plan-divider"></div>
+        <div class="plan-feature">Everything in Full Report</div>
+        <div class="plan-feature">New Archive Entry every 4 weeks</div>
+        <div class="plan-feature">Routine score tracked over time</div>
+        <div class="plan-feature">Seasonal routine adjustments</div>
+        <div class="plan-feature">Priority new K-beauty curation</div>
+        <div class="plan-feature">Skin problem aftercare support</div>
+        <div class="plan-feature">Cancel anytime · Your data is yours</div>
+        <a href="/full-survey-v4.html?plan=subscribe" class="plan-cta cta-sub">Start My Archive →</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Compare Table -->
+  <div class="compare">
+    <h2>Full comparison</h2>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Free</th>
+            <th>$9.99</th>
+            <th>$14.99/mo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Skin analysis (7 steps)</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Routine score</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Curator insight</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Full ingredient analysis (6)</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>AM / PM / Makeup routine</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Amazon product links</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>4-week challenge plan</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>K-beauty special care</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>D3 · D14 · D28 check-ins</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Monthly new entry</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Score tracked over time</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Aftercare support</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="check">✓</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq">
+    <h2>Common questions</h2>
+    <div class="faq-item">
+      <div class="faq-q">When do I receive my report?</div>
+      <div class="faq-a">Within 2 minutes of completing the analysis and payment. It's delivered directly to your inbox.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I upgrade from $9.99 to the monthly plan?</div>
+      <div class="faq-a">Yes. After receiving your report, you'll receive an email with a discount code to apply your $9.99 toward your first month.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I cancel my subscription?</div>
+      <div class="faq-a">You can cancel anytime from your account or by emailing <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f79f9eb7849298829b849c9e999683929b9e9285d994989a">[email&#160;protected]</a>. No questions asked.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is this medical advice?</div>
+      <div class="faq-a">No. Seoul Skin Atelier provides personalized skincare guidance based on your self-reported skin profile. This is not medical advice. For medical skin concerns, please consult a licensed dermatologist.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What payment methods do you accept?</div>
+      <div class="faq-a">All major credit cards, PayPal, and Apple Pay via Paddle — a secure, globally trusted payment platform.</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-brand">Seoul Skin Atelier</div>
+  <div class="footer-links">
+    <a href="/terms.html">Terms</a>
+    <a href="/privacy.html">Privacy</a>
+    <a href

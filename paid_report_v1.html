@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emma's Atelier Report — Seoul Skin Atelier</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:#FAF7F2; --ink:#1C1410; --rose:#C97B63; --blush:#E8C4B0;
+  --muted:#8C7B6E; --sand:#F0E8DF; --sage:#7A9E8E; --sage-light:#C8DDD6;
+  --gold:#B8935A; --warn:#C45A3A; --warn-light:#FFF0EC;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);font-size:14px;line-height:1.7;}
+
+/* COVER */
+.cover{background:var(--ink);min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:60px 48px;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;top:-100px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(201,123,99,.12) 0%,transparent 60%);border-radius:50%;}
+.cover::after{content:'';position:absolute;bottom:-60px;left:-60px;width:300px;height:300px;background:radial-gradient(circle,rgba(122,158,142,.1) 0%,transparent 70%);border-radius:50%;}
+.cover-brand{position:absolute;top:48px;left:48px;font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:3px;text-transform:uppercase;color:rgba(250,247,242,.35);}
+.entry-no{position:absolute;top:48px;right:48px;font-size:11px;color:rgba(250,247,242,.2);letter-spacing:2px;}
+.cover-eye{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--blush);opacity:.6;margin-bottom:16px;position:relative;}
+.cover-title{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,6vw,72px);font-weight:400;font-style:italic;color:#FAF7F2;line-height:1.05;margin-bottom:20px;position:relative;}
+.cover-title span{color:var(--blush);}
+.cover-meta{display:flex;gap:10px;flex-wrap:wrap;position:relative;}
+.meta-pill{font-size:11px;padding:5px 14px;border:1px solid rgba(250,247,242,.15);border-radius:20px;color:rgba(250,247,242,.4);}
+.meta-pill.active{border-color:var(--blush);color:var(--blush);}
+
+/* NAV */
+.report-nav{background:var(--sand);border-bottom:.5px solid rgba(28,20,16,.08);padding:12px 48px;display:flex;gap:0;overflow-x:auto;position:sticky;top:0;z-index:50;}
+.nav-item{font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:6px 14px;border-radius:20px;cursor:pointer;white-space:nowrap;transition:all .2s;text-decoration:none;}
+.nav-item:hover{color:var(--ink);}
+.nav-item.active{background:var(--ink);color:var(--cream);}
+
+/* MAIN */
+.main{max-width:720px;margin:0 auto;padding:52px 28px 100px;}
+
+.section{margin-bottom:64px;animation:fadeUp .35s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.sec-eye{font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--rose);margin-bottom:6px;}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,4vw,38px);font-weight:400;font-style:italic;color:var(--ink);margin-bottom:6px;line-height:1.15;}
+.sec-sub{font-size:13px;color:var(--muted);margin-bottom:28px;padding-bottom:18px;border-bottom:.5px solid rgba(28,20,16,.08);}
+
+/* CURATOR NOTE */
+.curator-note{background:var(--ink);border-radius:16px;padding:24px 28px;margin-bottom:24px;position:relative;overflow:hidden;}
+.curator-note::before{content:'';position:absolute;bottom:-30px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(201,123,99,.2) 0%,transparent 70%);border-radius:50%;}
+.cn-eye{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--blush);opacity:.55;margin-bottom:8px;}
+.cn-text{font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:#FAF7F2;line-height:1.7;}
+
+/* AFTER CARE */
+.aftercare-wrap{background:var(--ink);border-radius:20px;padding:36px;position:relative;overflow:hidden;margin-top:40px;}
+.aftercare-wrap::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(201,123,99,.18) 0%,transparent 70%);border-radius:50%;}
+.ac-eye{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--blush);opacity:.6;margin-bottom:10px;}
+.ac-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic;color:#FAF7F2;margin-bottom:10px;}
+.ac-sub{font-size:13px;color:rgba(250,247,242,.4);margin-bottom:24px;line-height:1.7;}
+.ac-timeline{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+.ac-item{background:rgba(250,247,242,.06);border-radius:12px;padding:14px 18px;display:flex;gap:12px;}
+.ac-day{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blush);background:rgba(232,196,176,.12);padding:3px 10px;border-radius:20px;flex-shrink:0;height:fit-content;margin-top:2px;}
+.ac-text{font-size:13px;color:rgba(250,247,242,.85);line-height:1.6;}
+.ac-note{font-size:12px;color:rgba(250,247,242,.35);margin-top:3px;}
+.subscribe-btn{display:block;background:linear-gradient(135deg,var(--blush),var(--rose));color:white;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;padding:15px 28px;border-radius:13px;text-decoration:none;text-align:center;margin-bottom:10px;position:relative;}
+.subscribe-note{font-size:11px;color:rgba(250,247,242,.22);text-align:center;}
+
+.disclaimer{font-size:11px;color:var(--muted);line-height:1.7;padding:20px;background:white;border-radius:12px;border:.5px solid rgba(28,20,16,.06);margin-top:28px;}
+
+@media(max-width:600px){
+  .cover,.report-nav{padding-left:20px;padding-right:20px;}
+  .cover-brand,.entry-no{left:20px;top:28px;}
+  .entry-no{right:20px;left:auto;}
+  .main{padding:36px 16px 80px;}
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-brand">Seoul Skin Atelier</div>
+  <div class="entry-no">Archive Entry No.001</div>
+  <div class="cover-eye">Full Atelier Report · Personalized K-beauty Curation</div>
+  <div class="cover-title">Emma,<br>your skin finally has<br><span>a plan.</span></div>
+  <div class="cover-meta">
+    <span class="meta-pill active">Combo Skin</span>
+    <span class="meta-pill active">Acne Care Goal</span>
+    <span class="meta-pill">Basic Routine Level</span>
+    <span class="meta-pill">New York · Mild Climate</span>
+    <span class="meta-pill">2026년 3월</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="report-nav">
+  <a class="nav-item active" href="#s1">Skin Diagnosis</a>
+  <a class="nav-item" href="#s2">Priority Map</a>
+  <a class="nav-item" href="#s3">Ingredient Analysis</a>
+  <a class="nav-item" href="#s4">Personalized Routine</a>
+  <a class="nav-item" href="#s5">Special Care</a>
+  <a class="nav-item" href="#s6">4-Week Plan</a>
+</nav>
+
+<div class="main">
+
+<!-- ═══ S1: Skin Diagnosis ═══ -->
+<div class="section" id="s1">
+  <div class="sec-eye">Section 01</div>
+  <div class="sec-title">Skin Diagnosis</div>
+  <div class="sec-sub">What Emma's skin is actually saying right now.</div>
+
+  <div class="curator-note">
+    <div class="cn-eye">Curator's Note</div>
+    <div class="cn-text">"Emma, the signals your skin is sending are very clear. You have combo skin with active breakouts and dehydration at the same time. It sounds like a contradiction, but it's real. The barrier needs to recover first, then everything else follows. Your routine foundation is solid — that's where we start."</div>
+  </div>
+
+  <div id="s1-content"></div>
+</div>
+
+<!-- ═══ S2: Priority Map ═══ -->
+<div class="section" id="s2">
+  <div class="sec-eye">Section 02</div>
+  <div class="sec-title">Skin Priority Map</div>
+  <div class="sec-sub">Emma's roadmap. Going step by step is the only way to make it last.</div>
+  <div id="s2-content"></div>
+</div>
+
+<!-- ═══ S3: Ingredient Analysis ═══ -->
+<div class="section" id="s3">
+  <div class="sec-eye">Section 03</div>
+  <div class="sec-title">Ingredient Intelligence</div>
+  <div class="sec-sub">Selected based on Emma's skin profile. Tap a card for details.</div>
+  <div id="s3-content"></div>
+</div>
+
+<!-- ═══ S4: Personalized Routine ═══ -->
+<div class="section" id="s4">
+  <div class="sec-eye">Section 04</div>
+  <div class="sec-title">Personalized Routine</div>
+  <div class="sec-sub">A routine designed for Emma's skin and lifestyle.</div>
+  <div id="s4-content"></div>
+</div>
+
+<!-- ═══ S5: Special Care ═══ -->
+<div class="section" id="s5">
+  <div class="sec-eye">Section 05</div>
+  <div class="sec-title">Special Care</div>
+  <div class="sec-sub">Adding 1–2x per week takes your skin to the next level.</div>
+  <div id="s5-content"></div>
+</div>
+
+<<!-- ═══ S6: 4-Week Plan ═══ -->
+<div class="section" id="s6">
+  <div class="sec-eye">Section 06</div>
+  <div class="sec-title">4-Week Challenge Plan</div>
+  <div class="sec-sub">Consistency beats intensity — every day builds on the last.</div>
+  <div id="s6-content"></div>
+</div>
+
+<!-- AFTER CARE + CTA -->
+<div class="aftercare-wrap">
+  <div class="ac-eye">After Care</div>
+  <div class="ac-title">Your curator<br>stays with you.</div>
+  <div class="ac-sub">This is just the beginning. We'll track Emma's skin journey together.</div>
+  <div class="ac-timeline">
+    <div class="ac-item">
+      <span class="ac-day">Day 3</span>
+      <div>
+        <div class="ac-text">Purchase check-in email arrives.</div>
+        <div class="ac-note">Tell us what you bought and we'll factor it into your next recommendations.</div>
+      </div>
+    </div>
+    <div class="ac-item">
+      <span class="ac-day">Day 14</span>
+      <div>
+        <div class="ac-text">2주 skin feedback.</div>
+        <div class="ac-note">Acne & Breakouts이 If breakouts appeared, we'll analyze whether ingredients, amount, or layering order is the cause.</div>
+      </div>
+    </div>
+    <div class="ac-item">
+      <span class="ac-day">Day 28</span>
+      <div>
+        <div class="ac-text">Archive Entry No.001 closes · No.002 begins.</div>
+        <div class="ac-note">Rate this routine. Your feedback makes the next entry sharper.</div>
+      </div>
+    </div>
+  </div>
+  <a href="#" class="subscribe-btn">Subscribe to Monthly Archive — $14.99 / month</a>
+  <div class="subscribe-note">Cancel anytime · Your data is yours</div>
+</div>
+
+<div class="disclaimer">
+  <strong>Affiliate Disclosure:</strong> 이 This report contains affiliate links. Purchasing through our links may earn Seoul Skin Atelier a small commission at no additional cost to you.<br><br>
+  <strong>Disclaimer:</strong> 이 This report is not medical advice. Recommendations are based on general skincare principles and self-reported skin profiles. For medical skin concerns, please consult a licensed dermatologist.
+</div>
+
+</div>
+
+<script>
+/* ── NAV SCROLL ACTIVE ── */
+const sections = document.querySelectorAll('.section');
+const navItems = document.querySelectorAll('.nav-item');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      navItems.forEach(n=>n.classList.remove('active'));
+      const active = document.querySelector(`.nav-item[href="#${entry.target.id}"]`);
+      if(active) active.classList.add('active');
+    }
+  });
+},{threshold:0.25});
+sections.forEach(s=>observer.observe(s));
+navItems.forEach(item=>{
+  item.addEventListener('click',e=>{
+    e.preventDefault();
+    const t = document.querySelector(item.getAttribute('href'));
+    if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+
+/* ══════════════════════════════════
+   S1 — Skin Diagnosis + Routine review
+══════════════════════════════════ */
+(function(){
+  const el = document.getElementById('s1-content');
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1.5rem;">
+      <div style="background:rgba(28,20,16,.04);border-radius:12px;padding:12px 14px;"><div style="font-size:11px;color:var(--muted);margin-bottom:5px;">Skin Type</div><div style="font-size:18px;font-weight:500;">Combo</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">T존 T-zone oily · cheeks normal~dry</div></div>
+      <div style="background:rgba(28,20,16,.04);border-radius:12px;padding:12px 14px;"><div style="font-size:11px;color:var(--muted);margin-bottom:5px;">Main Concern</div><div style="font-size:18px;font-weight:500;">Acne & Breakouts</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">Dehydration is the root cause</div></div>
+      <div style="background:rgba(28,20,16,.04);border-radius:12px;padding:12px 14px;"><div style="font-size:11px;color:var(--muted);margin-bottom:5px;">Barrier Status</div><div style="font-size:18px;font-weight:500;color:#C45A3A;">Moderate</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">Needs recovery before actives</div></div>
+      <div style="background:rgba(28,20,16,.04);border-radius:12px;padding:12px 14px;"><div style="font-size:11px;color:var(--muted);margin-bottom:5px;">Hydration Level</div><div style="font-size:18px;font-weight:500;color:#B8935A;">Low~Moderate</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">AC exposure is the main cause</div></div>
+    </div>
+    <div style="font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Current Routine Analysis — 5 products analyzed</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;">
+      <div onclick="toggleRoutineDetail()" style="border-radius:12px;padding:14px 12px;text-align:center;background:#E1F5EE;cursor:pointer;"><div style="font-size:26px;font-weight:500;color:#085041;">2</div><div style="font-size:11px;color:#0F6E56;margin-top:3px;">Keep Using</div></div>
+      <div onclick="toggleRoutineDetail()" style="border-radius:12px;padding:14px 12px;text-align:center;background:#FFF0EC;cursor:pointer;"><div style="font-size:26px;font-weight:500;color:#993C1D;">2</div><div style="font-size:11px;color:#C45A3A;margin-top:3px;">Replace</div></div>
+      <div onclick="toggleRoutineDetail()" style="border-radius:12px;padding:14px 12px;text-align:center;background:#FCEBEB;cursor:pointer;"><div style="font-size:26px;font-weight:500;color:#791F1F;">1</div><div style="font-size:11px;color:#A32D2D;margin-top:3px;">Conflict Found</div></div>
+    </div>
+    <button onclick="toggleRoutineDetail()" id="routine-btn" style="width:100%;background:none;border:0.5px solid rgba(28,20,16,.15);border-radius:10px;padding:9px 14px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <span>View all products in detail</span><span id="routine-arrow">▼</span>
+    </button>
+    <div id="routine-detail" style="display:none;border:0.5px solid rgba(28,20,16,.08);border-radius:14px;overflow:hidden;margin-bottom:12px;">
+      <div style="background:rgba(28,20,16,.04);padding:10px 14px;display:flex;justify-content:space-between;border-bottom:.5px solid rgba(28,20,16,.06);"><span style="font-size:12px;font-weight:500;">Morning Routine</span><span style="font-size:11px;color:var(--muted);">2개</span></div>
+      ${routineProduct('✓','g','AM','CeraVe Hydrating Cleanser','CeraVe','Ceramide / HA / Niacinamide','Fragrance-free','g','Keep using — do not change','Optimal for combo + acne skin. pH balance + ceramide','','')}
+      ${routineProduct('↑','w','AM','Neutrogena SPF 50','Neutrogena','SPF 50','May contain fragrance','w','Replace — K-beauty SPF upgrade','Some ingredients may irritate acne-prone skin.','','')}
+      <div style="background:rgba(28,20,16,.04);padding:10px 14px;display:flex;justify-content:space-between;border-top:.5px solid rgba(28,20,16,.06);border-bottom:.5px solid rgba(28,20,16,.06);"><span style="font-size:12px;font-weight:500;">Evening Routine</span><span style="font-size:11px;color:var(--muted);">3개</span></div>
+      ${routineProduct('!','b','PM','Foam cleanser used alone','Current product','No double cleansing','SPF residue risk','b','Conflict Found — one of your breakout causes','Foam cleanser alone lets SPF residue build up in pores.','Breaking the breakout cycle','폼Cleanser Foam cleanser alone doesn't fully remove morning SPF. SPF residue → pore buildup → breakout cycle. Adding an oil cleanser as step 1 breaks this cycle immediately.')}
+      ${routineProduct('✓','g','PM','CeraVe Moisturizing Cream','CeraVe','Ceramide 1·3·6','MVE technology','g','Keep using — essential for barrier recovery','Slowly releases ceramide overnight to rebuild your barrier.','','')}
+      ${routineProduct('↑','w','PM','Basic moisturizer','Current product','Basic moisturizing ingredients','','w','Replace — ingredient upgrade needed','Switch to a product with ceramide + moisture-locking technology for faster overnight barrier recovery.','','')}
+    </div>
+    <div style="background:rgba(28,20,16,.04);border-radius:10px;padding:11px 14px;">
+      <div style="font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;">Missing from your routine</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;">${['Toner','Essence or Serum','BHA Treatment','Oil Cleanser (evening)'].map(t=>`<span style="font-size:11px;padding:3px 10px;border-radius:14px;background:white;border:.5px solid rgba(28,20,16,.12);color:var(--muted);">+ ${t}</span>`).join('')}</div>
+    </div>`;
+})();
+
+function routineProduct(icon,type,timing,name,brand,tag1,tag2,verdictType,verdict,desc,alertTitle,alertDesc){
+  const colors={g:{icon:'#E1F5EE',dot:'#1D9E75',text:'#085041'},w:{icon:'#FFF0EC',dot:'#C97B63',text:'#993C1D'},b:{icon:'#FCEBEB',dot:'#E24B4A',text:'#791F1F'}};
+  const c=colors[type];const vc=colors[verdictType];
+  const timingBg=timing==='AM'?'#FAEEDA':'#EEEDFE';
+  const timingColor=timing==='AM'?'#633806':'#26215C';
+  const alertHtml=alertTitle?`<div style="margin-top:7px;background:#FCEBEB;border-radius:8px;padding:8px 10px;"><div style="font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:#A32D2D;margin-bottom:2px;">${alertTitle}</div><div style="font-size:12px;color:#791F1F;line-height:1.5;">${alertDesc}</div></div>`:'';
+  const tag2Html=tag2?`<span style="font-size:10px;padding:2px 7px;border-radius:10px;background:${type==='b'?'#FCEBEB':'#FFF0EC'};color:${type==='b'?'#791F1F':'#993C1D'};">${tag2}</span>`:'';
+  return `<div style="display:flex;gap:10px;padding:12px 14px;border-bottom:.5px solid rgba(28,20,16,.06);">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
+      <div style="width:28px;height:28px;border-radius:7px;background:${c.icon};display:flex;align-items:center;justify-content:center;font-size:12px;color:${c.text};">${icon}</div>
+      <span style="font-size:9px;font-weight:500;padding:2px 5px;border-radius:8px;background:${timingBg};color:${timingColor};">${timing}</span>
+    </div>
+    <div style="flex:1;">
+      <div style="font-size:13px;font-weight:500;margin-bottom:2px;">${name}</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:5px;">${brand}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;">
+        <span style="font-size:10px;padding:2px 7px;border-radius:10px;background:rgba(28,20,16,.06);color:var(--muted);">${tag1}</span>${tag2Html}
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+        <div style="width:7px;height:7px;border-radius:50%;background:${vc.dot};flex-shrink:0;"></div>
+        <span style="font-size:12px;font-weight:500;color:${vc.text};">${verdict}</span>
+      </div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.5;">${desc}</div>
+      ${alertHtml}
+    </div>
+  </div>`;
+}
+
+function toggleRoutineDetail(){
+  const d=document.getElementById('routine-detail');
+  const a=document.getElementById('routine-arrow');
+  const b=document.getElementById('routine-btn');
+  const open=d.style.display==='block';
+  d.style.display=open?'none':'block';
+  a.textContent=open?'▼':'▲';
+  b.querySelector('span').textContent=open?'View all products in detail':'Collapse';
+}
+
+/* ══════════════════════════════════
+   S2 — Priority Map
+══════════════════════════════════ */
+(function(){
+  const el=document.getElementById('s2-content');
+  const phases=[
+    {num:1,name:'Hydration Reset + Gentle BHA Introduction',period:'Now ~ Week 4',color:'#C97B63',lightBg:'#FFF8F6',desc:'Break the dehydration cycle driving excess oil first. Introduce BHA 2–3x per week gently.',dos:['HA serum daily','BHA 2–3x per week','SPF every morning','Oil cleanser at night'],donts:['Vitamin C (not yet)','Retinol (not yet)','Contains fragrance'],status:'You are here',statusBg:'#FFF0EC',statusColor:'#993C1D',current:true},
+    {num:2,name:'Brightening Layer + Increased BHA Frequency',period:'Week 4 ~ Week 8',color:'#7A9E8E',lightBg:'white',desc:'Acne & Breakouts이 Once stable, introduce niacinamide for brightening and pore care.',dos:['Niacinamide serum','BHA 4–5x per week','Alpha arbutin (optional)'],donts:[],status:'After Phase 1 complete',statusBg:'rgba(28,20,16,.06)',statusColor:'var(--muted)',current:false},
+    {num:3,name:'Clear + Bright Skin Maintenance',period:'3 months+',color:'#534AB7',lightBg:'white',desc:'Goal achieved. Next steps evaluated in Archive Entry No.002.',dos:['Vitamin C AM','Stable BHA routine','Bright and even skin tone'],donts:[],status:'Final Goal',statusBg:'#C8DDD6',statusColor:'#085041',current:false},
+  ];
+
+  const nowBadge=`<div style="display:inline-flex;align-items:center;gap:6px;background:#FFF0EC;border:1px solid #C97B63;border-radius:20px;padding:4px 12px;font-size:11px;font-weight:500;color:#993C1D;margin-bottom:16px;"><div style="width:6px;height:6px;border-radius:50%;background:#C97B63;animation:pulse 1.5s ease infinite;"></div>You are here — Phase 1</div>`;
+
+  const tlNodes=phases.map((p,i)=>{
+    const lineL=i===0?'transparent':p.current||phases[i-1].current?p.color:'rgba(28,20,16,.1)';
+    const lineR=i===phases.length-1?'transparent':p.current?p.color:'rgba(28,20,16,.1)';
+    const dotBg=p.current?p.color:'white';
+    const dotBorder=p.current?p.color:'rgba(28,20,16,.15)';
+    const dotColor=p.current?'white':p.color;
+    return `<div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+      <div style="display:flex;align-items:center;width:100%;">
+        <div style="flex:1;height:2px;background:${lineL};"></div>
+        <div style="width:34px;height:34px;border-radius:50%;background:${dotBg};border:2px solid ${dotBorder};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:${dotColor};flex-shrink:0;">${p.num}</div>
+        <div style="flex:1;height:2px;background:${lineR};"></div>
+      </div>
+      <div style="font-size:10px;margin-top:6px;color:${p.current?p.color:'var(--muted)'};font-weight:${p.current?'500':'400'};text-align:center;">${p.period.split(' ~ ')[0]}</div>
+    </div>`;
+  }).join('');
+
+  const phaseCards=phases.map(p=>{
+    const dosHtml=p.dos.map(d=>`<div style="display:flex;align-items:center;gap:6px;padding:3px 0;border-bottom:.5px solid rgba(0,100,60,.08);font-size:12px;color:#085041;"><span style="color:#1D9E75;font-size:12px;">+</span>${d}</div>`).join('');
+    const dontsHtml=p.donts.map(d=>`<div style="display:flex;align-items:center;gap:6px;padding:3px 0;border-bottom:.5px solid rgba(200,0,0,.06);font-size:12px;color:#791F1F;"><span style="color:#E24B4A;font-size:12px;">x</span>${d}</div>`).join('');
+    const ddGrid=p.donts.length?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <div style="background:#E1F5EE;border-radius:8px;padding:10px 12px;"><div style="font-size:9px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:#0F6E56;margin-bottom:6px;">Do this</div>${dosHtml}</div>
+      <div style="background:#FCEBEB;border-radius:8px;padding:10px 12px;"><div style="font-size:9px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:#A32D2D;margin-bottom:6px;">Don't do this</div>${dontsHtml}</div>
+    </div>`:`<div style="background:#E1F5EE;border-radius:8px;padding:10px 12px;margin-bottom:10px;"><div style="font-size:9px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:#0F6E56;margin-bottom:6px;">Add this</div>${dosHtml}</div>`;
+
+    const conflictNote=p.num===1?`<div style="background:#FFF0EC;border-radius:8px;padding:8px 10px;margin-bottom:10px;font-size:12px;color:#993C1D;line-height:1.5;"><span style="font-weight:500;">!</span> You want brightening, but hydration comes first. Dehydrated skin → excess oil → breakouts. Fill the hydration deficit and breakouts reduce too.</div>`:'';
+
+    return `<div style="border-radius:14px;border:${p.current?`2px solid ${p.color}`:'0.5px solid rgba(28,20,16,.08)'};overflow:hidden;margin-bottom:10px;opacity:${p.current?1:0.65};">
+      <div style="background:${p.current?p.lightBg:'white'};padding:12px 14px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:${p.current?p.color+'22':'rgba(28,20,16,.06)'};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:${p.current?p.color:'var(--muted)'};">${p.num}</div>
+          <div><div style="font-size:14px;font-weight:500;">${p.name}</div><div style="font-size:10px;color:var(--muted);margin-top:1px;">${p.period}</div></div>
+        </div>
+        <span style="font-size:10px;font-weight:500;padding:3px 10px;border-radius:20px;background:${p.statusBg};color:${p.statusColor};flex-shrink:0;">${p.status}</span>
+      </div>
+      <div style="padding:12px 14px;background:white;">${conflictNote}${ddGrid}<div style="font-size:12px;color:var(--muted);">${p.desc}</div></div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML=`<style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}</style>${nowBadge}<div style="display:flex;align-items:center;gap:0;margin-bottom:20px;">${tlNodes}</div>${phaseCards}`;
+})();
+
+/* ══════════════════════════════════
+   S3 — Ingredient Intelligence
+══════════════════════════════════ */
+(function(){
+  const el=document.getElementById('s3-content');
+  const ings=[
+    {sym:'🧪',bg:'#E1F5EE',name:'BHA',eng:'Salicylic Acid 0.5~2%',why:'Dissolves sebum directly inside pores.',badge:'Phase 1 Essential',badgeBg:'#FFF0EC',badgeColor:'#993C1D',detail:'Oil-soluble — penetrates deep into pores. Start 2–3x per week, increase if no irritation.',timing:'PM PM only',timingBg:'#EEEDFE',timingColor:'#26215C'},
+    {sym:'🛡',bg:'#C8DDD6',name:'Ceramide',eng:'Ceramide 1, 3, 6',why:'Rebuilds the barrier that AC exposure breaks down every day.',badge:'Phase 1 Essential',badgeBg:'#FFF0EC',badgeColor:'#993C1D',detail:'50% of skin lipids. Prevents moisture from escaping throughout the day.',timing:'AM + PM',timingBg:'#F0E8DF',timingColor:'#7A5C20'},
+    {sym:'💧',bg:'#E6F1FB',name:'Hyaluronic Acid',eng:'Hyaluronic Acid 1~2%',why:'Breaks the excess oil cycle caused by dehydration.',badge:'Phase 1 Essential',badgeBg:'#FFF0EC',badgeColor:'#993C1D',detail:'1000x moisture absorption. Products with both low and high molecular weight HA work best.',timing:'AM + PM',timingBg:'#F0E8DF',timingColor:'#7A5C20'},
+    {sym:'🌿',bg:'#C8DDD6',name:'Snail Secretion',eng:'Snail Secretion 96%',why:'Recovers post-breakout marks without irritation.',badge:'Phase 1',badgeBg:'#F0E8DF',badgeColor:'#7A5C20',detail:'Allantoin + mucin complex action. Safe to use alongside BHA.',timing:'PM Recommended',timingBg:'#EEEDFE',timingColor:'#26215C'},
+    {sym:'🍀',bg:'#E1F5EE',name:'Centella Asiatica',eng:'Centella Asiatica',why:'Acne & Breakouts 후 Quickly calms redness and irritation.',badge:'Phase 1',badgeBg:'#F0E8DF',badgeColor:'#7A5C20',detail:'BHA Using it during early BHA introduction helps reduce irritation.',timing:'AM + PM',timingBg:'#F0E8DF',timingColor:'#7A5C20'},
+    {sym:'✨',bg:'#FAEEDA',name:'Niacinamide',eng:'Niacinamide 5~10%',why:'Brightening + pore ingredient to add after week 4.',badge:'Phase 2 Upcoming',badgeBg:'#C8DDD6',badgeColor:'#085041',detail:'Introduce after 4 weeks of barrier stabilization — targets pores and dullness simultaneously.',timing:'AM + PM',timingBg:'#F0E8DF',timingColor:'#7A5C20'},
+  ];
+  const avoids=[
+    {name:'Fragrance / Parfum',why:'A known irritant for Emma's skin. Skip any product listing fragrance, parfum, or essential oil.'},
+    {name:'Coconut Oil',why:'Comedogenic rating 4/5. Always check cleanser and moisturizer ingredients.'},
+    {name:'Retinol',why:'Phase 1 중 Off limits. Introducing retinol now will cause severe irritation on a weakened barrier.'},
+    {name:'High-concentration AHA alone',why:'BHA와 Do not use on the same day. Over-exfoliation weakens the barrier further.'},
+  ];
+  const combos=[
+    {s:'✅',a:'BHA + Ceramide',n:'Treatment + barrier protection simultaneously'},
+    {s:'✅',a:'Snail + BHA',n:'Treat while recovering'},
+    {s:'⚠️',a:'BHA + SPF',n:'Separate timing — BHA at PM, SPF at AM'},
+    {s:'❌',a:'BHA + Retinol',n:'Phase 3 Absolutely avoid until Phase 3'},
+  ];
+
+  const ingGrid=ings.map((ing,i)=>`
+    <div onclick="toggleIng(${i})" id="ing-card-${i}" style="background:white;border:0.5px solid rgba(28,20,16,.08);border-radius:13px;padding:13px;cursor:pointer;transition:border-color .15s;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:7px;">
+        <div style="width:34px;height:34px;border-radius:10px;background:${ing.bg};display:flex;align-items:center;justify-content:center;font-size:16px;">${ing.sym}</div>
+        <span style="font-size:9px;font-weight:500;padding:2px 7px;border-radius:10px;background:${ing.badgeBg};color:${ing.badgeColor};">${ing.badge}</span>
+      </div>
+      <div style="font-size:14px;font-weight:500;margin-bottom:2px;">${ing.name}</div>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:5px;">${ing.eng}</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.5;">${ing.why}</div>
+      <div id="ing-exp-${i}" style="display:none;margin-top:8px;padding-top:8px;border-top:.5px solid rgba(28,20,16,.06);">
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:6px;">${ing.detail}</div>
+        <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:${ing.timingBg};color:${ing.timingColor};">${ing.timing}</span>
+      </div>
+    </div>`).join('');
+
+  const avoidList=avoids.map(a=>`
+    <div style="background:white;border-radius:8px;padding:10px 12px;display:flex;gap:10px;">
+      <div style="width:20px;height:20px;border-radius:5px;background:#FCEBEB;display:flex;align-items:center;justify-content:center;font-size:11px;color:#A32D2D;flex-shrink:0;margin-top:1px;">✕</div>
+      <div><div style="font-size:13px;font-weight:500;margin-bottom:2px;">${a.name}</div><div style="font-size:12px;color:var(--muted);line-height:1.5;">${a.why}</div></div>
+    </div>`).join('');
+
+  const comboList=combos.map(c=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;border:.5px solid rgba(28,20,16,.08);background:white;">
+      <span style="font-size:13px;flex-shrink:0;width:18px;">${c.s}</span>
+      <span style="font-size:13px;font-weight:500;flex:1;">${c.a}</span>
+      <span style="font-size:11px;color:var(--muted);">${c.n}</span>
+    </div>`).join('');
+
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><div style="width:8px;height:8px;border-radius:50%;background:#1D9E75;"></div><div style="font-size:12px;font-weight:500;">Ingredients to use now</div><div style="font-size:11px;color:var(--muted);margin-left:auto;">Tap for details</div></div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1.5rem;">${ingGrid}</div>
+    <div style="background:#FCEBEB;border-radius:13px;padding:14px 16px;margin-bottom:1.5rem;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><div style="width:8px;height:8px;border-radius:50%;background:#E24B4A;"></div><div style="font-size:12px;font-weight:500;color:#791F1F;">Ingredients to avoid now</div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;">${avoidList}</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--gold);"></div><div style="font-size:12px;font-weight:500;">Ingredient Combination Guide</div></div>
+    <div style="display:flex;flex-direction:column;gap:6px;">${comboList}</div>`;
+})();
+
+function toggleIng(i){
+  const exp=document.getElementById('ing-exp-'+i);
+  const card=document.getElementById('ing-card-'+i);
+  const open=exp.style.display==='block';
+  document.querySelectorAll('[id^="ing-exp-"]').forEach(e=>e.style.display='none');
+  document.querySelectorAll('[id^="ing-card-"]').forEach(c=>c.style.borderColor='rgba(28,20,16,.08)');
+  if(!open){exp.style.display='block';card.style.borderColor='#C97B63';}
+}
+
+/* ══════════════════════════════════
+   S4 — Personalized Routine
+══════════════════════════════════ */
+(function(){
+  const el=document.getElementById('s4-content');
+  const amSteps=[
+    {num:1,cat:'Cleanser',product:'Hydrating Facial Cleanser',brand:'CeraVe · $15.97',keep:true,reason:'Keep current product. Ceramide + HA protect your barrier even during cleansing.',amount:'1 pump · 30 sec · lukewarm rinse'},
+    {num:2,cat:'Toner',product:'Supple Preparation Facial Toner',brand:'Klairs · $22.00',keep:false,reason:'Directly compensates for AC moisture loss. pH 6.0 preps skin for next step absorption.',amount:'3–4 drops in palm · press gently'},
+    {num:3,cat:'Moisturizer',product:'PM Facial Moisturizing Lotion',brand:'CeraVe · $18.97',keep:false,reason:'Lightweight gel cream. Niacinamide + ceramide maintain your barrier throughout the day.',amount:'Pea size · inside out'},
+    {num:4,cat:'Sunscreen — never skip',product:'Relief Sun SPF 50+ PA++++',brand:'Beauty of Joseon · $18.00',keep:false,reason:'Prevents post-breakout marks from darkening. No stickiness, no white cast.',amount:'2 finger lengths · face + neck · pat in',highlight:true},
+  ];
+  const pmSteps=[
+    {num:1,cat:'Oil Cleanser — new addition',product:'Clean It Zero Cleansing Balm',brand:'Banila Co · $20.00',keep:false,reason:'The key to removing SPF residue. Without this, your breakout cycle continues.',amount:'1 finger length · 60 sec on dry skin · emulsify with water',alert:true},
+    {num:2,cat:'폼 Cleanser',product:'Hydrating Facial Cleanser',brand:'CeraVe · $15.97',keep:true,reason:'Same as morning. Keep the second cleanse light.',amount:'Small amount · 30 sec · rinse thoroughly'},
+    {num:3,cat:'BHA Toner',product:'AHA/BHA Clarifying Treatment Toner',brand:'Some By Mi · $14.99',keep:false,reason:'Dissolves sebum inside pores. Start Monday and Thursday.',amount:'Apply on cotton pad · swipe · wait 5 min',badge:'주 2~3회'},
+    {num:4,cat:'Essence',product:'Advanced Snail 96 Mucin Power Essence',brand:'COSRX · $21.99',keep:false,reason:'Post-breakout recovery + deep hydration. Safe to use on BHA days too.',amount:'3~4 pumps · into palm'},
+    {num:5,cat:'Moisturizer',product:'Moisturizing Cream',brand:'CeraVe · $19.97',keep:false,reason:'Ceramide slowly releases overnight, rebuilding your barrier.',amount:'10원 size · upward direction'},
+  ];
+  const mkSteps=[
+    {num:1,cat:'Base prep',product:'Relief Sun SPF 50+ PA++++',brand:'Beauty of Joseon · $18.00',keep:false,reason:'SPF가 Also works as a makeup base. No separate primer needed.',amount:'Wait 2–3 min until fully absorbed, then apply makeup'},
+    {num:2,cat:'Light coverage',product:'BBBB cream or tinted SPF',brand:'Your preferred product',keep:false,reason:'Light coverage. Not layering it heavy is better for your skin.',amount:'Apply lightly only where needed'},
+    {num:3,cat:'SPF Reapplication (2+ hours outdoors)',product:'Powder or mist SPF',brand:'Recommended: ISDIN Fusion Water SPF',keep:false,reason:'A way to reapply SPF over makeup.',amount:'Every 2 hours outdoors',badge:'For outdoor activities'},
+  ];
+
+  function stepsHtml(steps){
+    return steps.map((s,i)=>{
+      const keepBadge=s.keep?`<span style="font-size:10px;padding:2px 8px;border-radius:10px;background:#E1F5EE;color:#085041;margin-left:5px;">Current product</span>`:'';
+      const freqBadge=s.badge?`<span style="font-size:10px;padding:2px 8px;border-radius:10px;background:#FAEEDA;color:#633806;margin-left:5px;">${s.badge}</span>`:'';
+      const alertHtml=s.alert?`<div style="margin-top:7px;background:#FCEBEB;border-radius:8px;padding:7px 10px;"><div style="font-size:10px;font-weight:500;color:#A32D2D;margin-bottom:1px;">Breaking the breakout cycle</div><div style="font-size:11px;color:#791F1F;">이 Without this step, SPF residue builds up in your pores</div></div>`:'';
+      const hl=s.highlight?`border:1.5px solid #C97B63;border-radius:11px;padding:11px;margin:-1px;`:'';
+      return `<div style="display:flex;gap:11px;padding:13px 0;${i<steps.length-1?'border-bottom:.5px solid rgba(28,20,16,.07);':''}">
+        <div style="width:26px;height:26px;border-radius:50%;background:${s.highlight?'#C97B63':'rgba(28,20,16,.06)'};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:${s.highlight?'white':'var(--muted)'};flex-shrink:0;margin-top:2px;">${s.num}</div>
+        <div style="flex:1;${hl}">
+          <div style="font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:2px;">${s.cat}${keepBadge}${freqBadge}</div>
+          <div style="font-size:14px;font-weight:500;margin-bottom:1px;">${s.product}</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:5px;">${s.brand}</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:3px;">${s.reason}</div>
+          <div style="font-size:11px;color:rgba(28,20,16,.4);">${s.amount}</div>
+          ${alertHtml}
+          <a href="#" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;color:#7A9E8E;background:#C8DDD6;padding:3px 11px;border-radius:20px;text-decoration:none;margin-top:7px;">→ Amazon Link</a>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  el.innerHTML=`
+    <div style="display:flex;gap:8px;margin-bottom:1.5rem;" id="s4-tabs">
+      <button onclick="s4Tab('am')" id="s4-am" style="flex:1;padding:10px 8px;border-radius:10px;border:0.5px solid #C97B63;background:#FFF8F6;color:#993C1D;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;">Morning Routine</button>
+      <button onclick="s4Tab('pm')" id="s4-pm" style="flex:1;padding:10px 8px;border-radius:10px;border:0.5px solid rgba(28,20,16,.12);background:white;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;">Evening Routine</button>
+      <button onclick="s4Tab('mk')" id="s4-mk" style="flex:1;padding:10px 8px;border-radius:10px;border:0.5px solid rgba(28,20,16,.12);background:white;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;">Before Makeup</button>
+    </div>
+    <div id="s4-panel-am">${stepsHtml(amSteps)}</div>
+    <div id="s4-panel-pm" style="display:none;">${stepsHtml(pmSteps)}</div>
+    <div id="s4-panel-mk" style="display:none;">${stepsHtml(mkSteps)}</div>`;
+})();
+
+function s4Tab(t){
+  ['am','pm','mk'].forEach(x=>{
+    const p=document.getElementById('s4-panel-'+x);
+    const b=document.getElementById('s4-'+x);
+    p.style.display=x===t?'block':'none';
+    if(x===t){b.style.borderColor='#C97B63';b.style.background='#FFF8F6';b.style.color='#993C1D';}
+    else{b.style.borderColor='rgba(28,20,16,.12)';b.style.background='white';b.style.color='var(--muted)';}
+  });
+}
+
+/* ══════════════════════════════════
+   S5 — 4-Week Challenge Plan
+══════════════════════════════════ */
+const weeks=[
+  {num:1,theme:'Reset Week',color:'#C97B63',lightBg:'#FFF8F6',desc:'Block the problems in your current routine and build new habits.',tasks:[{id:'w1t1',text:'Add oil cleanser as first evening step — every day'},{id:'w1t2',text:'BHA toner Monday + Thursday (2x per week)'},{id:'w1t3',text:'SPF every morning — no exceptions'}]},
+  {num:2,theme:'Hydration Layering',color:'#7A9E8E',lightBg:'#F0FAF7',desc:'Start the hydration-filling cycle in earnest.',tasks:[{id:'w2t1',text:'Add Klairs toner after cleansing morning + evening'},{id:'w2t2',text:'Evening Routine에 COSRX Add snail essence'},{id:'w2t3',text:'Check: Is your T-zone less oily during the day?'}]},
+  {num:3,theme:'Treatment Boost',color:'#B8935A',lightBg:'#FDF6EE',desc:'If routine feels stable, increase BHA frequency slightly.',tasks:[{id:'w3t1',text:'BHA 주 33x per week (add Wednesday)'},{id:'w3t2',text:'Try gauze toner mask once (special care)'},{id:'w3t3',text:'Acne & BreakoutsApply acne patch on every breakout'}]},
+  {num:4,theme:'Analysis Week',color:'#534AB7',lightBg:'#F4F3FE',desc:'4주 Compare before and after, prep for the next entry.',tasks:[{id:'w4t1',text:'1Week 1 vs now — compare photos'},{id:'w4t2',text:'Routine review — what worked / what didn't'},{id:'w4t3',text:'4주 Submit 4-week check-in → prepare Archive No.002'}]},
+];
+const wkState={};
+weeks.forEach(w=>w.tasks.forEach(t=>wkState[t.id]=false));
+
+function wkDone(n){return weeks[n-1].tasks.every(t=>wkState[t.id]);}
+function wkProg(n){return weeks[n-1].tasks.filter(t=>wkState[t.id]).length;}
+function wkUnlocked(n){return n===1||wkDone(n-1);}
+
+function renderWeeks(){
+  const el=document.getElementById('s6-content');
+  const prog=weeks.map((w,i)=>{
+    const done=wkDone(w.num);const ul=wkUnlocked(w.num);
+    const lL=i===0?'transparent':wkDone(i)?w.color:'rgba(28,20,16,.1)';
+    const lR=i===weeks.length-1?'transparent':done?weeks[i+1].color:'rgba(28,20,16,.1)';
+    const dBg=done?w.color:'white';const dBd=done||ul?w.color:'rgba(28,20,16,.15)';const dC=done?'white':ul?w.color:'var(--muted)';
+    return `<div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+      <div style="display:flex;align-items:center;width:100%;"><div style="flex:1;height:2px;background:${lL};"></div>
+      <div style="width:32px;height:32px;border-radius:50%;background:${dBg};border:2px solid ${dBd};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:${dC};flex-shrink:0;">${done?'✓':w.num}</div>
+      <div style="flex:1;height:2px;background:${lR};"></div></div>
+      <div style="font-size:10px;margin-top:5px;color:${done||ul?w.color:'var(--muted)'};font-weight:${ul&&!done?'500':'400'};text-align:center;">${w.theme}</div>
+    </div>`;
+  }).join('');
+
+  const cards=weeks.map(w=>{
+    const done=wkDone(w.num);const ul=wkUnlocked(w.num);const prog=wkProg(w.num);const tot=w.tasks.length;
+    const pct=Math.round(prog/tot*100);
+    const tasks=ul?w.tasks.map(t=>`
+      <div onclick="toggleWkTask('${t.id}')" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:.5px solid rgba(28,20,16,.06);cursor:pointer;">
+        <div style="width:18px;height:18px;border-radius:4px;border:1.5px solid ${wkState[t.id]?w.color:'rgba(28,20,16,.15)'};background:${wkState[t.id]?w.color:'transparent'};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          ${wkState[t.id]?`<svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5L8 3" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>`:''}
+        </div>
+        <span style="font-size:13px;color:${wkState[t.id]?'var(--muted)':'var(--ink)'};text-decoration:${wkState[t.id]?'line-through':'none'};line-height:1.5;">${t.text}</span>
+      </div>`).join('')
+      :`<div style="padding:14px;text-align:center;font-size:12px;color:var(--muted);">🔒 ${w.num-1}Week를 Complete all tasks to unlock</div>`;
+
+    return `<div style="border-radius:13px;border:${done?'2px':'1px'} solid ${done||ul?w.color:'rgba(28,20,16,.08)'};overflow:hidden;margin-bottom:10px;opacity:${ul?1:0.45};">
+      <div style="background:${done?w.color:w.lightBg};padding:12px 14px;display:flex;align-items:center;justify-content:space-between;">
+        <div><div style="font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:${done?'rgba(255,255,255,.6)':w.color};margin-bottom:2px;">Week ${w.num}</div>
+        <div style="font-size:14px;font-weight:500;color:${done?'white':'var(--ink)'};">${w.theme}</div>
+        <div style="font-size:11px;color:${done?'rgba(255,255,255,.5)':'var(--muted)'};margin-top:1px;">${w.desc}</div></div>
+        <div style="text-align:right;flex-shrink:0;margin-left:10px;"><div style="font-size:18px;font-weight:500;color:${done?'white':w.color};">${prog}/${tot}</div><div style="font-size:10px;color:${done?'rgba(255,255,255,.5)':'var(--muted)'};">Done</div></div>
+      </div>
+      <div style="height:3px;background:rgba(28,20,16,.06);"><div style="height:100%;width:${pct}%;background:${w.color};transition:width .3s;"></div></div>
+      ${tasks}
+    </div>`;
+  }).join('');
+
+  el.innerHTML=`
+    <div style="background:rgba(28,20,16,.04);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:1.5rem;">Check off tasks to unlock the next week. <strong style="color:var(--ink);">Consistency beats intensity</strong> — Every day builds on the last.</div>
+    <div style="display:flex;align-items:center;gap:0;margin-bottom:1.5rem;">${prog}</div>
+    ${cards}`;
+}
+
+function toggleWkTask(id){
+  wkState[id]=!wkState[id];
+  renderWeeks();
+}
+
+renderWeeks();
+
+/* ══════════════════════════════════
+   S5 — Special Care
+══════════════════════════════════ */
+(function(){
+  const el=document.getElementById('s5-content');
+  const cares=[
+    {emoji:'🪡',freq:'주 2~3회',freqBg:'#E6F1FB',freqColor:'#0C447C',name:'Gauze Toner Mask',source:'Korean esthetics pre-treatment routine',why:'The most needed care for Emma's daily AC dehydration.',steps:['Soak gauze pads generously with Klairs toner','Place on dry, tight areas for 10–15 minutes','Pat remaining toner into skin after removing','Follow immediately with moisturizer'],needs:'Klairs Toner + gauze pads',effect:'Instant hydration · softens dead skin · next-day texture improvement'},
+    {emoji:'🫙',freq:'As needed',freqBg:'#FAEEDA',freqColor:'#633806',name:'Acne Patch Overnight',source:'Korean SNS viral',why:'The fastest way to prevent active breakouts from turning into scars.',steps:['After evening essence, when skin is slightly moist','Apply COSRX master patch over active breakout','Keep on for at least 6–8 hours (while sleeping)','Yellow patch in the morning = success'],needs:'COSRX Acne Pimple Master Patch',effect:'Absorbs fluid · blocks bacteria · prevents scarring'},
+    {emoji:'🍯',freq:'주 1회',freqBg:'#FAEEDA',freqColor:'#633806',name:'꿀 Sleeping Mask',source:'Korean traditional beauty + SNS trending',why:'Natural antibacterial properties calm breakouts while improving dullness.',steps:['PM Last step of PM routine (before moisturizer)','Spread a thin layer of pure manuka or raw honey','20~30분 후 lukewarm water rinse','The residue can be left to absorb'],needs:'Pure honey (manuka or raw)',effect:'Natural antibacterial · moisturizing · gentle brightening'},
+    {emoji:'🧊',freq:'주 2~3회 Morning',freqBg:'#E6F1FB',freqColor:'#0C447C',name:'Chilled Toner Massage',source:'Korean beauty SNS trending',why:'Morning puffiness relief + pore tightening. No ice roller needed.',steps:['Toner를 Keep in the refrigerator (not freezer)','Morning After cleansing, soak cotton pad with cold toner','Wipe gently from inside outward','Continue morning routine immediately after'],needs:'Klairs Toner (refrigerated)',effect:'Reduces puffiness · tightens pores · morning radiance'},
+  ];
+
+  const careCards=cares.map((c,i)=>{
+    const steps=c.steps.map((s,si)=>`
+      <div style="display:flex;gap:10px;padding:5px 0;${si<c.steps.length-1?'border-bottom:.5px solid rgba(28,20,16,.06);':''}">
+        <div style="width:18px;height:18px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--muted);flex-shrink:0;margin-top:1px;">${si+1}</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">${s}</div>
+      </div>`).join('');
+    return `<div style="border:.5px solid rgba(28,20,16,.08);border-radius:13px;overflow:hidden;margin-bottom:10px;">
+      <div onclick="toggleCareCard(${i})" style="padding:14px 15px;cursor:pointer;display:flex;align-items:flex-start;gap:11px;background:white;">
+        <div style="width:40px;height:40px;border-radius:11px;background:rgba(28,20,16,.04);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">${c.emoji}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:500;">${c.name}</span>
+            <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:${c.freqBg};color:${c.freqColor};">${c.freq}</span>
+          </div>
+          <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:#E1F5EE;color:#085041;">${c.source}</span>
+          <div style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5;">${c.why}</div>
+        </div>
+        <div id="care-arrow-${i}" style="font-size:11px;color:var(--muted);flex-shrink:0;margin-top:2px;">▼</div>
+      </div>
+      <div id="care-detail-${i}" style="display:none;border-top:.5px solid rgba(28,20,16,.06);padding:14px 15px;background:rgba(28,20,16,.02);">
+        <div style="font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">How to</div>
+        ${steps}
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:5px;">
+          <div style="display:flex;gap:8px;"><span style="font-size:10px;font-weight:500;color:var(--muted);min-width:52px;padding-top:2px;">What you need</span><span style="font-size:12px;">${c.needs}</span></div>
+          <div style="display:flex;gap:8px;"><span style="font-size:10px;font-weight:500;color:var(--muted);min-width:52px;padding-top:2px;">Expected results</span><span style="font-size:12px;">${c.effect}</span></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML=`
+    <div style="background:rgba(28,20,16,.04);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:1.5rem;">
+      On top of your daily routine, <strong style="color:var(--ink);">주 1~2회</strong> these are cares that take your skin to the next level. Methods trending in Korea or actually used in Korean esthetics.
+    </div>
+    ${careCards}`;
+})();
+
+function toggleCareCard(i){
+  const d=document.getElementById('care-detail-'+i);
+  const a=document.getElementById('care-arrow-'+i);
+  const open=d.style.display==='block';
+  document.querySelectorAll('[id^="care-detail-"]').forEach(x=>x.style.display='none');
+  document.querySelectorAll('[id^="care-arrow-"]').forEach(x=>x.textContent='▼');
+  if(!open){d.style.display='block';a.textContent='▲';}
+}
+</script>
+</body>
+</html>
