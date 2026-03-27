@@ -5,6 +5,7 @@
     { "source": "/refund", "destination": "/refund.html" },
     { "source": "/pricing", "destination": "/pricing.html" },
     { "source": "/survey", "destination": "/full-survey-v4.html" },
-    { "source": "/report", "destination": "/paid_report_v1.html" }
+    { "source": "/report", "destination": "/paid_report_v1.html" },
+    { "source": "/skin-survey", "destination": "/skin-survey.html" }
   ]
 }
