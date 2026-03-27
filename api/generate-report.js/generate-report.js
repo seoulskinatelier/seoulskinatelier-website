@@ -20,7 +20,7 @@ export const config = {
    CORS 설정 — seoulskinatelier.com에서만 허용
 ────────────────────────────────────────────────────────────── */
 const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': 'https://seoulskinatelier.com',
+  'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
