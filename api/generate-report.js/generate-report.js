@@ -19,11 +19,20 @@ export const config = {
 /* ──────────────────────────────────────────────────────────────
    CORS 설정 — seoulskinatelier.com에서만 허용
 ────────────────────────────────────────────────────────────── */
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': 'https://seoulskinatelier.com',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
+const ALLOWED_ORIGINS = [
+  'https://seoulskinatelier.com',
+  'https://www.seoulskinatelier.com',
+];
+
+function getCorsHeaders(req) {
+  const origin = req.headers.get('origin') || '';
+  const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowed,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
+}
 
 /* ──────────────────────────────────────────────────────────────
    SYSTEM PROMPT — Claude API에 넘기는 페르소나 설정
@@ -302,13 +311,13 @@ async function verifyPayment(sessionId) {
 export default async function handler(req) {
   // OPTIONS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers: CORS_HEADERS });
+    return new Response(null, { status: 204, headers: getCorsHeaders(req) });
   }
 
   if (req.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), {
       status: 405,
-      headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+      headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
     });
   }
 
@@ -320,7 +329,7 @@ export default async function handler(req) {
     if (!profile || !profile.archetype || !profile.scores) {
       return new Response(JSON.stringify({ error: 'Invalid profile data' }), {
         status: 400,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+        headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
       });
     }
 
@@ -331,7 +340,7 @@ export default async function handler(req) {
       if (!isPaid) {
         return new Response(JSON.stringify({ error: 'Payment not verified' }), {
           status: 403,
-          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+          headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
         });
       }
 
@@ -339,7 +348,7 @@ export default async function handler(req) {
       const paidData = await callClaude(buildPaidPrompt(profile), 3000);
       return new Response(JSON.stringify({ success: true, data: paidData, mode: 'paid' }), {
         status: 200,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+        headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
       });
 
     } else {
@@ -347,7 +356,7 @@ export default async function handler(req) {
       const freeData = await callClaude(buildFreePrompt(profile), 1500);
       return new Response(JSON.stringify({ success: true, data: freeData, mode: 'free' }), {
         status: 200,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+        headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
       });
     }
 
@@ -357,7 +366,7 @@ export default async function handler(req) {
       JSON.stringify({ error: err.message || 'Internal server error' }),
       {
         status: 500,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+        headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
       }
     );
   }
