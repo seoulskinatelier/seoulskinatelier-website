@@ -527,7 +527,7 @@ function buildStructuredProfile(ans) {
     : base.title;
 
   // Routine profile (Layer 4.5) — generate-report.js buildPaidPrompt()가 참조
-  const routine = buildRoutineProfile(archetype, S, flags);
+  const routine = buildRoutineProfile(archetype, barrierKey, acneLevel, flags, spf); 
 
   return {
     // Claude에 넘기는 전체 구조
