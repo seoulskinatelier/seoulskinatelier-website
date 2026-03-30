@@ -1121,10 +1121,6 @@ p { line-height: 1.7; }
   color: var(--accent);
   background: rgba(184,134,78,0.08);
 }
-.result-cta-wrap {
-  padding: 24px 24px 0;
-}
-
 /* ── S4: EMPATHY / PAIN ── */
 .empathy {
   padding: 0 !important;
@@ -1599,6 +1595,40 @@ footer {
   display: block;
 }
 
+
+/* ── MOBILE OVERFLOW FIX ── */
+html, body {
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+section {
+  overflow: hidden !important;
+}
+
+.hero {
+  overflow: hidden !important;
+}
+
+.final-cta-section {
+  overflow: hidden !important;
+}
+
+/* absolute 요소가 뷰포트를 넘지 않도록 */
+.final-cta-section::before {
+  max-width: 100% !important;
+}
+
+/* cards-scroll 부모도 overflow 처리 */
+.result-preview {
+  overflow: hidden !important;
+}
+
+/* 모든 이미지/absolute 요소 뷰포트 제한 */
+img {
+  max-width: 100%;
+}
+
 </style>
 </head>
 
@@ -1611,7 +1641,7 @@ footer {
 
 <!-- STICKY CTA -->
 <div class="sticky-cta" id="sticky-cta">
-  <a href="#" onclick="document.getElementById('modal-overlay').style.display='flex'; return false;" class="sticky-text">Get My Free Analysis →</a>
+  <button class="sticky-btn" onclick="document.getElementById('modal-overlay').style.display='flex'">Get My Free Analysis →</button>
 </div>
 
 <!-- SECTION 1: HERO -->
@@ -1678,9 +1708,6 @@ footer {
     <div class="dot"></div>
   </div>
   
-  <div style="text-align: center;">
-    <button class="result-cta" onclick="document.getElementById('modal-overlay').style.display='flex'">Start Free Analysis</button>
-  </div>
 </section>
 
 <!-- SECTION 4: PAIN / EMPATHY -->
