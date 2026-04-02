@@ -1005,17 +1005,23 @@ p { line-height: 1.7; }
 .hero {
   background: var(--cream) !important;
   padding: 0 !important;
-  min-height: 100svh !important;
-  justify-content: flex-end !important;
+  min-height: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
   position: relative !important;
 }
 .hero-content {
   position: relative;
   z-index: 2;
-  padding: 0 28px 52px;
-  text-align: left;
+  padding: 36px 28px 48px;
+  text-align: center !important;
   max-width: 600px;
   width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .hero h1 {
   font-size: clamp(40px, 10vw, 72px) !important;
@@ -1215,12 +1221,14 @@ p { line-height: 1.7; }
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 0;
+  padding: 14px 0;
   border-bottom: 1px solid rgba(255,255,255,0.08);
-  font-size: 14px;
-  color: rgba(253,250,246,0.85);
+  font-size: clamp(15px, 3.8vw, 17px);
+  color: rgba(253,250,246,0.9);
   font-weight: 300;
   text-align: left;
+  max-width: 320px;
+  margin: 0 auto;
 }
 .check-item input[type="checkbox"] {
   width: 18px;
@@ -1356,16 +1364,16 @@ p { line-height: 1.7; }
 }
 .diff-block-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(17px, 4vw, 20px);
+  font-size: clamp(19px, 4.5vw, 22px);
   font-weight: 400;
   color: var(--white);
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   line-height: 1.3;
 }
 .diff-block-desc {
-  font-size: 13px;
-  color: var(--bark);
-  line-height: 1.7;
+  font-size: clamp(14px, 3.5vw, 16px);
+  color: var(--sand);
+  line-height: 1.6;
 }
 .diff-block-kbeauty {
   border: 1px solid var(--gold) !important;
@@ -1402,7 +1410,7 @@ p { line-height: 1.7; }
   gap: 14px;
 }
 .diff-who-item {
-  font-size: clamp(13px, 3.2vw, 15px);
+  font-size: clamp(14px, 3.5vw, 16px);
   color: var(--sand);
   padding-left: 20px;
   position: relative;
@@ -1580,12 +1588,15 @@ footer {
 
 /* ── RESPONSIVE ── */
 @media (max-width: 767px) {
-  .hero-content { padding: 0 24px 44px; }
+  .hero-content { padding: 28px 24px 40px; }
+  .hero-bg-img { max-height: 55vh; }
+  .hero-bg-img img { max-height: 55vh; }
+  .hero-photo { max-height: 55vh; }
   .preview-card { flex: 0 0 260px; }
 }
 @media (min-width: 768px) {
   .hero-content {
-    padding: 0 48px 72px;
+    padding: 40px 48px 64px;
     max-width: 680px;
   }
   .preview-card { flex: 0 0 300px; }
@@ -1595,27 +1606,30 @@ footer {
 
 
 
-/* Hero background image layer */
+/* Hero image layer — stacked above text */
 .hero-bg-img {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
+  position: relative;
+  width: 100%;
+  max-height: 65vh;
+  overflow: hidden;
 }
 .hero-bg-img img {
   width: 100%;
-  height: 100%;
+  height: auto;
+  display: block;
   object-fit: cover;
-  object-position: 65% 20%;
+  object-position: center center;
+  max-height: 65vh;
 }
 .hero-gradient {
   position: absolute;
-  inset: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
   background: linear-gradient(to bottom,
-    rgba(248,244,238,0) 0%,
-    rgba(248,244,238,0) 30%,
-    rgba(248,244,238,0.5) 52%,
-    rgba(248,244,238,0.9) 68%,
-    rgba(248,244,238,1) 80%
+    rgba(250,247,242,0) 0%,
+    rgba(250,247,242,1) 100%
   );
 }
 .hero-content {
@@ -1633,6 +1647,8 @@ footer {
   -webkit-backdrop-filter: none !important;
   max-width: 480px;
   width: 100%;
+  margin: 0 auto;
+  text-align: center !important;
 }
 @media (min-width: 768px) {
   .empathy-card {
@@ -1711,10 +1727,11 @@ footer {
 
 .hero-photo {
   width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: cover;
-  object-position: 65% 20%;
+  object-position: center center;
   display: block;
+  max-height: 65vh;
 }
 
 
@@ -1790,7 +1807,7 @@ img {
     <span class="proof-divider">·</span>
     <span class="proof-item"><strong>100%</strong> free</span>
   </div>
-  <p class="trust-text"><strong>A personalized skin strategy</strong> built from your answers.</p>
+  <p class="trust-text"><strong>A personalized skin strategy</strong><br>built from your answers.</p>
   <p class="trust-kbeauty">Backed by real Korean skincare trends, SNS reviews, and dermatologist-trusted K-beauty methods.</p>
   <div class="trust-chips">
     <div class="chip">Skin condition</div>
@@ -1917,7 +1934,7 @@ img {
     </div>
     <div class="diff-block diff-block-kbeauty reveal">
       <div class="diff-block-title">Built on real K-beauty intelligence</div>
-      <p class="diff-block-desc">Our recommendations are based on verified Korean skincare trends, top-reviewed products on Korean platforms, and proven K-beauty routines — not generic Western advice.</p>
+      <p class="diff-block-desc">Based on verified Korean skincare trends, top-reviewed products, and proven K-beauty routines.</p>
     </div>
   </div>
   
@@ -1968,9 +1985,8 @@ img {
 
 <!-- SECTION 11: FOOTER -->
 <footer>
-  <div style="text-align: center; margin-bottom: 32px;">
-    <p style="font-size: 0.95rem; color: var(--white); font-style: italic; max-width: 500px; margin: 0 auto 16px;">Your skin can shift with stress, season, and routine. A better diagnosis makes better skincare decisions.</p>
-    <button style="background: var(--accent); color: var(--white); padding: 10px 28px; border-radius: 40px; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.06em;" onclick="document.getElementById('modal-overlay').style.display='flex'">Get My Free Skin Analysis</button>
+  <div style="text-align: center; margin-bottom: 24px;">
+    <p style="font-size: 0.85rem; color: rgba(255,255,255,0.6); max-width: 400px; margin: 0 auto; line-height: 1.6;">Your skin can shift with stress, season, and routine.<br>A better diagnosis makes better skincare decisions.</p>
   </div>
   
   <div class="footer-links">
