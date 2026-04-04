@@ -380,7 +380,7 @@ export default async function handler(req) {
     /* ── 무료 모드 ── */
     } else {
       const freeData = await callClaude(buildFreePrompt(profile), 1500);
-
+          
       // 설문 응답 저장
       const savedResponse = await saveToSupabase('survey_responses', {
         email: body.email || null,
