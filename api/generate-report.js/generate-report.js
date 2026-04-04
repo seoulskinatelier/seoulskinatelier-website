@@ -1,23 +1,26 @@
 /* ══════════════════════════════════════════════════════════════
    Seoul Skin Atelier — Vercel API Route
    파일 위치: /api/generate-report.js
-   
+
    역할:
    - 브라우저에서 Profile JSON 수신
    - Claude API 키를 서버 환경변수에서 안전하게 사용
    - 무료/유료 섹션 분리해서 Claude 호출
    - 응답 JSON 브라우저에 반환
-   
+   - survey_responses / reports Supabase 자동 저장
+
    환경변수 (Vercel Dashboard에서 설정):
    - ANTHROPIC_API_KEY=sk-ant-...
+   - SUPABASE_URL=https://ijuavefvnfghnyzmyubh.supabase.co
+   - SUPABASE_SERVICE_KEY=서비스롤키
 ══════════════════════════════════════════════════════════════ */
 
 export const config = {
-  runtime: 'nodejs', // Vercel Edge Function — 빠른 응답, 전세계 분산
+  runtime: 'nodejs',
 };
 
 /* ──────────────────────────────────────────────────────────────
-   CORS 설정 — seoulskinatelier.com에서만 허용
+   CORS 설정
 ────────────────────────────────────────────────────────────── */
 const ALLOWED_ORIGINS = [
   'https://seoulskinatelier.com',
@@ -35,7 +38,30 @@ function getCorsHeaders(req) {
 }
 
 /* ──────────────────────────────────────────────────────────────
-   SYSTEM PROMPT — Claude API에 넘기는 페르소나 설정
+   Supabase 저장 함수
+────────────────────────────────────────────────────────────── */
+async function saveToSupabase(table, data) {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+  if (!supabaseUrl || !supabaseKey) return null;
+
+  const res = await fetch(`${supabaseUrl}/rest/v1/${table}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      apikey: supabaseKey,
+      Authorization: `Bearer ${supabaseKey}`,
+      Prefer: 'return=representation',
+    },
+    body: JSON.stringify(data),
+  });
+
+  const result = await res.json();
+  return Array.isArray(result) ? result[0] : result;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   SYSTEM PROMPT
 ────────────────────────────────────────────────────────────── */
 const SYSTEM_PROMPT = `You are a senior K-beauty skin consultant at Seoul Skin Atelier writing personalized skin analysis reports for American millennial women (ages 25–38) discovering K-beauty.
 
@@ -45,7 +71,6 @@ Return ONLY valid JSON. No markdown, no backticks, no explanation outside the JS
 
 /* ──────────────────────────────────────────────────────────────
    FREE SECTIONS PROMPT (S1~S4 + S9)
-   결제 없이 생성 — 원가 ~$0.003
 ────────────────────────────────────────────────────────────── */
 function buildFreePrompt(profile) {
   const T = profile.templates;
@@ -103,12 +128,11 @@ Product reactions: ${profile.raw.reactions.join(', ')}
 }
 
 /* ──────────────────────────────────────────────────────────────
-   PAID SECTIONS PROMPT (S5~S8 + Pre-Makeup + SPF)
-   결제 후 생성 — 원가 ~$0.01
+   PAID SECTIONS PROMPT (S5~S8)
 ────────────────────────────────────────────────────────────── */
 function buildPaidPrompt(profile) {
   const T = profile.templates;
-  const R = profile.routine; // buildRoutineProfile() 결과
+  const R = profile.routine;
   const S = profile.scores;
   const F = profile.flags;
 
@@ -150,7 +174,7 @@ High UV exposure: ${F.high_uv}
 Tags: ${profile.tags.slice(0, 10).join(', ')}
 Scores: hydration ${S.hydration}, oil ${S.oil}, sensitivity ${S.sensitivity}, barrier_damage ${S.barrier_damage}, acne ${S.acne}
 
-=== ROUTINE TEMPLATE (already selected by scoring engine) ===
+=== ROUTINE TEMPLATE ===
 --- AM STEPS ---
 ${amStepsText}
 
@@ -166,7 +190,7 @@ ${spfText}
 --- CONDITION MODIFIERS ---
 ${modifiersText || 'None'}
 
-=== PRODUCTS (already matched) ===
+=== PRODUCTS ===
 ${T.products.map(p => `${p.tierLabel}: ${p.name} — ${p.why} (Key: ${p.key})`).join('\n')}
 
 === OUTPUT: Return this exact JSON structure ===
@@ -213,7 +237,7 @@ ${T.products.map(p => `${p.tierLabel}: ${p.name} — ${p.why} (Key: ${p.key})`).
       "tier": "budget",
       "tierLabel": "Budget Pick",
       "name": "${T.products[0]?.name || ''}",
-      "why": "Elevated explanation of why this matches their specific skin profile — not just generic product benefits",
+      "why": "Elevated explanation of why this matches their specific skin profile",
       "key": "${T.products[0]?.key || ''}"
     },
     {
@@ -242,14 +266,11 @@ ${T.products.map(p => `${p.tierLabel}: ${p.name} — ${p.why} (Key: ${p.key})`).
 }
 
 /* ──────────────────────────────────────────────────────────────
-   Claude API 호출 공통 함수
+   Claude API 호출
 ────────────────────────────────────────────────────────────── */
 async function callClaude(prompt, maxTokens = 2000) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
-
-  if (!apiKey) {
-    throw new Error('ANTHROPIC_API_KEY is not set in environment variables.');
-  }
+  if (!apiKey) throw new Error('ANTHROPIC_API_KEY is not set.');
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -283,12 +304,11 @@ async function callClaude(prompt, maxTokens = 2000) {
 }
 
 /* ──────────────────────────────────────────────────────────────
-   결제 검증 — Supabase에서 확인
+   결제 검증
 ────────────────────────────────────────────────────────────── */
 async function verifyPayment(sessionId) {
   const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_KEY; // service role key (서버 전용)
-
+  const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
   if (!supabaseUrl || !supabaseKey) return false;
 
   const res = await fetch(
@@ -309,7 +329,6 @@ async function verifyPayment(sessionId) {
    MAIN HANDLER
 ────────────────────────────────────────────────────────────── */
 export default async function handler(req) {
-  // OPTIONS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: getCorsHeaders(req) });
   }
@@ -325,7 +344,6 @@ export default async function handler(req) {
     const body = await req.json();
     const { profile, mode, session_id } = body;
 
-    // 기본 검증
     if (!profile || !profile.archetype || !profile.scores) {
       return new Response(JSON.stringify({ error: 'Invalid profile data' }), {
         status: 400,
@@ -333,9 +351,8 @@ export default async function handler(req) {
       });
     }
 
-    // mode: 'free' | 'paid'
+    /* ── 유료 모드 ── */
     if (mode === 'paid') {
-      // 결제 검증
       const isPaid = await verifyPayment(session_id);
       if (!isPaid) {
         return new Response(JSON.stringify({ error: 'Payment not verified' }), {
@@ -344,20 +361,56 @@ export default async function handler(req) {
         });
       }
 
-      // 유료 섹션 생성 (S5~S8)
       const paidData = await callClaude(buildPaidPrompt(profile), 3000);
-      return new Response(JSON.stringify({ success: true, data: paidData, mode: 'paid' }), {
-        status: 200,
-        headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
+
+      // 유료 리포트 Supabase 저장
+      if (body.response_id) {
+        await saveToSupabase('reports', {
+          response_id: body.response_id,
+          report_content: JSON.stringify(paidData),
+          is_paid: true,
+        });
+      }
+
+      return new Response(
+        JSON.stringify({ success: true, data: paidData, mode: 'paid' }),
+        { status: 200, headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' } }
+      );
+
+    /* ── 무료 모드 ── */
+    } else {
+      const freeData = await callClaude(buildFreePrompt(profile), 1500);
+
+      // 설문 응답 저장
+      const savedResponse = await saveToSupabase('survey_responses', {
+        email: body.email || null,
+        archetype: profile.archetype,
+        answers: profile.raw,
+        utm_source: body.utm_source || null,
+        utm_medium: body.utm_medium || null,
+        is_paid: false,
       });
 
-    } else {
-      // 무료 섹션 생성 (S1~S4 + S9)
-      const freeData = await callClaude(buildFreePrompt(profile), 1500);
-      return new Response(JSON.stringify({ success: true, data: freeData, mode: 'free' }), {
-        status: 200,
-        headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
-      });
+      const responseId = savedResponse?.id || null;
+
+      // 무료 리포트 저장
+      if (responseId) {
+        await saveToSupabase('reports', {
+          response_id: responseId,
+          report_content: JSON.stringify(freeData),
+          is_paid: false,
+        });
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          data: freeData,
+          mode: 'free',
+          response_id: responseId, // 만족도 수집 / 유료 전환 시 사용
+        }),
+        { status: 200, headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' } }
+      );
     }
 
   } catch (err) {
