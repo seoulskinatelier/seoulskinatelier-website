@@ -9,6 +9,7 @@
     { "source": "/survey", "destination": "/full-survey-v4.html" },
     { "source": "/report", "destination": "/paid_report_v1.html" },
     { "source": "/skin-survey", "destination": "/skin-survey.html" },
-    { "source": "/result", "destination": "/report-result.html" }
+    { "source": "/result", "destination": "/report-result.html" },
+    { "source": "/api/generate-report", "destination": "/api/generate-report.js/generate-report.js" }
   ]
 }
