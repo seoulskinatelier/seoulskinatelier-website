@@ -1,0 +1,2258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Skin Analysis — Seoul Skin Atelier</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<!-- Paddle.js v2 -->
+<script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+<script>
+  Paddle.Initialize({
+    token: 'live_56b65f30a43c26b17cb61602c6d',
+    eventCallback: function(event) {
+      if (event.name === 'checkout.completed') {
+        const txId = event.data?.transaction_id || sessionStorage.getItem('ssa_session_id');
+        // window를 통해 호출 — 함수가 나중에 정의되어도 안전하게 참조
+        if (typeof window.unlockPaidReport === 'function') {
+          window.unlockPaidReport(txId);
+        } else {
+          console.error('unlockPaidReport not ready yet');
+        }
+      }
+    }
+  });
+</script>
+<style>
+:root {
+  --cream:#F9F5EF; --warm:#EDE5D8; --sand:#D4C4A8; --bark:#8C7355;
+  --deep:#2C2416; --ink:#1A1410; --accent:#B8864E; --green:#4A5E4A;
+  --rose:#C4826A; --danger:#A03A2A;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.6;}
+.container{position:relative;z-index:1;max-width:660px;margin:0 auto;padding:48px 24px 100px;}
+
+/* SURVEY */
+.header{text-align:center;margin-bottom:52px;animation:fadeUp 0.7s ease both;}
+.brand{font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:0.25em;text-transform:uppercase;color:var(--bark);margin-bottom:20px;}
+.header h1{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,6vw,44px);font-weight:300;line-height:1.15;color:var(--deep);margin-bottom:16px;}
+.header h1 em{font-style:italic;color:var(--accent);}
+.header p{font-size:14px;color:var(--bark);line-height:1.7;max-width:400px;margin:0 auto;}
+.progress-wrap{margin-bottom:40px;animation:fadeUp 0.7s 0.1s ease both;}
+.progress-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--bark);margin-bottom:8px;letter-spacing:0.05em;}
+.progress-bar{height:2px;background:var(--warm);border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--rose));border-radius:2px;transition:width 0.5s cubic-bezier(0.4,0,0.2,1);width:11%;}
+.question-card{background:rgba(255,255,255,0.6);border:1px solid var(--warm);border-radius:2px;padding:40px 36px;margin-bottom:16px;backdrop-filter:blur(8px);animation:fadeUp 0.5s ease both;}
+.q-number{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;font-weight:400;}
+.q-text{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,3.5vw,22px);font-weight:400;line-height:1.4;color:var(--deep);margin-bottom:8px;}
+.q-hint{font-size:12px;color:var(--bark);margin-bottom:28px;font-style:italic;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option{display:flex;align-items:center;gap:14px;padding:14px 18px;border:1px solid var(--warm);border-radius:2px;cursor:pointer;transition:all 0.2s ease;background:rgba(255,255,255,0.4);user-select:none;}
+.option:hover{border-color:var(--sand);background:rgba(255,255,255,0.8);transform:translateX(3px);}
+.option.selected{border-color:var(--accent);background:rgba(184,134,78,0.06);}
+.option-dot{width:18px;height:18px;border:1.5px solid var(--sand);border-radius:50%;flex-shrink:0;transition:all 0.2s ease;display:flex;align-items:center;justify-content:center;}
+.option.selected .option-dot{border-color:var(--accent);background:var(--accent);}
+.option.selected .option-dot::after{content:'';width:6px;height:6px;background:white;border-radius:50%;}
+.multi .option-dot{border-radius:2px;}
+.multi .option.selected .option-dot::after{content:'✓';font-size:10px;color:white;border-radius:0;width:auto;height:auto;background:none;}
+.option-label{font-size:14px;color:var(--deep);line-height:1.4;}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+.btn-back{background:none;border:1px solid var(--warm);padding:12px 24px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--bark);cursor:pointer;letter-spacing:0.05em;border-radius:2px;transition:all 0.2s ease;}
+.btn-back:hover{border-color:var(--sand);color:var(--deep);}
+.btn-next{background:var(--deep);border:none;padding:14px 36px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:400;color:var(--cream);cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;border-radius:2px;transition:all 0.2s ease;}
+.btn-next:hover{background:var(--accent);transform:translateY(-1px);}
+.btn-next:disabled{background:var(--sand);cursor:not-allowed;transform:none;}
+
+/* LOADING */
+.loading-wrap{text-align:center;padding:80px 20px;animation:fadeUp 0.5s ease both;}
+.loading-brand{font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:0.25em;text-transform:uppercase;color:var(--bark);margin-bottom:40px;}
+.loading-spinner{width:40px;height:40px;border:1.5px solid var(--warm);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 32px;}
+.loading-title{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,5vw,32px);font-weight:300;color:var(--deep);line-height:1.3;margin-bottom:32px;}
+.loading-title em{font-style:italic;color:var(--accent);}
+.loading-steps{display:flex;flex-direction:column;gap:10px;max-width:300px;margin:0 auto;}
+.loading-step{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--bark);opacity:0.3;transition:all 0.4s ease;}
+.loading-step.active{opacity:1;color:var(--ink);}
+.loading-step.done{opacity:0.5;}
+.step-dot{width:5px;height:5px;border-radius:50%;background:var(--sand);flex-shrink:0;transition:background 0.3s;}
+.loading-step.active .step-dot{background:var(--accent);}
+.loading-step.done .step-dot{background:var(--green);}
+
+/* REPORT */
+#report-wrap{animation:fadeUp 0.7s ease both;}
+.report-hero{background:var(--deep);border-radius:2px;padding:52px 40px 44px;text-align:center;margin-bottom:2px;}
+.report-brand-sm{font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--bark);margin-bottom:32px;}
+.report-label{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--sand);margin-bottom:12px;}
+.report-skin-type{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,5vw,40px);font-weight:300;color:var(--cream);line-height:1.25;margin-bottom:20px;}
+.report-skin-type em{font-style:italic;color:var(--accent);}
+.report-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:28px;}
+.rtag{padding:5px 14px;border:1px solid rgba(212,196,168,0.3);border-radius:20px;font-size:11px;color:var(--sand);letter-spacing:0.06em;}
+.rtag.danger{border-color:rgba(196,130,106,0.5);color:#D4826A;}
+.rtag.ok{border-color:rgba(74,94,74,0.5);color:#7FAF7F;}
+.report-intro{font-size:14px;color:rgba(212,196,168,0.85);line-height:1.95;max-width:480px;margin:0 auto;}
+.report-section{background:rgba(255,255,255,0.55);border:1px solid var(--warm);border-radius:2px;padding:36px;margin-bottom:2px;backdrop-filter:blur(6px);}
+.section-eyebrow{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,4vw,26px);font-weight:400;color:var(--deep);line-height:1.3;margin-bottom:20px;}
+.prose{font-size:14px;color:var(--ink);line-height:1.9;}
+.prose p{margin-bottom:12px;}
+.prose p:last-child{margin-bottom:0;}
+.critical-block{background:rgba(44,36,22,0.05);border:1px solid rgba(44,36,22,0.1);border-left:3px solid var(--danger);border-radius:2px;padding:20px 22px;margin-bottom:10px;font-size:14px;line-height:1.85;color:var(--deep);}
+.pattern-list{display:flex;flex-direction:column;gap:10px;}
+.pattern-item{display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:rgba(237,229,216,0.35);border-radius:2px;font-size:14px;color:var(--ink);line-height:1.65;}
+.pattern-item::before{content:'→';color:var(--accent);flex-shrink:0;margin-top:1px;}
+.wrong-list{display:flex;flex-direction:column;gap:0;}
+.wrong-item{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--warm);font-size:14px;color:var(--ink);line-height:1.65;}
+.wrong-item:last-child{border-bottom:none;}
+.wrong-x{color:var(--danger);font-size:15px;flex-shrink:0;font-weight:500;}
+.routine-block{margin-bottom:28px;}
+.routine-block:last-child{margin-bottom:0;}
+.routine-time{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.routine-time-label{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--bark);font-weight:500;white-space:nowrap;}
+.routine-time-line{flex:1;height:1px;background:var(--warm);}
+.routine-step{display:flex;gap:16px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--warm);}
+.routine-step:last-child{border-bottom:none;}
+.step-num{width:24px;height:24px;border:1px solid var(--sand);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--bark);flex-shrink:0;margin-top:1px;}
+.step-name{font-size:14px;font-weight:500;color:var(--deep);margin-bottom:3px;}
+.step-why{font-size:13px;color:var(--bark);line-height:1.6;}
+.ing-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:480px){.ing-cols{grid-template-columns:1fr;}}
+.ing-col-label{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px;font-weight:500;}
+.ing-col-label.good{color:var(--green);}
+.ing-col-label.bad{color:var(--danger);}
+.ing-item{padding:11px 13px;margin-bottom:8px;border-radius:2px;font-size:13px;line-height:1.5;}
+.ing-item.good{background:rgba(74,94,74,0.07);border-left:2px solid var(--green);}
+.ing-item.bad{background:rgba(160,58,42,0.06);border-left:2px solid var(--danger);}
+.ing-name{font-weight:500;color:var(--deep);margin-bottom:2px;}
+.ing-why{font-size:12px;color:var(--bark);}
+.product-card{border:1px solid var(--warm);border-radius:2px;padding:18px;margin-bottom:10px;background:rgba(255,255,255,0.5);display:flex;gap:14px;align-items:flex-start;}
+.product-badge{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:2px;white-space:nowrap;flex-shrink:0;margin-top:2px;font-weight:500;}
+.product-badge.budget{background:rgba(74,94,74,0.1);color:var(--green);}
+.product-badge.best{background:rgba(184,134,78,0.12);color:var(--accent);}
+.product-badge.premium{background:rgba(44,36,22,0.08);color:var(--deep);}
+.product-name{font-size:14px;font-weight:500;color:var(--deep);margin-bottom:3px;}
+.product-why{font-size:13px;color:var(--bark);line-height:1.6;margin-bottom:3px;}
+.product-key{font-size:12px;color:var(--accent);}
+.timeline{display:flex;flex-direction:column;}
+.tl-item{display:flex;gap:18px;padding-bottom:24px;position:relative;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-item:not(:last-child)::before{content:'';position:absolute;left:14px;top:30px;bottom:0;width:1px;background:var(--warm);}
+.tl-dot{width:28px;height:28px;border:1px solid var(--sand);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--cream);font-size:10px;font-weight:500;color:var(--bark);}
+.tl-week{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:3px;margin-top:4px;}
+.tl-desc{font-size:14px;color:var(--ink);line-height:1.65;}
+.final-box{background:var(--deep);border-radius:2px;padding:44px 36px;text-align:center;margin-top:2px;}
+.final-box .section-eyebrow{color:var(--bark);}
+.final-box .section-title{color:var(--cream);margin-bottom:16px;}
+.final-box .prose{color:rgba(212,196,168,0.8);max-width:440px;margin:0 auto 32px;}
+.btn-cta{display:block;background:var(--accent);border:none;padding:18px 48px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:white;cursor:pointer;letter-spacing:0.12em;text-transform:uppercase;border-radius:2px;transition:all 0.2s ease;width:100%;margin-bottom:12px;}
+.btn-cta:hover{background:#C4956A;transform:translateY(-1px);}
+.cta-note{font-size:12px;color:var(--bark);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hidden{display:none;}
+@media(max-width:480px){.question-card,.report-section,.report-hero,.final-box{padding:28px 20px}.product-card{flex-direction:column;gap:10px}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div id="survey-view">
+    <div class="header">
+      <div class="brand">Seoul Skin Atelier</div>
+      <h1>Your <em>Skin Story</em><br>begins here</h1>
+      <p>9 questions · about 60 seconds · personalized for your skin</p>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="progress-label">Question 1 of 9</span>
+        <span id="progress-pct">11%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+    <div class="question-card" id="question-card"></div>
+    <div class="nav">
+      <button class="btn-back" id="btn-back" onclick="prevQ()">← Back</button>
+      <button class="btn-next" id="btn-next" onclick="nextQ()" disabled>Continue →</button>
+    </div>
+  </div>
+
+  <div id="loading-view" class="hidden">
+    <div class="loading-wrap">
+      <div class="loading-brand">Seoul Skin Atelier</div>
+      <div class="loading-spinner"></div>
+      <div class="loading-title">Analyzing your <em>skin profile</em>…</div>
+      <div class="loading-steps" id="loading-steps">
+        <div class="loading-step" id="ls-1"><div class="step-dot"></div>Scoring your answers</div>
+        <div class="loading-step" id="ls-2"><div class="step-dot"></div>Classifying skin archetype</div>
+        <div class="loading-step" id="ls-3"><div class="step-dot"></div>Applying barrier modifier</div>
+        <div class="loading-step" id="ls-4"><div class="step-dot"></div>Building template profile</div>
+        <div class="loading-step" id="ls-5"><div class="step-dot"></div>Generating your report</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="report-wrap" class="hidden"></div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════
+   SURVEY QUESTIONS
+══════════════════════════════════════════════ */
+const questions = [
+  {id:'q1',number:'01',text:'What are your top skin concerns right now?',hint:'Select up to 2',type:'multi',max:2,
+   options:['Dryness','Oiliness / Shine','Acne / Breakouts','Pigmentation / Dark spots','Pores','Firmness / Fine lines','Sensitivity / Redness']},
+  {id:'q2',number:'02',text:'How does your skin feel right after cleansing — with nothing applied?',hint:'Single choice',type:'single',
+   options:['Very tight and dry','Slightly tight','Comfortable and balanced','Slightly shiny','Noticeably oily']},
+  {id:'q3',number:'03',text:'By midday, how has your skin changed?',hint:'Single choice',type:'single',
+   options:['Dry with flakiness','Dry in some areas','No change','Oily only in T-zone','Oily all over']},
+  {id:'q4',number:'04',text:'How often do you experience breakouts?',hint:'Single choice',type:'single',
+   options:['Rarely or never','Occasionally','Frequently','Almost constantly']},
+  {id:'q5',number:'05',text:'Does your skin react easily — redness, stinging, or irritation?',hint:'Single choice',type:'single',
+   options:['Not at all','Sometimes','Often','Very sensitive — reacts to most products']},
+  {id:'q6',number:'06',text:'How has your skin been over the past 2 weeks?',hint:'Single choice',type:'single',
+   options:['No change — pretty stable','Slightly worse than usual','Suddenly much worse']},
+  {id:'q7',number:'07',text:'How much time do you spend outdoors on an average day?',hint:'Single choice',type:'single',
+   options:['Mostly indoors','1–2 hours','3+ hours']},
+  {id:'q8',number:'08',text:'How would you describe your typical makeup routine?',hint:'Single choice',type:'single',
+   options:['No makeup','Light coverage (BB cream, tinted SPF)','Full coverage makeup']},
+  {id:'q9',number:'09',text:'Have you experienced any of these with skincare products?',hint:'Select all that apply',type:'multi',max:4,
+   options:['Stinging or burning sensation','New breakouts after use','No visible effect','No issues — products work well']}
+];
+
+let current = 0, answers = {};
+
+/* ══════════════════════════════════════════════
+   LAYER 1 — ANSWER MAPPING (숫자 + 태그)
+   Q6 x2 가중치, Q9 x1.5 가중치
+   Q3 강화 — 속건조 vs 진짜 지성 구분 핵심
+══════════════════════════════════════════════ */
+const ANSWER_MAP = {
+  q1_map: {
+    'Dryness':                   { scores:{ hydration:-1 },            tags:['dry-concern'] },
+    'Oiliness / Shine':          { scores:{ oil:1 },                   tags:['oily-concern'] },
+    'Acne / Breakouts':          { scores:{ acne:1 },                  tags:['acne-concern'] },
+    'Pigmentation / Dark spots': { scores:{ pigmentation:1 },          tags:['pigmentation'] },
+    'Pores':                     { scores:{ oil:1 },                   tags:['enlarged-pores'] },
+    'Firmness / Fine lines':     { scores:{ aging:1 },                 tags:['aging-concern'] },
+    'Sensitivity / Redness':     { scores:{ sensitivity:1 },           tags:['redness-concern'] }
+  },
+  q2: {
+    'Very tight and dry':        { scores:{ hydration:-2, oil:-2 },    tags:['dry','tight','moisture-deficit'] },
+    'Slightly tight':            { scores:{ hydration:-1, oil:-1 },    tags:['dry-leaning','mild-tight'] },
+    'Comfortable and balanced':  { scores:{ hydration:0, oil:0 },      tags:['normal','balanced'] },
+    'Slightly shiny':            { scores:{ hydration:0, oil:1 },      tags:['oily-leaning','mild-shine'] },
+    'Noticeably oily':           { scores:{ hydration:1, oil:2 },      tags:['oily','sebum-high','shine'] }
+  },
+  // Q3 강화: 속건조(dehydrated) vs 진짜지성(true-oily) 구분 핵심 축
+  q3: {
+    'Dry with flakiness':        { scores:{ hydration:-2, oil:-1 },    tags:['very-dry','flaky','true-dry'] },
+    'Dry in some areas':         { scores:{ hydration:-1, oil:0 },     tags:['patchy-dry','dehydrated-leaning'] },
+    'No change':                 { scores:{ hydration:0, oil:0 },      tags:['stable-midday'] },
+    'Oily only in T-zone':       { scores:{ oil:1, combo:1 },          tags:['combo','t-zone-oily','dehydrated-possible'] },
+    'Oily all over':             { scores:{ oil:2 },                   tags:['true-oily','sebum-active','all-over-shine'] }
+  },
+  q4: {
+    'Rarely or never':           { scores:{ acne:0 },                  tags:['clear-skin'] },
+    'Occasionally':              { scores:{ acne:1 },                  tags:['occasional-breakout'] },
+    'Frequently':                { scores:{ acne:2 },                  tags:['frequent-breakout','acne-prone'] },
+    'Almost constantly':         { scores:{ acne:3 },                  tags:['persistent-acne','severe-acne'] }
+  },
+  q5: {
+    'Not at all':                          { scores:{ sensitivity:0 }, tags:['resilient','tolerant'] },
+    'Sometimes':                           { scores:{ sensitivity:1 }, tags:['mild-sensitive'] },
+    'Often':                               { scores:{ sensitivity:2 }, tags:['sensitive','reactive'] },
+    'Very sensitive — reacts to most products': { scores:{ sensitivity:3 }, tags:['very-sensitive','highly-reactive','product-intolerant'] }
+  },
+  // Q6 weight x2 — 최근 변화가 가장 중요
+  q6: {
+    'No change — pretty stable': { scores:{ barrier_damage:0*2 },      tags:['stable','barrier-stable'] },
+    'Slightly worse than usual': { scores:{ barrier_damage:1*2 },      tags:['mildly-compromised','worsening'] },
+    'Suddenly much worse':       { scores:{ barrier_damage:3*2 },      tags:['barrier-damaged','acute-stress','sudden-worsening'] }
+  },
+  q7: {
+    'Mostly indoors':   { scores:{ uv_exposure:0 }, tags:['low-uv'] },
+    '1–2 hours':        { scores:{ uv_exposure:1 }, tags:['moderate-uv'] },
+    '3+ hours':         { scores:{ uv_exposure:2 }, tags:['high-uv','spf50-required'] }
+  },
+  q8: {
+    'No makeup':                           { scores:{ makeup_load:0 }, tags:['no-makeup'] },
+    'Light coverage (BB cream, tinted SPF)':{ scores:{ makeup_load:1 }, tags:['light-makeup'] },
+    'Full coverage makeup':                { scores:{ makeup_load:2 }, tags:['full-makeup','double-cleanse-needed'] }
+  },
+  // Q9 weight x1.5
+  q9_map: {
+    'Stinging or burning sensation': { scores:{ barrier_damage:1*1.5, sensitivity:1*1.5 }, tags:['product-reactive','stings','barrier-stress'] },
+    'New breakouts after use':       { scores:{ acne:1*1.5, sensitivity:1*1.5 },           tags:['comedogenic-react','sensitivity-breakout'] },
+    'No visible effect':             { scores:{ efficacy_gap:1 },                           tags:['product-mismatch'] },
+    'No issues — products work well':{ scores:{ barrier_damage:-1*1.5 },                   tags:['product-tolerant','stable-barrier'] }
+  }
+};
+
+/* ══════════════════════════════════════════════
+   LAYER 2 — SCORING ENGINE
+══════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════
+   SUBTYPE NAME MAPPING
+   아키타입 → 브랜드 서브타입 이름
+══════════════════════════════════════════════ */
+const SUBTYPE_NAMES = {
+  dehydrated_oily:        'The Compensator',
+  balanced_oily:          'The Overproducer',
+  dry_sensitive:          'The Fragile',
+  dehydrated_sensitive:   'The Reactor',
+  combination_dehydrated: 'The Clogger',
+  balanced_normal:        'The Balanced'
+};
+
+function getSubtypeName(archetype) {
+  return SUBTYPE_NAMES[archetype] || 'Your Skin Type';
+}
+
+/* ══════════════════════════════════════════════
+   DASHBOARD SCORE HELPERS — 전역 (free + paid 공용)
+══════════════════════════════════════════════ */
+function scoreLabel(val, type) {
+  if (type === 'hydration')   return val >= 60 ? 'Excellent' : val >= 35 ? 'Good' : 'Attention';
+  if (type === 'oil_balance') return val < 35  ? 'Excellent' : val < 60  ? 'Good' : 'Attention';
+  if (type === 'oil')         return val < 35  ? 'Excellent' : val < 60  ? 'Good' : 'Attention';
+  if (type === 'barrier')     return val >= 60 ? 'Excellent' : val >= 35 ? 'Good' : 'Attention';
+  if (type === 'sensitivity') return val < 35  ? 'Excellent' : val < 60  ? 'Good' : 'Attention';
+  if (type === 'congestion')  return val < 35  ? 'Excellent' : val < 60  ? 'Good' : 'Attention';
+  return '';
+}
+function scoreLabelClass(val, type) {
+  const lbl = scoreLabel(val, type);
+  if (lbl === 'Excellent') return 'dash-val-excellent';
+  if (lbl === 'Good')      return 'dash-val-good';
+  return 'dash-val-attention';
+}
+function scoreBarColor(val, type) {
+  const lbl = scoreLabel(val, type);
+  if (lbl === 'Excellent') return 'linear-gradient(90deg,#4A90D9,#6DB8F0)';
+  if (lbl === 'Good')      return 'linear-gradient(90deg,#4A5E4A,#7FAF7F)';
+  return 'linear-gradient(90deg,#A03A2A,#C4826A)';
+}
+
+
+/* ══════════════════════════════════════════════
+   K-BEAUTY RITUAL DB
+   스코어 기반 조합 로직
+   수분(hydration) × 오일(oil) × 민감도(sensitivity) × 아크네 × 플래그
+══════════════════════════════════════════════ */
+
+// ── 팩 재료 DB ─────────────────────────────────
+const KBEAUTY_PACKS = {
+
+  BHA_PACK: {
+    id: 'bha_pack',
+    name: 'BHA/PHA Ampoule Pack',
+    name_kr: '바하팩',
+    duration: '10 min',
+    frequency_note: '2x per week only',
+    steps: [
+      'BHA/PHA 앰플을 화장솜 또는 마스크시트에 충분히 적셔주세요.',
+      '얼굴에 밀착시킨 후 10분간 유지합니다.',
+      '떼어낸 후 남은 앰플을 가볍게 패팅해 흡수시킵니다.'
+    ],
+    why: 'BHA는 오일에 용해되어 모공 깊숙이 침투해 과잉 피지와 각질을 녹여냅니다. 다음 단계의 수분 흡수를 극대화하는 준비 단계예요.',
+    products: ['마몽드 로즈워터 리퀴드 앰플', 'COSRX BHA Blackhead Power Liquid', 'Some By Mi AHA BHA PHA 토너'],
+    caution: null
+  },
+
+  MOISTURE_CREAM_PACK: {
+    id: 'moisture_cream_pack',
+    name: 'Moisture Cream Pack',
+    name_kr: '수분크림팩',
+    duration: '15–20 min',
+    steps: [
+      '수분크림에 히알루론산 토너를 2-3방울 섞어 묽게 만들어주세요.',
+      '피부 전체에 고르게 펴 바릅니다.',
+      '마스크시트 또는 화장솜에 물을 적셔 위에 밀착시켜 주세요.',
+      '15-20분 후 시트를 제거하고 남은 크림을 가볍게 패팅합니다.'
+    ],
+    why: '수분토너로 묽어진 크림이 피부 속 깊이 침투하고, 위에 덮은 젖은 시트가 수분이 날아가지 않도록 밀봉해 수분 흡수율을 극대화합니다.',
+    products: ['히알루론산 수분크림', '히알루론산 토너', 'Laneige Water Bank Moisture Cream'],
+    caution: null
+  },
+
+  ALOE_PACK: {
+    id: 'aloe_pack',
+    name: 'Aloe Gel Pack',
+    name_kr: '알로에팩',
+    duration: '15–20 min',
+    steps: [
+      '알로에겔을 피부 전체에 넉넉하게 발라주세요.',
+      '마스크시트 또는 화장솜에 물을 적셔 위에 밀착시킵니다.',
+      '15-20분 후 제거하고 남은 알로에를 가볍게 패팅합니다.'
+    ],
+    why: '알로에는 강력한 수분 공급과 동시에 피지 조절 효과가 있어 오일 밸런스가 좋은 피부의 수분을 가볍게 유지하는 데 최적입니다.',
+    products: ['순수 알로에겔 (99%)', 'Innisfree Aloe Revital Soothing Gel'],
+    caution: null
+  },
+
+  REGEN_CREAM_PACK: {
+    id: 'regen_cream_pack',
+    name: 'Regenerating Cream Pack',
+    name_kr: '재생크림팩',
+    duration: '10 min',
+    steps: [
+      '재생크림을 피부가 보이지 않을 정도로 두껍게 발라주세요.',
+      '랩 마스크(식품용 랩)를 얼굴에 밀착시킵니다. 눈과 코는 오픈.',
+      '10분 후 랩을 제거하고 해면이나 부드러운 면으로 닦아냅니다.',
+      '미온수로 가볍게 세안하고 마무리합니다.'
+    ],
+    why: '손상된 장벽을 재생크림의 지질 성분으로 채우는 오클루시브 팩입니다. 랩이 열기와 습기를 가둬 성분 흡수를 극대화해요.',
+    products: ['라로슈포제 Cicaplast Baume B5', 'Dr.Jart+ Cicapair Cream', 'Pyunkang Yul Moisture Cream'],
+    caution: '팩 후 남은 크림은 반드시 닦아내주세요. 오일 지수가 높은 분은 아주 얇게 시작하세요.'
+  },
+
+  RUBBER_MASK: {
+    id: 'rubber_mask',
+    name: 'Rubber Mask (Modeling Mask)',
+    name_kr: '고무팩',
+    duration: '10–15 min',
+    steps: [
+      '먼저 판테놀 또는 마데카소사이드 앰플을 얼굴 전체에 충분히 바릅니다.',
+      '고무팩 파우더와 물을 1:1 비율로 섞어 빠르게 얼굴에 도포합니다.',
+      '10-15분 후 굳은 팩을 아래에서 위로 한 번에 제거합니다.',
+      '재생크림을 얇게 마무리로 발라줍니다.'
+    ],
+    why: '고무팩은 밀봉 효과로 앰플의 진정·재생 성분을 피부 깊이 침투시킵니다. 자극없이 장벽을 회복하는 민감성 피부의 핵심 트리트먼트예요.',
+    products: ['마데카소사이드 앰플', '판테놀 앰플', 'Lindsay Modeling Mask', 'Dr.Jart+ Rubber Mask'],
+    caution: null
+  },
+
+  CICA_AMPOULE_STEP: {
+    id: 'cica_ampoule',
+    name: 'Cica Ampoule Pre-Treatment',
+    name_kr: '시카앰플 전처리',
+    duration: 'Until absorbed',
+    steps: [
+      '시카(센텔라) 앰플을 팩 전에 얼굴 전체에 충분히 패팅해 흡수시킵니다.',
+      '흡수 후 바로 다음 팩 단계로 진행하세요.'
+    ],
+    why: '시카의 진정·항염 성분이 팩의 효과를 높여줍니다. 트러블이 활성화된 피부를 먼저 안정시키는 사전 준비 단계예요.',
+    products: ['Dr.Jart+ Cicapair Serum', 'IUNIK Centella Calming Serum', 'Purito Centella Green Level Serum'],
+    caution: null
+  },
+
+  HA_LAYERING: {
+    id: 'ha_layering',
+    name: 'Hyaluronic Acid 3-Layer Method',
+    name_kr: '히알루론산 3번 레이어링',
+    duration: '1–2 min per layer',
+    steps: [
+      '히알루론산 토너를 손바닥에 덜어 얼굴 전체에 부드럽게 패팅합니다.',
+      '완전히 흡수될 때까지 기다린 후 동일하게 2번 더 반복합니다. (총 3레이어)',
+      '마지막 레이어가 아직 촉촉할 때 수분크림으로 마무리합니다.'
+    ],
+    why: '히알루론산을 얇게 레이어링하면 각 층이 다음 층의 흡수를 도와 수분이 표피 깊이까지 채워집니다. Glass Skin의 핵심 테크닉이에요.',
+    products: ['Torriden DIVE-IN Hyaluronic Acid Toner', 'Beauty of Joseon Hyaluronic Toner', 'Klairs Supple Preparation Toner'],
+    caution: null
+  },
+
+  COOLING_TIP: {
+    id: 'cooling_tip',
+    name: 'Cooling Pack Add-on',
+    name_kr: '쿨링팩 (옵션)',
+    duration: '10 min',
+    steps: [
+      '알로에겔 또는 수분 앰플을 냉장 보관 후 차갑게 사용합니다.',
+      '야외 활동 후 모공이 열린 상태에서 냉장 팩으로 빠르게 진정시킵니다.'
+    ],
+    why: '자외선과 열에 노출된 후 피부 온도를 낮춰 모공을 수축시키고 피지 과다 분비를 억제합니다.',
+    products: ['냉장 알로에겔', '냉장 수분 에센스'],
+    caution: '야외 활동 후에만 사용하는 옵션 단계예요.'
+  }
+};
+
+// ── 스코어 기반 리추얼 조합 함수 ──────────────────
+function buildKBeautyRitual(dashScores, acneLevel, flags) {
+
+  // dashScores: { hydration, oil_balance, barrier_strength, sensitivity_risk, congestion_tendency }
+  const hydration   = dashScores.hydration   || 50;
+  const oil         = dashScores.oil_balance || 50;
+  const sensitivity = dashScores.sensitivity_risk || 50;
+  const isHighOil       = oil >= 60;        // Attention
+  const isHighSensitive = sensitivity >= 60; // Attention
+  const isLowHydration  = hydration < 35;   // Attention
+  const isMidHydration  = hydration >= 35 && hydration < 60; // Good
+  const isHighHydration = hydration >= 60;  // Excellent
+  const isAcneProne = acneLevel === 'acne_prone' || acneLevel === 'breakout_prone';
+
+  const steps = [];
+  const tips  = [];
+
+  // ── Step 1: 오일 많음 → BHA팩 (민감도 높으면 스킵) ──
+  if (isHighOil && !isHighSensitive) {
+    steps.push({ ...KBEAUTY_PACKS.BHA_PACK, order: 1 });
+  }
+
+  // ── Step 2: 아크네 → 시카 앰플 전처리 ──
+  if (isAcneProne) {
+    steps.push({ ...KBEAUTY_PACKS.CICA_AMPOULE_STEP, order: steps.length + 1 });
+  }
+
+  // ── Step 3: 민감도 높음 → 고무팩 ──
+  if (isHighSensitive) {
+    steps.push({ ...KBEAUTY_PACKS.RUBBER_MASK, order: steps.length + 1 });
+  } else {
+    // ── Step 3: 수분 상태에 따라 베이스 팩 선택 ──
+    if (isLowHydration) {
+      // 수분 Attention → 재생크림팩
+      steps.push({ ...KBEAUTY_PACKS.REGEN_CREAM_PACK, order: steps.length + 1 });
+    } else if (isHighHydration && isHighOil) {
+      // 수분 Good/Excellent + 오일 많음 → 알로에팩
+      steps.push({ ...KBEAUTY_PACKS.ALOE_PACK, order: steps.length + 1 });
+    } else {
+      // 기본 → 수분크림팩
+      steps.push({ ...KBEAUTY_PACKS.MOISTURE_CREAM_PACK, order: steps.length + 1 });
+    }
+  }
+
+  // ── Step 4: The Balanced (모두 Good/Excellent) → HA 3레이어링 추가 ──
+  const isBalanced = !isHighOil && !isHighSensitive && !isLowHydration && !isAcneProne;
+  if (isBalanced) {
+    // BHA팩 → HA 3레이어링 → 수분크림팩 순서로 재조립
+    steps.length = 0;
+    steps.push({ ...KBEAUTY_PACKS.BHA_PACK, order: 1 });
+    steps.push({ ...KBEAUTY_PACKS.HA_LAYERING, order: 2 });
+    steps.push({ ...KBEAUTY_PACKS.MOISTURE_CREAM_PACK, order: 3 });
+    tips.push('For best results, do this ritual 1–2x per week. Consistency is what creates glass skin — not a single session.');
+  }
+
+  // ── 옵션: 야외활동 많음 + 오일 많음 → 쿨링팩 팁 ──
+  if (flags.high_uv && isHighOil) {
+    tips.push(KBEAUTY_PACKS.COOLING_TIP.steps.join(' ') + ' — ' + KBEAUTY_PACKS.COOLING_TIP.why);
+  }
+
+  // ── 재생크림 마무리 코멘트 (오일 Attention이면 얇게) ──
+  if (isHighSensitive) {
+    const finishNote = isHighOil
+      ? '재생크림은 아주 얇게 마무리해주세요 — 오일 밸런스가 높아 두껍게 바르면 모공이 막힐 수 있어요.'
+      : '재생크림으로 마무리해 장벽을 보호해주세요.';
+    tips.push(finishNote);
+  }
+
+  // ── 리추얼 이름 결정 ──
+  let ritualName = '';
+  if (isBalanced)                       ritualName = 'Glass Skin Ritual';
+  else if (isHighSensitive && isAcneProne) ritualName = 'Cica Ampoule + Rubber Mask Ritual';
+  else if (isHighSensitive)              ritualName = 'Rubber Mask Ritual';
+  else if (isHighOil && isLowHydration) ritualName = 'BHA Pack + Moisture Cream Pack Ritual';
+  else if (isHighOil && isHighHydration)ritualName = 'BHA Pack + Aloe Pack Ritual';
+  else if (isHighOil)                   ritualName = 'BHA Pack + Moisture Cream Pack Ritual';
+  else if (isLowHydration)              ritualName = 'Regenerating Cream Pack Ritual';
+  else                                  ritualName = 'Moisture Cream Pack Ritual';
+
+  return { ritualName, steps, tips };
+}
+
+function scoreAnswers(ans) {
+  const S = { hydration:0, oil:0, combo:0, sensitivity:0, barrier_damage:0, acne:0, pigmentation:0, aging:0, uv_exposure:0, makeup_load:0, efficacy_gap:0 };
+  const T = new Set();
+
+  // Q1 multi
+  (ans.q1||[]).forEach(opt => {
+    const m = ANSWER_MAP.q1_map[opt]; if(!m) return;
+    Object.entries(m.scores).forEach(([k,v]) => S[k] = (S[k]||0) + v);
+    m.tags.forEach(t => T.add(t));
+  });
+
+  // Q2–Q8 single
+  ['q2','q3','q4','q5','q6','q7','q8'].forEach(qid => {
+    const val = (ans[qid]||[])[0]; if(!val) return;
+    const m = ANSWER_MAP[qid]?.[val]; if(!m) return;
+    Object.entries(m.scores).forEach(([k,v]) => S[k] = (S[k]||0) + v);
+    m.tags.forEach(t => T.add(t));
+  });
+
+  // Q9 multi
+  (ans.q9||[]).forEach(opt => {
+    const m = ANSWER_MAP.q9_map[opt]; if(!m) return;
+    Object.entries(m.scores).forEach(([k,v]) => S[k] = (S[k]||0) + v);
+    m.tags.forEach(t => T.add(t));
+  });
+
+  return { scores: S, tags: Array.from(T) };
+}
+
+/* ══════════════════════════════════════════════
+   LAYER 3 — ARCHETYPE CLASSIFICATION (6개 고정)
+   Q3이 속건조 vs 진짜지성 구분 핵심 축
+══════════════════════════════════════════════ */
+function classifyArchetype(S, tags, ans) {
+  const q3val = (ans.q3||[])[0]||'';
+  const trueOily   = tags.includes('true-oily') || q3val.includes('all over');
+  const midDry     = tags.includes('patchy-dry') || tags.includes('very-dry') || q3val.includes('Dry');
+  const tzone      = tags.includes('combo') || q3val.includes('T-zone');
+  const afterCleanDry = S.hydration <= -1;
+  const afterCleanOily = S.oil >= 1;
+
+  // 속건조 판별: 세안 후 건조한데 낮에 기름짐 → 수분부족이 피지 유발
+  const isDehydratedOily = afterCleanDry && (trueOily || tzone);
+  // 진짜 지성: 세안 후부터 번들 + 낮에도 전체 번들
+  const isTrueOily = afterCleanOily && trueOily && !midDry;
+
+  let archetype;
+  if (isDehydratedOily && S.sensitivity >= 2)    archetype = 'dehydrated_sensitive';
+  else if (isDehydratedOily && tzone)             archetype = 'combination_dehydrated';
+  else if (isDehydratedOily)                      archetype = 'dehydrated_oily';
+  else if (isTrueOily)                            archetype = 'balanced_oily';
+  else if (S.hydration <= -2 && S.sensitivity >= 2) archetype = 'dry_sensitive';
+  else if (S.hydration <= -1 && S.sensitivity >= 1) archetype = 'dry_sensitive';
+  else                                            archetype = 'balanced_normal';
+
+  return archetype;
+}
+
+/* ══════════════════════════════════════════════
+   LAYER 4 — TEMPLATE DATABASE
+══════════════════════════════════════════════ */
+const TEMPLATE_DB = {
+
+  profile_base: {
+    dehydrated_oily: {
+      title: 'Dehydrated Oily Skin',
+      description: 'Your skin produces excess oil on the surface, but lacks sufficient hydration underneath. This imbalance can lead to both shine and tightness — and is often mistaken for purely oily skin.',
+      spf_note: 'Oil-control sunscreen essential'
+    },
+    balanced_oily: {
+      title: 'Balanced Oily Skin',
+      description: 'Your skin produces oil consistently but remains relatively stable without significant dehydration. The challenge is managing sebum and preventing congestion over time.',
+      spf_note: 'Lightweight, non-comedogenic SPF'
+    },
+    dry_sensitive: {
+      title: 'Dry & Sensitive Skin',
+      description: 'Your skin lacks both oil and moisture, making it prone to tightness, flakiness, and irritation. Barrier support and gentle formulations are the priority.',
+      spf_note: 'Moisturizing SPF with barrier support'
+    },
+    dehydrated_sensitive: {
+      title: 'Dehydrated Sensitive Skin',
+      description: 'Your skin lacks hydration and is easily irritated, often reacting to environmental changes or skincare products. The barrier needs careful rebuilding before any active treatment.',
+      spf_note: 'Fragrance-free, mineral SPF preferred'
+    },
+    combination_dehydrated: {
+      title: 'Combination Dehydrated Skin',
+      description: 'Your skin shows both oily and dry zones, with an underlying lack of hydration driving the imbalance. Treating only the oiliness will make the dryness worse.',
+      spf_note: 'Zone-specific SPF application'
+    },
+    balanced_normal: {
+      title: 'Balanced Normal Skin',
+      description: 'Your skin is well-balanced in both oil and hydration, with minimal sensitivity or reactivity. The focus now is maintenance and prevention.',
+      spf_note: 'Standard daily SPF sufficient'
+    }
+  },
+
+  barrier_modifier: {
+    healthy: {
+      label: '',
+      text: 'Your skin barrier is currently stable and functioning well.',
+      prefix: '',
+      mode: 'maintenance'
+    },
+    sensitive: {
+      label: 'Sensitive',
+      text: 'Your skin barrier shows signs of mild sensitivity — certain ingredients and environmental factors may trigger reactions.',
+      prefix: 'Sensitive',
+      mode: 'gentle'
+    },
+    compromised: {
+      label: 'Barrier-Compromised',
+      text: 'Your skin barrier appears weakened, leading to increased sensitivity, moisture loss, and unpredictable reactions to products you may have used before.',
+      prefix: 'Barrier-Compromised',
+      mode: 'recovery'
+    },
+    damaged: {
+      label: 'Barrier-Damaged',
+      text: 'Your skin barrier is significantly compromised. It is more reactive, vulnerable, and unable to retain moisture effectively — active ingredients should be paused entirely.',
+      prefix: 'Barrier-Damaged',
+      mode: 'repair'
+    }
+  },
+
+  sensitivity_modifier: {
+    low: {
+      label: '',
+      text: 'Your skin is generally resilient and tolerates a wide range of products without significant reaction.',
+      level: 'low'
+    },
+    medium: {
+      label: '',
+      text: 'Your skin may react to certain ingredients or environmental triggers, particularly when the barrier is stressed.',
+      level: 'medium'
+    },
+    high: {
+      label: 'Sensitive',
+      text: 'Your skin is prone to irritation and requires gentle, carefully selected formulations. Patch testing new products is essential.',
+      level: 'high'
+    }
+  },
+
+  critical_insight: {
+    barrier_recovery: 'Your current skin condition strongly suggests a compromised barrier. Using active ingredients — retinol, AHAs, BHAs — right now is likely making your skin worse, not better. Barrier repair must come first.',
+    acne_risk: 'Frequent breakouts signal that your current approach to oil and inflammation management is not working. Aggressive spot treatment without addressing the root cause will extend the cycle.',
+    sensitivity_risk: 'Your skin\'s high reactivity means that even well-regarded active ingredients could trigger irritation if introduced without care. Less is significantly more at this stage.',
+    dehydration_issue: 'A lack of internal hydration may be driving your skin to overproduce oil as a compensatory response — creating a cycle of imbalance that oil-control products alone cannot fix.',
+    stable: 'Your skin is in a relatively stable state. The priority now is building a consistent routine that maintains this balance and prevents future disruption.'
+  },
+
+  // 제품 추천 DB (archetype별)
+  // affiliateUrl: Amazon Associates 승인 후 실제 링크로 교체 필요
+  products_db: {
+    dehydrated_oily: [
+      { tier:'budget', tierLabel:'Best under $20', name:'COSRX Oil-Free Ultra Moisturizing Lotion', why:'Lightweight hydration without contributing to shine — addresses the moisture deficit that drives excess oil production.', key:'Birch Sap, Betaine', texture:'Light lotion', useWhen:'AM + PM', affiliateUrl:'https://www.amazon.com/s?k=COSRX+Oil-Free+Ultra+Moisturizing+Lotion&tag=seoulskinatel-20' },
+      { tier:'best', tierLabel:'Best mid-range', name:'Laneige Water Bank Blue Hyaluronic Cream', why:'K-beauty\'s gold standard for dehydrated oily skin — deeply hydrates while maintaining a matte finish.', key:'Blue Hyaluronic Acid, Hydro Ionized Mineral Water', texture:'Gel-cream', useWhen:'AM + PM', affiliateUrl:'https://www.amazon.com/s?k=Laneige+Water+Bank+Blue+Hyaluronic+Cream&tag=seoulskinatel-20' },
+      { tier:'premium', tierLabel:'Premium pick', name:'SK-II Facial Treatment Essence', why:'Legendary Pitera essence that rebalances the skin\'s natural hydration cycle at a cellular level.', key:'Galactomyces Ferment Filtrate (Pitera)', texture:'Watery essence', useWhen:'After cleansing', affiliateUrl:'https://www.amazon.com/s?k=SK-II+Facial+Treatment+Essence&tag=seoulskinatel-20' }
+    ],
+    balanced_oily: [
+      { tier:'budget', tierLabel:'Best under $20', name:'COSRX BHA Blackhead Power Liquid', why:'Clears congestion and controls sebum at the pore level without stripping your barrier.', key:'Betaine Salicylate 4% (BHA)', texture:'Watery liquid', useWhen:'PM, 2-3x/week', affiliateUrl:'https://www.amazon.com/s?k=COSRX+BHA+Blackhead+Power+Liquid&tag=seoulskinatel-20' },
+      { tier:'best', tierLabel:'Best mid-range', name:'Some By Mi AHA BHA PHA 30 Days Miracle Toner', why:'Multi-acid formula loved for visible texture improvement and breakout reduction within 4 weeks.', key:'AHA + BHA + PHA, Tea Tree', texture:'Toner', useWhen:'PM after cleansing', affiliateUrl:'https://www.amazon.com/s?k=Some+By+Mi+AHA+BHA+PHA+30+Days+Miracle+Toner&tag=seoulskinatel-20' },
+      { tier:'premium', tierLabel:'Premium pick', name:'Tatcha The Water Cream', why:'Oil-free, pore-refining moisturizer that delivers hydration without heaviness or congestion.', key:'Japanese Wild Rose, Hadasei-3™', texture:'Water cream', useWhen:'AM + PM', affiliateUrl:'https://www.amazon.com/s?k=Tatcha+The+Water+Cream&tag=seoulskinatel-20' }
+    ],
+    dry_sensitive: [
+      { tier:'budget', tierLabel:'Best under $20', name:'CeraVe Moisturizing Cream', why:'Ceramide-rich formula that restores barrier function — fragrance-free and dermatologist-tested.', key:'Ceramides NP, NL, AP + Hyaluronic Acid', texture:'Rich cream', useWhen:'AM + PM', affiliateUrl:'https://www.amazon.com/s?k=CeraVe+Moisturizing+Cream&tag=seoulskinatel-20' },
+      { tier:'best', tierLabel:'Best mid-range', name:'Dr. Jart+ Cicapair Tiger Grass Serum', why:'Centella-based repair serum for sensitive, dry skin — calms redness while rebuilding barrier integrity.', key:'Centella Asiatica, Madecassoside', texture:'Serum', useWhen:'PM', affiliateUrl:'https://www.amazon.com/s?k=Dr+Jart+Cicapair+Tiger+Grass+Serum&tag=seoulskinatel-20' },
+      { tier:'premium', tierLabel:'Premium pick', name:'Sulwhasoo First Care Activating Serum', why:'Luxury Korean first essence that amplifies moisture absorption and nourishes depleted skin from within.', key:'Jaum Activator™, Ginseng, Red Pine', texture:'Essence', useWhen:'After cleansing', affiliateUrl:'https://www.amazon.com/s?k=Sulwhasoo+First+Care+Activating+Serum&tag=seoulskinatel-20' }
+    ],
+    dehydrated_sensitive: [
+      { tier:'budget', tierLabel:'Best under $20', name:'Vanicream Gentle Facial Cleanser', why:'Stripped-down formula with zero irritants — the safest cleanser when your barrier is reactive.', key:'Free of dyes, fragrance, parabens, formaldehyde', texture:'Gel cleanser', useWhen:'AM + PM cleanse', affiliateUrl:'https://www.amazon.com/s?k=Vanicream+Gentle+Facial+Cleanser&tag=seoulskinatel-20' },
+      { tier:'best', tierLabel:'Best mid-range', name:'Torriden DIVE-IN Low Molecule Hyaluronic Acid Serum', why:'Fragrance-free, multi-weight HA serum ideal for compromised skin that needs hydration without risk.', key:'5 types of Hyaluronic Acid, Panthenol', texture:'Watery serum', useWhen:'AM + PM after toner', affiliateUrl:'https://www.amazon.com/s?k=Torriden+DIVE-IN+Hyaluronic+Acid+Serum&tag=seoulskinatel-20' },
+      { tier:'premium', tierLabel:'Premium pick', name:'La Mer The Moisturizing Cream', why:'Intensive barrier recovery for severely reactive skin — worth the investment during an acute repair phase.', key:'Miracle Broth™, Sea Kelp', texture:'Rich cream', useWhen:'PM', affiliateUrl:'https://www.amazon.com/s?k=La+Mer+Moisturizing+Cream&tag=seoulskinatel-20' }
+    ],
+    combination_dehydrated: [
+      { tier:'budget', tierLabel:'Best under $20', name:'Klairs Supple Preparation Facial Toner', why:'Alcohol-free hydrating toner that preps the whole face — even oily zones benefit from the pH-balancing effect.', key:'Beta-glucan, Niacinamide, AHA (low%)', texture:'Toner', useWhen:'AM + PM after cleansing', affiliateUrl:'https://www.amazon.com/s?k=Klairs+Supple+Preparation+Facial+Toner&tag=seoulskinatel-20' },
+      { tier:'best', tierLabel:'Best mid-range', name:'Innisfree Green Tea Seed Serum', why:'Antioxidant-rich hydration that works across zones — addresses dryness without triggering T-zone oiliness.', key:'Green Tea Extract, Amino Acids', texture:'Serum', useWhen:'AM + PM', affiliateUrl:'https://www.amazon.com/s?k=Innisfree+Green+Tea+Seed+Serum&tag=seoulskinatel-20' },
+      { tier:'premium', tierLabel:'Premium pick', name:'Amorepacific Treatment Essence', why:'Balancing essence that reads combination skin\'s dual needs — hydrates dry zones while refining oily areas.', key:'Green Tea Water, Bamboo Sap', texture:'Essence', useWhen:'After cleansing', affiliateUrl:'https://www.amazon.com/s?k=Amorepacific+Treatment+Essence&tag=seoulskinatel-20' }
+    ],
+    balanced_normal: [
+      { tier:'budget', tierLabel:'Best under $20', name:'Klairs Rich Moist Soothing Serum', why:'Gentle, effective hydration with no unnecessary actives — a reliable daily serum for balanced skin.', key:'Centella Asiatica, Allantoin, Aloe', texture:'Serum', useWhen:'AM + PM', affiliateUrl:'https://www.amazon.com/s?k=Klairs+Rich+Moist+Soothing+Serum&tag=seoulskinatel-20' },
+      { tier:'best', tierLabel:'Best mid-range', name:'Innisfree Green Tea Seed Serum', why:'Antioxidant maintenance serum that keeps normal skin performing at its best through seasonal changes.', key:'Green Tea Extract, Amino Acids, Seed Oil', texture:'Serum', useWhen:'AM + PM', affiliateUrl:'https://www.amazon.com/s?k=Innisfree+Green+Tea+Seed+Serum&tag=seoulskinatel-20' },
+      { tier:'premium', tierLabel:'Premium pick', name:'Sulwhasoo Concentrated Ginseng Renewing Serum', why:'Luxury firming serum for elevating already-healthy skin — prevention and longevity in one formula.', key:'Red Ginseng Root Extract, Ginsenosides', texture:'Serum', useWhen:'PM', affiliateUrl:'https://www.amazon.com/s?k=Sulwhasoo+Concentrated+Ginseng+Renewing+Serum&tag=seoulskinatel-20' }
+    ]
+  }
+};
+
+/* ══════════════════════════════════════════════
+   LAYER 4.5 — ROUTINE PROFILE BUILDER
+   archetype + barrier + acne + flags 기반으로
+   AM/PM/Pre-Makeup/SPF 루틴 템플릿 생성
+   → profile.routine에 삽입됨
+   → generate-report.js paid prompt의 R 변수에 대응
+══════════════════════════════════════════════ */
+function buildRoutineProfile(archetype, barrierKey, acneLevel, flags, spf) {
+
+  /* ── AM 루틴 ─────────────────────────────────────────── */
+  const AM_BASE = {
+    dehydrated_oily: [
+      { title:'Low-pH Gel Cleanser',              desc:'Removes overnight sebum without stripping the water barrier — preserves the acid mantle your skin relies on.' },
+      { title:'Hydrating Toner (2–3 layers)',      desc:'Pat in thin layers to saturate dehydrated cells before oil production accelerates.' },
+      { title:'Lightweight Hydrating Serum',       desc:'Water-binding actives (HA, Panthenol) fill moisture gaps that cause compensatory sebum.' },
+      { title:'Oil-Free Gel Moisturizer',          desc:'Seals hydration without adding lipids — keeps your T-zone matte through mid-morning.' },
+      { title:'Oil-Control SPF 50+',               desc:'Non-comedogenic sunscreen that controls shine and provides UV protection suited to your exposure level.' }
+    ],
+    balanced_oily: [
+      { title:'Gel or Foam Cleanser',              desc:'Thoroughly removes excess sebum without over-drying — prevents rebound oil production.' },
+      { title:'BHA Toner (AM, 2–3x/week)',         desc:'Salicylic acid penetrates pores to prevent congestion before it becomes visible breakouts.' },
+      { title:'Niacinamide Serum',                 desc:'Regulates sebum production over time and minimizes pore appearance.' },
+      { title:'Lightweight Gel Moisturizer',       desc:'Provides necessary moisture without adding excess lipids or comedogenic ingredients.' },
+      { title:'Matte-Finish SPF 50+',              desc:'Broad-spectrum protection in a formula that controls shine through the day.' }
+    ],
+    dry_sensitive: [
+      { title:'Cream or Milk Cleanser',            desc:'Non-foaming formulas preserve the lipid barrier that dry skin cannot afford to lose.' },
+      { title:'Calming Essence or Toner',          desc:'Fragrance-free, hydrating first layer that primes skin for absorption without any risk of irritation.' },
+      { title:'Ceramide + Peptide Serum',          desc:'Replenishes the lipid structure of your barrier while delivering signals for collagen maintenance.' },
+      { title:'Rich Moisturizer',                  desc:'An occlusive-rich formula that locks in every layer beneath it and prevents transepidermal water loss.' },
+      { title:'Moisturizing SPF 50+',              desc:'Broad-spectrum SPF in a hydrating, barrier-supportive formula — not a matte or oil-control type.' }
+    ],
+    dehydrated_sensitive: [
+      { title:'Gentle Micellar or Low-pH Cleanser', desc:'Minimal cleansing action — removes surface impurities without disturbing the compromised barrier.' },
+      { title:'Fragrance-Free Hydrating Toner',    desc:'Single-ingredient or minimal formula; no actives, no fragrance — pure moisture restoration only.' },
+      { title:'Barrier-Repair Serum (Ceramides/HA)', desc:'Rebuilds the lipid-water balance your skin has lost; must come before any other treatment.' },
+      { title:'Soothing Gel-Cream Moisturizer',   desc:'Lightweight occlusion that calms reactivity while keeping water locked in.' },
+      { title:'Mineral SPF 30–50+ (Fragrance-Free)', desc:'Zinc oxide or titanium dioxide only — zero risk of chemical filter irritation on sensitized skin.' }
+    ],
+    combination_dehydrated: [
+      { title:'Low-pH Gel Cleanser',               desc:'Balanced cleanse that addresses T-zone without drying cheeks further.' },
+      { title:'Hydrating Toner (focus on dry zones)', desc:'Layer twice on dry areas; single pass on T-zone — zone-aware hydration strategy.' },
+      { title:'Hydrating Serum (water-based)',     desc:'Hyaluronic acid across the whole face addresses the underlying dehydration driving both zones.' },
+      { title:'Lightweight Moisturizer',           desc:'Gel-cream texture works across combination zones without triggering midday shine.' },
+      { title:'SPF 50+ PA+++',                     desc:'Broad-spectrum daily protection appropriate for your outdoor exposure level.' }
+    ],
+    balanced_normal: [
+      { title:'Gentle Gel or Foam Cleanser',       desc:'Clean without stripping — normal skin needs to maintain its current balance, not disrupt it.' },
+      { title:'Antioxidant Toner or Mist',         desc:'Light hydration layer with antioxidant protection — prevention is the priority at this stage.' },
+      { title:'Vitamin C or Niacinamide Serum',   desc:'Brightening and preventive care to maintain your skin\'s current healthy baseline.' },
+      { title:'Lightweight Moisturizer',           desc:'Maintains the oil-moisture balance without adding unnecessary richness.' },
+      { title:'SPF 30–50+',                        desc:'Non-negotiable daily protection — the single most effective anti-aging and anti-pigmentation tool.' }
+    ]
+  };
+
+  const PM_BASE = {
+    dehydrated_oily: [
+      { title:'Double Cleanse (Oil Cleanser → Foam)', desc:'First cleanse lifts sunscreen and makeup residue; second cleanse fully clears pores without over-stripping.' },
+      { title:'Hydrating Toner (2–3 layers)',          desc:'Evening hydration sets the stage for any active ingredients to absorb properly.' },
+      { title:'Treatment Serum (Niacinamide or Retinol if stable)', desc:'Evening is optimal for oil-regulating actives — no UV interference.' },
+      { title:'Hydrating Moisturizer',                desc:'Lock in moisture before sleep; your skin loses water at night if left unoccluded.' }
+    ],
+    balanced_oily: [
+      { title:'Double Cleanse',                        desc:'Clears excess sebum, makeup, and SPF completely — prevents overnight pore congestion.' },
+      { title:'AHA Exfoliant Toner (2x/week)',         desc:'Glycolic or lactic acid refines texture and speeds cell turnover; skip on other nights.' },
+      { title:'Retinol or Niacinamide Serum',          desc:'Evening-only actives that reduce oil production and accelerate skin renewal over time.' },
+      { title:'Lightweight Gel Moisturizer',           desc:'Minimal occlusion is enough at night — heavy formulas can cause milia in oily types.' }
+    ],
+    dry_sensitive: [
+      { title:'Cream Cleanser or Oil Cleanser (single step)', desc:'Single gentle cleanse is sufficient — over-cleansing is one of the primary dry skin mistakes.' },
+      { title:'Hydrating Toner or Essence',            desc:'Layer generously; dry skin is most receptive to hydration immediately after cleansing.' },
+      { title:'Ceramide or Peptide Treatment',         desc:'Overnight barrier repair — ceramides synthesize more effectively during sleep.' },
+      { title:'Rich Night Cream or Sleeping Mask',     desc:'Heaviest occlusive layer seals all actives beneath and works while you rest.' }
+    ],
+    dehydrated_sensitive: [
+      { title:'Micellar Water or Gentle Cleanser',     desc:'Single light cleanse only — no harsh removal, no double cleanse unless wearing heavy SPF.' },
+      { title:'Barrier Essence (Ceramide/Peptide)',    desc:'Core PM repair step; these ingredients work synergistically with the skin\'s nocturnal repair cycle.' },
+      { title:'Rich Soothing Moisturizer',             desc:'Generous application acts as an overnight skin shield — use a sleeping mask 2–3x per week.' }
+    ],
+    combination_dehydrated: [
+      { title:'Double Cleanse (if wearing SPF/makeup)', desc:'Oil-based first step removes without stripping; foaming second step clears pores.' },
+      { title:'Hydrating Toner (zone focus)',          desc:'Concentrate on cheeks and dry areas; lighter touch on T-zone.' },
+      { title:'Hyaluronic Acid Serum',                desc:'Full-face hydration treatment before a lightweight moisturizer.' },
+      { title:'Zone Moisturizing — lighter on T, richer on dry zones', desc:'Apply gel moisturizer to T-zone only; cream formula to dry zones.' }
+    ],
+    balanced_normal: [
+      { title:'Double Cleanse (SPF days)',             desc:'Remove SPF and environmental debris thoroughly — this protects your current healthy baseline.' },
+      { title:'Hydrating Toner',                      desc:'Prep layer to maximize serum absorption.' },
+      { title:'Retinol or AHA (2–3x/week, evenings)', desc:'Preventive actives that maintain cell turnover and collagen health — introduce slowly.' },
+      { title:'Moisturizer',                          desc:'Lighter than daytime is fine — your skin is stable enough for a simple PM seal.' }
+    ]
+  };
+
+  /* ── Barrier modifier adjustments ─────────────────────── */
+  const BARRIER_ADJUSTMENTS = {
+    damaged: {
+      adjust_all: 'Remove all actives (retinol, AHA, BHA, Vitamin C). Focus exclusively on cleanse + hydrate + barrier seal. No new products.',
+      note: 'Barrier is damaged — reset to a 3-step repair routine only.',
+      extra_note: 'Pause all exfoliants, retinol, and Vitamin C until barrier has recovered for at least 2–3 weeks.'
+    },
+    compromised: {
+      adjust_all: 'Reduce actives to minimum frequency (1x/week max). Prioritize barrier-repair ingredients every day.',
+      note: 'Barrier is compromised — limit actives, add ceramides.',
+      extra_note: 'Use actives no more than once per week until skin stops reacting.'
+    },
+    sensitive: {
+      adjust_all: 'Introduce any new active slowly (every 3 days), monitor reaction.',
+      note: 'Sensitivity elevated — patch test and slow introduction protocol.',
+      extra_note: null
+    },
+    healthy: {
+      adjust_all: null,
+      note: 'Barrier is stable — can proceed with full routine as designed.',
+      extra_note: null
+    }
+  };
+
+  /* ── Acne modifier ─────────────────────────────────────── */
+  const ACNE_MODIFICATIONS = {
+    acne_prone: {
+      pm_add: { title:'BHA Spot Treatment (PM)', desc:'Salicylic acid directly on active breakouts — penetrates the pore lining where acne originates.' },
+      note: 'Active acne — add BHA spot treatment, avoid occlusive sleeping masks'
+    },
+    breakout_prone: {
+      pm_add: { title:'Niacinamide or Tea Tree Spot Treatment', desc:'Anti-inflammatory treatment on pre-breakout areas — stops congestion before it surfaces.' },
+      note: 'Breakout-prone — add targeted spot treatment to PM routine'
+    },
+    occasional: { pm_add: null, note: null },
+    clear:      { pm_add: null, note: null }
+  };
+
+  /* ── Pre-Makeup (full_makeup flag) ────────────────────── */
+  const PRE_MAKEUP = flags.full_makeup ? [
+    { step:'Lightweight Hydrating Primer or Water Mist', why:'Hydrates skin before foundation — prevents dry patches from showing through coverage.' },
+    { step:'Allow SPF to fully set (5–10 minutes)',      why:'SPF needs to bond to the skin to function — applying foundation immediately over wet SPF reduces protection.' },
+    { step:'Color-Correcting Primer (if needed)',        why:'Neutralizes redness or dullness before foundation, reducing how much product you need.' }
+  ] : [];
+
+  /* ── SPF strategy ──────────────────────────────────────── */
+  const SPF_STRATEGIES = {
+    dehydrated_oily: {
+      purpose: 'UV protection with sebum control — prevents both sun damage and midday shine',
+      spf_grade: spf,
+      filter_type: 'chemical preferred (lighter finish)',
+      filter_note: 'Avoid mineral/zinc if full coverage makeup worn on top — pilling risk',
+      formula_type: 'Lightweight serum or fluid SPF; gel textures ideal',
+      extra_strategy: 'Layer over moisturizer; do not mix with other products in palm',
+      optional: 'SPF setting spray for midday reapplication over makeup'
+    },
+    balanced_oily: {
+      purpose: 'Broad-spectrum UV with matte finish — prevents photo-aging and sebum excess',
+      spf_grade: spf,
+      filter_type: 'chemical or hybrid',
+      filter_note: 'Choose formulas with silica or niacinamide for added oil control',
+      formula_type: 'Fluid or lotion; avoid cream SPFs that add unnecessary lipids',
+      extra_strategy: 'Apply as the final skincare step, not mixed into moisturizer',
+      optional: 'Oil-control powder SPF for reapplication'
+    },
+    dry_sensitive: {
+      purpose: 'UV protection with built-in moisture — prevents barrier disruption from UV-induced oxidative stress',
+      spf_grade: spf,
+      filter_type: 'mineral preferred (zinc oxide)',
+      filter_note: 'Chemical filters may irritate sensitized skin; mineral is gentler',
+      formula_type: 'Cream or emulsion SPF with ceramide or HA added',
+      extra_strategy: 'Apply generously — most people underapply and get 30–50% of listed SPF value',
+      optional: 'Hydrating SPF with tint for minimal coverage days'
+    },
+    dehydrated_sensitive: {
+      purpose: 'Fragrance-free, reactive-skin-safe UV protection — no compromise on barrier safety',
+      spf_grade: spf,
+      filter_type: 'mineral only (zinc oxide)',
+      filter_note: 'Avoid all chemical UV filters — avobenzone and octinoxate are common sensitizers',
+      formula_type: 'Fragrance-free, alcohol-free, minimal ingredient list',
+      extra_strategy: 'Patch test new SPF on jawline for 3 days before full face use',
+      optional: 'Physical sunstick for reapplication without disturbing compromised skin'
+    },
+    combination_dehydrated: {
+      purpose: 'Zone-aware UV protection — hydrating on dry zones, non-comedogenic on T-zone',
+      spf_grade: spf,
+      filter_type: 'hybrid chemical/mineral or lightweight chemical',
+      filter_note: 'Avoid heavy cream formulas on T-zone — look for fluid or serum SPFs',
+      formula_type: 'Serum-weight or fluid SPF that works across zones without emphasizing oiliness',
+      extra_strategy: 'Apply slightly more product to dry cheek/temple zones',
+      optional: 'Setting powder on T-zone after SPF sets to control midday shine'
+    },
+    balanced_normal: {
+      purpose: 'Daily UV maintenance — the most impactful anti-aging step for skin in good condition',
+      spf_grade: spf,
+      filter_type: 'chemical or hybrid',
+      filter_note: 'Wide filter selection available for your resilient skin type',
+      formula_type: 'Any texture you enjoy wearing daily — compliance matters most',
+      extra_strategy: 'SPF 30 minimum every day including indoors — UVA penetrates glass',
+      optional: 'Tinted SPF for a natural "clean girl" finish'
+    }
+  };
+
+  /* ── Assemble routine ─────────────────────────────────── */
+  const am = (AM_BASE[archetype] || AM_BASE.balanced_normal).map(s => ({ ...s }));
+  const pm = (PM_BASE[archetype] || PM_BASE.balanced_normal).map(s => ({ ...s }));
+  const spfStrategy = SPF_STRATEGIES[archetype] || SPF_STRATEGIES.balanced_normal;
+  const preMakeup = PRE_MAKEUP;
+  const conditionModifiers = [];
+
+  // Apply barrier modifier
+  const barrierAdj = BARRIER_ADJUSTMENTS[barrierKey] || BARRIER_ADJUSTMENTS.healthy;
+  if (barrierAdj.note) conditionModifiers.push(barrierAdj);
+
+  // Apply acne modifier — add spot treatment to PM
+  const acneMod = ACNE_MODIFICATIONS[acneLevel] || ACNE_MODIFICATIONS.clear;
+  if (acneMod.pm_add) {
+    pm.push(acneMod.pm_add);
+    conditionModifiers.push({ note: acneMod.note });
+  }
+
+  return {
+    am,
+    pm,
+    pre_makeup: preMakeup,
+    spf_strategy: spfStrategy,
+    condition_modifiers: conditionModifiers
+  };
+}
+
+/* ══════════════════════════════════════════════
+   LAYER 5 — BUILD STRUCTURED PROFILE
+   모든 데이터를 Claude API용 JSON으로 조합
+══════════════════════════════════════════════ */
+function buildStructuredProfile(ans) {
+  const { scores: S, tags: T } = scoreAnswers(ans);
+  const archetype = classifyArchetype(S, T, ans);
+
+  // Barrier classification
+  let barrierKey;
+  if (S.barrier_damage >= 6)      barrierKey = 'damaged';     // Q6 x2 = 6 if "suddenly much worse"
+  else if (S.barrier_damage >= 3) barrierKey = 'compromised';
+  else if (S.barrier_damage >= 1 || S.sensitivity >= 2) barrierKey = 'sensitive';
+  else                            barrierKey = 'healthy';
+
+  // Sensitivity classification
+  let sensitivityKey;
+  if (S.sensitivity >= 3)      sensitivityKey = 'high';
+  else if (S.sensitivity >= 1) sensitivityKey = 'medium';
+  else                         sensitivityKey = 'low';
+
+  // Acne level
+  let acneLevel;
+  if (S.acne >= 5)      acneLevel = 'acne_prone';
+  else if (S.acne >= 3) acneLevel = 'breakout_prone';
+  else if (S.acne >= 1) acneLevel = 'occasional';
+  else                  acneLevel = 'clear';
+
+  // SPF
+  const spf = S.uv_exposure >= 2 ? 'SPF 50+ PA++++' : S.uv_exposure >= 1 ? 'SPF 50+ PA+++' : 'SPF 30+ PA++';
+
+  // Flags
+  const flags = {
+    barrier_mode: barrierKey === 'damaged' || barrierKey === 'compromised',
+    full_makeup: S.makeup_load >= 2,
+    high_uv: S.uv_exposure >= 2,
+    has_pigmentation: S.pigmentation >= 1,
+    has_aging: S.aging >= 1,
+    product_mismatch: T.includes('product-mismatch'),
+    sudden_worsening: T.includes('sudden-worsening'),
+    true_oily: T.includes('true-oily'),
+    dehydrated: S.hydration <= -1
+  };
+
+  // Critical insight 선택
+  let insightKey;
+  if (flags.barrier_mode)           insightKey = 'barrier_recovery';
+  else if (S.acne >= 3)             insightKey = 'acne_risk';
+  else if (sensitivityKey === 'high') insightKey = 'sensitivity_risk';
+  else if (flags.dehydrated)        insightKey = 'dehydration_issue';
+  else                              insightKey = 'stable';
+
+  // 최종 archetype 명칭 조합 (modifier 추가)
+  const base = TEMPLATE_DB.profile_base[archetype];
+  const barrierMod = TEMPLATE_DB.barrier_modifier[barrierKey];
+  const sensitivityMod = TEMPLATE_DB.sensitivity_modifier[sensitivityKey];
+
+  const prefixParts = [barrierMod.prefix, sensitivityMod.label].filter(Boolean);
+  const finalTitle = prefixParts.length > 0
+    ? `${prefixParts.join(', ')} ${base.title}`
+    : base.title;
+
+  // Routine profile (Layer 4.5) — generate-report.js buildPaidPrompt()가 참조
+  const routine = buildRoutineProfile(archetype, barrierKey, acneLevel, flags, spf);
+
+  return {
+    // Claude에 넘기는 전체 구조
+    archetype,
+    final_title: finalTitle,
+    scores: S,
+    tags: T,
+    flags,
+    spf,
+    acne_level: acneLevel,
+
+    // Routine profile (AM / PM / Pre-makeup / SPF strategy)
+    routine,
+
+    // Template DB 레이어 (이미 선택된 텍스트)
+    templates: {
+      profile_base: base,
+      barrier_modifier: barrierMod,
+      sensitivity_modifier: sensitivityMod,
+      critical_insight: TEMPLATE_DB.critical_insight[insightKey],
+      insight_key: insightKey,
+      products: TEMPLATE_DB.products_db[archetype] || TEMPLATE_DB.products_db.balanced_normal
+    },
+
+    // Raw answers
+    raw: {
+      top_concerns: ans.q1 || [],
+      post_cleanse: (ans.q2||[])[0]||'',
+      midday: (ans.q3||[])[0]||'',
+      breakouts: (ans.q4||[])[0]||'',
+      sensitivity: (ans.q5||[])[0]||'',
+      recent_change: (ans.q6||[])[0]||'',
+      outdoors: (ans.q7||[])[0]||'',
+      makeup: (ans.q8||[])[0]||'',
+      reactions: ans.q9 || []
+    }
+  };
+}
+
+/* ══════════════════════════════════════════════
+   LAYER 6 — CLAUDE API
+   Template DB → 자연어 고급화
+══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════
+   API 호출 함수 (Supabase Edge Function)
+
+══════════════════════════════════════════════ */
+const EDGE_FUNCTION_URL = 'https://ijuavefvnfghnyzmyubh.supabase.co/functions/v1/generate-report';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlqdWF2ZWZ2bmZnaG55em15dWJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNjM2OTUsImV4cCI6MjA4OTgzOTY5NX0.Odl4rdRiAgezU0eiZhbbSVnoitDtD7vw3uIiiK2l-C8';
+
+async function callReportAPI(profile, mode = 'free', sessionId = null) {
+  const resp = await fetch(EDGE_FUNCTION_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+    },
+    body: JSON.stringify({ profile, mode, session_id: sessionId })
+  });
+
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({ error: `API error ${resp.status}` }));
+    throw new Error(err.error || `API error ${resp.status}`);
+  }
+
+  const result = await resp.json();
+  return result.data;
+}
+
+/* ══════════════════════════════════════════════
+   RENDER REPORT
+══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════
+   RENDER FREE REPORT v2
+   새 구조: Header → Mini Dashboard → Signals →
+   What's Throwing Off → Partial Lock → CTA
+══════════════════════════════════════════════ */
+function renderFreeReport(profile, gen) {
+  const T = profile.templates;
+  const F = profile.flags;
+  const S = profile.scores;
+  const wrap = document.getElementById('report-wrap');
+
+  const patterns = gen.section2_patterns || [];
+  const subtypeName = getSubtypeName(profile.archetype);
+  const firstAMStep = profile.routine?.am?.[0];
+
+  // 대시보드 점수 계산
+  const dashScores = {
+    hydration:   Math.max(10, Math.min(90, 50 + (S.hydration * 15))),
+    oil_balance: Math.max(10, Math.min(90, 40 + (S.oil * 15))),
+    barrier:     Math.max(10, Math.min(90, 70 - (S.barrier_damage * 10))),
+    sensitivity: Math.max(10, Math.min(90, 20 + (S.sensitivity * 18))),
+    congestion:  Math.max(10, Math.min(90, 30 + (S.acne * 12)))
+  };
+
+  // K-Beauty 리추얼 이름만 (blur용)
+  const kbRitual = buildKBeautyRitual(dashScores, profile.acne_level, F);
+
+  wrap.innerHTML = `
+
+    <!-- ── HERO ── -->
+    <div class="report-hero">
+      <div class="report-brand-sm">Seoul Skin Atelier — Skin Analysis</div>
+      <div class="report-label">Your Skin Profile</div>
+      <div class="free-subtype-name">${subtypeName}</div>
+      <div class="report-hook">${gen.section1_intro}</div>
+      <div class="report-tags">
+        <span class="rtag">${profile.acne_level.replace(/_/g,' ')}</span>
+        <span class="rtag">Barrier: ${T.barrier_modifier.label || 'Healthy'}</span>
+        <span class="rtag">${profile.spf}</span>
+        ${F.full_makeup ? '<span class="rtag">Makeup user</span>' : ''}
+      </div>
+    </div>
+
+    <!-- ── DASHBOARD (전체 공개) ── -->
+    <div class="report-section">
+      <div class="section-eyebrow">Your Skin Dashboard</div>
+      <div class="section-title">How your skin is showing up right now</div>
+      <div class="dashboard-grid">
+        ${[
+          { key:'hydration',   label:'Hydration',          val: dashScores.hydration },
+          { key:'oil_balance', label:'Oil Balance',         val: dashScores.oil_balance },
+          { key:'barrier',     label:'Barrier Strength',    val: dashScores.barrier },
+          { key:'sensitivity', label:'Sensitivity Risk',    val: dashScores.sensitivity },
+          { key:'congestion',  label:'Congestion Tendency', val: dashScores.congestion },
+        ].map(s => `
+          <div class="dash-row">
+            <div class="dash-meta">
+              <span class="dash-label">${s.label}</span>
+              <span class="dash-val ${scoreLabelClass(s.val, s.key)}">${scoreLabel(s.val, s.key)}</span>
+            </div>
+            <div class="dash-bar"><div class="dash-fill" style="width:${s.val}%;background:${scoreBarColor(s.val, s.key)}"></div></div>
+          </div>`).join('')}
+      </div>
+      <div class="dash-priorities" style="margin-top:16px;">
+        <div class="dash-priority-header">Your main priorities</div>
+        <div class="dash-priority-item primary">
+          <span class="dash-p-num">1</span>
+          <span class="dash-p-val">${gen.section_signals?.[0] || T.critical_insight?.split('.')[0] || ''}</span>
+        </div>
+        <div class="dash-priority-item secondary">
+          <span class="dash-p-num">2</span>
+          <span class="dash-p-val">${gen.section_signals?.[1] || 'Monitor how your skin responds to new products'}</span>
+        </div>
+        <div class="dash-priority-item watch">
+          <span class="dash-p-num">3</span>
+          <span class="dash-p-val">${gen.section_signals?.[2] || 'Build a consistent routine before adding actives'}</span>
+        </div>
+      </div>
+      <div class="dash-summary">${gen.section3_critical}</div>
+    </div>
+
+    <!-- ── SUBTYPE (전체 공개) ── -->
+    <div class="report-section">
+      <div class="section-eyebrow">Your Subtype</div>
+      <div class="subtype-name">${subtypeName}</div>
+      <div class="subtype-headline">${gen.section_subtype_hook || T.profile_base.description}</div>
+      <div class="pattern-list" style="margin-bottom:20px;">
+        ${patterns.map(p => `<div class="pattern-item">${p}</div>`).join('')}
+      </div>
+      <div class="free-insight-box">
+        <div class="free-insight-label">Here's what's actually happening</div>
+        <div class="free-insight-quote">${gen.section3_critical}</div>
+        <div class="free-insight-sub">${T.critical_insight}</div>
+      </div>
+    </div>
+
+    <!-- ── TEASER (티징 영역) ── -->
+    <div class="report-section free-teaser-section">
+      <div class="free-teaser-headline">We analyzed your answers and built something just for you.</div>
+      <div class="free-teaser-sub">No generic advice. Everything below is specific to ${subtypeName} — your exact skin pattern.</div>
+      <div class="free-unlock-label">What we prepared for you</div>
+      <div class="free-unlock-box">
+        <div class="free-unlock-item">
+          <div class="free-unlock-dot"></div>
+          <div class="free-unlock-txt">Your K-Beauty special care ritual<span class="free-unlock-sub">A weekly protocol built for your oil-hydration pattern</span></div>
+        </div>
+        <div class="free-unlock-item">
+          <div class="free-unlock-dot"></div>
+          <div class="free-unlock-txt">Your exact AM + PM routine<span class="free-unlock-sub">Step-by-step, in the right order, for your skin</span></div>
+        </div>
+        <div class="free-unlock-item">
+          <div class="free-unlock-dot"></div>
+          <div class="free-unlock-txt">Ingredients your skin actually needs<span class="free-unlock-sub">What to use, what to avoid — and exactly why</span></div>
+        </div>
+        <div class="free-unlock-item">
+          <div class="free-unlock-dot"></div>
+          <div class="free-unlock-txt">Products that fit your skin (not just trending ones)<span class="free-unlock-sub">Matched to your archetype with Amazon links</span></div>
+        </div>
+        <div class="free-unlock-item">
+          <div class="free-unlock-dot"></div>
+          <div class="free-unlock-txt">A 14-day reset plan to rebalance your skin<span class="free-unlock-sub">Week-by-week progress guide for ${subtypeName}</span></div>
+        </div>
+      </div>
+      <div class="free-progress-bar-wrap"><div class="free-progress-bar-fill"></div></div>
+      <div class="free-progress-row">
+        <span class="free-progress-lbl">Your report is ready</span>
+        <span class="free-progress-pct">94% complete</span>
+      </div>
+      <div class="free-follow-hint">Just follow along — we'll guide you every step.</div>
+    </div>
+
+    <!-- ── K-BEAUTY RITUAL (blur) ── -->
+    <div class="report-section" style="border-left:3px solid var(--accent);">
+      <div class="section-eyebrow">✦ K-Beauty Special Care</div>
+      <div class="free-blur-title">YOUR K-BEAUTY RITUAL</div>
+      <div class="free-blur-sub">A weekly care protocol designed for your skin pattern</div>
+      <div class="free-kb-ritual-name">${kbRitual.ritualName}</div>
+      <div class="free-blur-wrap">
+        <div class="free-blurred">
+          <div class="free-kb-step-fake">
+            <div class="free-kb-step-head"><span class="free-kb-num">01</span><div><div class="free-kb-nm">BHA/PHA Ampoule Pack<span class="free-kb-badge">2x per week only</span></div><div class="free-kb-dur">⏱ 10 min</div></div></div>
+            <div class="free-kb-body">
+              <ol class="free-kb-list"><li>Soak a cotton pad with your BHA/PHA ampoule.</li><li>Press onto face and leave for 10 minutes.</li><li>Remove and pat in remaining product.</li></ol>
+              <div class="free-kb-why">BHA dissolves in oil, penetrating deep into pores to break down excess sebum and buildup.</div>
+              <div class="free-kb-prods">
+                <div class="free-kb-prod-item"><span class="free-kb-prod-name">Mamonde Rose Water Liquid Ampoule</span><span class="free-kb-amz">GO TO AMAZON →</span></div>
+                <div class="free-kb-prod-item"><span class="free-kb-prod-name">COSRX BHA Blackhead Power Liquid</span><span class="free-kb-amz">GO TO AMAZON →</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="free-kb-step-fake">
+            <div class="free-kb-step-head"><span class="free-kb-num">02</span><div><div class="free-kb-nm">Moisture Cream Pack</div><div class="free-kb-dur">⏱ 15–20 min</div></div></div>
+            <div class="free-kb-body">
+              <ol class="free-kb-list"><li>Mix moisturizer with 2–3 drops of hydrating toner.</li><li>Apply across face and seal with damp sheet mask.</li></ol>
+              <div class="free-kb-prods">
+                <div class="free-kb-prod-item"><span class="free-kb-prod-name">Laneige Water Bank Moisture Cream</span><span class="free-kb-amz">GO TO AMAZON →</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="free-blur-overlay">
+          <span class="free-blur-msg">Your weekly K-Beauty ritual is ready<br>Step-by-step method + product links inside</span>
+          <button class="free-blur-btn" onclick="initiatePaddleCheckout('${profile.archetype}')">UNLOCK RITUAL →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ROUTINE (Step 1 공개 + blur) ── -->
+    <div class="report-section">
+      <div class="section-eyebrow">Your Custom Routine</div>
+      <div class="free-blur-title">YOUR CUSTOM ROUTINE</div>
+      <div class="free-blur-sub">Built for your pattern — follow it in order.</div>
+      <div class="free-routine-note">✦ Product recommendations matched to this routine are below ↓</div>
+      <div class="routine-time"><span class="routine-time-label-bold">☀ MORNING</span><div class="routine-time-line"></div></div>
+      <div class="focus-box am-focus"><span class="focus-label">AM FOCUS</span>Hydration lock first — oil control follows naturally when skin is properly fed.</div>
+      ${firstAMStep ? `
+      <div class="routine-step">
+        <div class="step-num">1</div>
+        <div><div class="step-name">${firstAMStep.title}</div><div class="step-why">${firstAMStep.desc}</div></div>
+      </div>` : ''}
+      <div class="free-blur-wrap" style="margin-top:2px;">
+        <div class="free-blurred">
+          <div class="routine-step"><div class="step-num">2</div><div><div class="step-name">Hydrating Toner (2–3 layers)</div><div class="step-why">Saturates dehydrated cells before oil production kicks in mid-morning.</div></div></div>
+          <div class="routine-step"><div class="step-num">3</div><div><div class="step-name">Lightweight HA Serum</div><div class="step-why">Water-binding actives fill the moisture gaps driving compensatory sebum.</div></div></div>
+          <div class="routine-step"><div class="step-num">4</div><div><div class="step-name">Oil-Free Gel Moisturizer</div><div class="step-why">Seals hydration without adding lipids your T-zone doesn't need.</div></div></div>
+          <div class="routine-step" style="border:none;"><div class="step-num">5</div><div><div class="step-name">Oil-Control SPF 50+</div><div class="step-why">Non-comedogenic protection that controls shine through the day.</div></div></div>
+          <div style="padding:10px 14px;background:rgba(44,36,22,0.04);border-top:1px solid var(--warm);font-size:11px;color:var(--bark);letter-spacing:0.1em;text-transform:uppercase;">☽ Evening — 4 steps inside</div>
+        </div>
+        <div class="free-blur-overlay">
+          <span class="free-blur-msg">4 more AM steps + full PM routine<br>Double cleanse · Actives · Overnight hydration</span>
+          <button class="free-blur-btn" onclick="initiatePaddleCheckout('${profile.archetype}')">UNLOCK FULL ROUTINE →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── INGREDIENT MATCH (blur) ── -->
+    <div class="report-section">
+      <div class="section-eyebrow">Your Ingredient Match</div>
+      <div class="free-blur-title">YOUR INGREDIENT MATCH</div>
+      <div class="free-blur-sub">What your skin is most likely to respond well to right now</div>
+      <div class="free-blur-wrap">
+        <div class="free-blurred">
+          <div class="ing-col-label good" style="margin-bottom:12px;">✓ Best Fit</div>
+          <div class="ing-item good"><div class="ing-name">Hyaluronic Acid</div><div class="ing-why">Draws water into dehydrated cells — essential for breaking the oil-compensation cycle.</div></div>
+          <div class="ing-item good"><div class="ing-name">Niacinamide</div><div class="ing-why">Regulates sebum production over time while strengthening barrier function.</div></div>
+          <div class="ing-item good"><div class="ing-name">Birch Sap</div><div class="ing-why">K-beauty's lightweight hydration hero — absorbs without residue.</div></div>
+          <div style="height:12px;"></div>
+          <div class="ing-col-label bad" style="margin-bottom:12px;">✕ Use Carefully</div>
+          <div class="ing-item bad"><div class="ing-name">Heavy oils (marula, rosehip)</div><div class="ing-why">Adds lipids your surface doesn't need — worsens midday shine.</div></div>
+          <div class="ing-item bad"><div class="ing-name">High-concentration alcohol</div><div class="ing-why">Strips moisture barrier — triggers rebound oil production.</div></div>
+        </div>
+        <div class="free-blur-overlay">
+          <span class="free-blur-msg">4 best-fit ingredients + 3 to avoid<br>With reasons specific to your skin pattern</span>
+          <button class="free-blur-btn" onclick="initiatePaddleCheckout('${profile.archetype}')">UNLOCK INGREDIENT GUIDE →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PRODUCTS (blur) ── -->
+    <div class="report-section">
+      <div class="section-eyebrow">Products Matched to Your Skin</div>
+      <div class="free-blur-title">PRODUCTS MATCHED TO YOUR SKIN</div>
+      <div class="free-blur-sub">What tends to work best for your pattern</div>
+      <div class="free-blur-wrap">
+        <div class="free-blurred">
+          ${T.products.map(p => `
+          <div class="product-card-v2">
+            <div style="display:flex;gap:14px;align-items:flex-start;">
+              <div style="width:64px;height:64px;min-width:64px;background:var(--warm);border-radius:3px;border:1px solid var(--sand);display:flex;align-items:center;justify-content:center;color:var(--sand);font-size:18px;flex-shrink:0;">✦</div>
+              <div style="flex:1;">
+                <span class="product-badge ${p.tier}">${p.tierLabel}</span>
+                <div class="product-name">${p.name}</div>
+                <div class="product-why">${p.why}</div>
+                <span style="display:inline-flex;align-items:center;background:var(--deep);color:var(--cream);font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:5px 12px;border-radius:2px;">GO TO AMAZON →</span>
+              </div>
+            </div>
+          </div>`).join('')}
+        </div>
+        <div class="free-blur-overlay">
+          <span class="free-blur-msg">3 products matched to your exact skin pattern<br>Budget · Mid-range · Premium with Amazon links</span>
+          <button class="free-blur-btn" onclick="initiatePaddleCheckout('${profile.archetype}')">UNLOCK PRODUCT PICKS →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STICKY CTA ── -->
+    <div class="free-sticky-cta" id="free-sticky-cta">
+      <div class="free-sticky-inner">
+        <div class="free-sticky-price">
+          <span class="free-sticky-launch">$9.99</span>
+          <span class="free-sticky-regular">$14.99</span>
+          <span class="free-sticky-save">Save 33%</span>
+        </div>
+        <button class="free-sticky-btn" onclick="initiatePaddleCheckout('${profile.archetype}')">Unlock My Skin Plan</button>
+        <div class="free-sticky-note">Less than the cost of one wrong skincare purchase</div>
+      </div>
+    </div>
+  `;
+
+  injectFreeReportStyles();
+  wrap.scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ══════════════════════════════════════════════
+   RENDER PAID SECTIONS v2
+   새 섹션: Dashboard, Subtype, Reset, Final
+══════════════════════════════════════════════ */
+function renderPaidSections(profile, paidGen) {
+  const T = profile.templates;
+  const wrap = document.getElementById('report-wrap');
+
+  const dash   = paidGen.section_dashboard || {};
+  const sub    = paidGen.section_subtype || {};
+  const amSteps = paidGen.section5_routine?.am || [];
+  const pmSteps = paidGen.section5_routine?.pm || [];
+  const preMakeup = paidGen.section5_routine?.pre_makeup || [];
+  const spf    = paidGen.section5_routine?.spf_strategy || {};
+  const amSum  = paidGen.section5_routine?.am_summary || '';
+  const pmSum  = paidGen.section5_routine?.pm_summary || '';
+  const goodIngs = paidGen.section6_ingredients?.good || [];
+  const badIngs  = paidGen.section6_ingredients?.bad  || [];
+  const prods    = paidGen.section_products_db || paidGen.section7_products || T.products;
+  const reset    = paidGen.section_reset || {};
+  const tl       = paidGen.section8_timeline || [];
+  const finalTxt = paidGen.section_final || '';
+
+  const scores = dash.scores || {};
+
+  // 기존 섹션들 전체를 새 HTML로 교체
+  wrap.innerHTML = `
+
+    <!-- ── HERO ── -->
+    <div class="report-hero">
+      <div class="report-brand-sm">Seoul Skin Atelier — Personal Skin Report</div>
+      <div class="report-label">Your Skin Profile</div>
+      <div class="report-skin-type"><em>${profile.final_title}</em></div>
+      <div class="report-hook">${paidGen.section_hook || 'A personalized read on what your skin is doing, why it\'s happening, and what to do next.'}</div>
+      <div class="report-tags">
+        <span class="rtag">${profile.acne_level.replace(/_/g,' ')}</span>
+        <span class="rtag">Barrier: ${T.barrier_modifier.label || 'Healthy'}</span>
+        <span class="rtag">${profile.spf}</span>
+      </div>
+      <div class="report-meta-line">Built from your skin patterns, daily habits, sensitivity profile, and product tolerance.</div>
+    </div>
+
+    <!-- ── DASHBOARD ── -->
+    <div class="report-section">
+      <div class="section-eyebrow">Your Skin Dashboard</div>
+      <div class="section-title">How your skin is showing up right now</div>
+      <div class="dashboard-grid">
+        ${[
+          { key:'hydration',   label:'Hydration',          val: scores.hydration || 50 },
+          { key:'oil',         label:'Oil Balance',         val: scores.oil_balance || 50 },
+          { key:'barrier',     label:'Barrier Strength',    val: scores.barrier_strength || 50 },
+          { key:'sensitivity', label:'Sensitivity Risk',    val: scores.sensitivity_risk || 50 },
+          { key:'congestion',  label:'Congestion Tendency', val: scores.congestion_tendency || 50 },
+        ].map(s => `
+          <div class="dash-row">
+            <div class="dash-meta">
+              <span class="dash-label">${s.label}</span>
+              <span class="dash-val ${scoreLabelClass(s.val, s.key)}">${scoreLabel(s.val, s.key)}</span>
+            </div>
+            <div class="dash-bar"><div class="dash-fill" style="width:${s.val}%;background:${scoreBarColor(s.val, s.key)}"></div></div>
+          </div>`).join('')}
+      </div>
+
+      ${paidGen.section_signals?.length ? `
+      <div class="signals-block">
+        <div class="signals-label">What we picked up from your answers</div>
+        ${paidGen.section_signals.map(s=>`<div class="signal-item">— ${s}</div>`).join('')}
+      </div>` : ''}
+
+      <div class="dash-priorities">
+        <div class="dash-priority-header">Your main priorities</div>
+        <div class="dash-priority-item primary">
+          <span class="dash-p-num">1</span>
+          <span class="dash-p-val">${dash.primary_priority || ''}</span>
+        </div>
+        <div class="dash-priority-item secondary">
+          <span class="dash-p-num">2</span>
+          <span class="dash-p-val">${dash.secondary_priority || ''}</span>
+        </div>
+        <div class="dash-priority-item watch">
+          <span class="dash-p-num">3</span>
+          <span class="dash-p-val">${dash.watch_for || ''}</span>
+        </div>
+      </div>
+      ${dash.summary ? `<div class="dash-summary">${dash.summary}</div>` : ''}
+    </div>
+
+    <!-- ── SUBTYPE ── -->
+    <div class="report-section">
+      <div class="section-eyebrow">Your Subtype</div>
+      <div class="subtype-name">${getSubtypeName(profile.archetype)}</div>
+      <div class="subtype-headline">${sub.headline || profile.final_title}</div>
+      <div class="prose" style="margin-bottom:20px;">${sub.explanation || ''}</div>
+      ${sub.signals?.length ? `
+      <div class="pattern-list" style="margin-bottom:20px;">
+        ${sub.signals.map(s=>`<div class="pattern-item">${s}</div>`).join('')}
+      </div>` : ''}
+      ${sub.bottom_line ? `<div class="critical-block subtype-bottom-line" style="border-left-color:var(--green);background:rgba(74,94,74,0.06);color:var(--deep);">${sub.bottom_line}</div>` : ''}
+    </div>
+
+
+    <!-- ── K-BEAUTY RITUAL ── -->
+    <div class="report-section kbeauty-section">
+      <div class="section-eyebrow">✦ K-Beauty Special Care</div>
+      <div class="kbeauty-main-title">YOUR K-BEAUTY RITUAL</div>
+      <div class="kbeauty-sub-title">A weekly care protocol designed specifically for your skin pattern — follow the order.</div>
+
+      ${(function() {
+        const dash = paidGen.section_dashboard || {};
+        const scores = dash.scores || {};
+        const ritual = buildKBeautyRitual(scores, profile.acne_level, profile.flags);
+        const steps = ritual.steps || [];
+        const tips = ritual.tips || [];
+
+        return `
+          <div class="kbeauty-ritual-name">${ritual.ritualName}</div>
+
+          <div class="kbeauty-steps">
+            ${steps.map((step, i) => `
+              <div class="kbeauty-step">
+                <div class="kbeauty-step-header">
+                  <span class="kbeauty-step-num">0${i + 1}</span>
+                  <div style="flex:1;">
+                    <div class="kbeauty-step-name">
+                      ${step.name}
+                      ${step.frequency_note ? `<span class="kbeauty-freq-badge">${step.frequency_note}</span>` : ''}
+                    </div>
+                    <div class="kbeauty-duration">⏱ ${step.duration}</div>
+                  </div>
+                </div>
+                <div class="kbeauty-step-body">
+                  <ol class="kbeauty-how-to">
+                    ${(step.steps || []).map(s => `<li>${s}</li>`).join('')}
+                  </ol>
+                  <div class="kbeauty-why">${step.why}</div>
+                  ${step.caution ? `<div class="kbeauty-caution">⚠ ${step.caution}</div>` : ''}
+                  ${step.products?.length ? `
+                  <div class="kbeauty-products-block">
+                    <span class="kbeauty-products-label">Recommended products</span>
+                    <div class="kbeauty-prod-list">
+                      ${step.products.map(p => `
+                        <div class="kbeauty-prod-item">
+                          <span class="kbeauty-prod-name">${p}</span>
+                          <a href="https://www.amazon.com/s?k=${encodeURIComponent(p)}&tag=seoulskinatel-20" target="_blank" rel="noopener noreferrer" class="kbeauty-amazon-btn">GO TO AMAZON →</a>
+                        </div>`).join('')}
+                    </div>
+                  </div>` : ''}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+
+          ${tips.length ? `
+          <div class="kbeauty-tips">
+            ${tips.map(t => `<div class="kbeauty-tip-item">✦ ${t}</div>`).join('')}
+          </div>` : ''}
+
+          <div class="kbeauty-frequency">
+            <span class="kbeauty-freq-label">Frequency</span>
+            <span class="kbeauty-freq-val">1–2x per week · Evening routine only</span>
+          </div>
+        `;
+      })()}
+    </div>
+
+    <!-- ── ROUTINE ── -->
+    <div class="report-section">
+      <div class="routine-main-title">YOUR CUSTOM ROUTINE</div>
+      <div class="routine-sub-title">Built for your pattern — follow it in order.</div>
+      <div class="routine-product-note">✦ Product recommendations matched to this routine are below ↓</div>
+
+      <div class="routine-block">
+        <div class="routine-time"><span class="routine-time-label-bold">☀ MORNING</span><div class="routine-time-line"></div></div>
+        ${amSum ? `<div class="routine-focus-box am-focus"><span class="focus-label">AM FOCUS</span>${amSum}</div>` : ''}
+        ${amSteps.map((s,i)=>`
+          <div class="routine-step">
+            <div class="step-num">${i+1}</div>
+            <div><div class="step-name">${s.name}</div><div class="step-why">${s.why}</div></div>
+          </div>`).join('')}
+      </div>
+
+      <div class="routine-block">
+        <div class="routine-time"><span class="routine-time-label-bold">☽ EVENING</span><div class="routine-time-line"></div></div>
+        ${pmSum ? `<div class="routine-focus-box pm-focus"><span class="focus-label">PM PRIORITY</span>${pmSum}</div>` : ''}
+        ${pmSteps.map((s,i)=>`
+          <div class="routine-step">
+            <div class="step-num">${i+1}</div>
+            <div><div class="step-name">${s.name}</div><div class="step-why">${s.why}</div></div>
+          </div>`).join('')}
+      </div>
+
+      ${preMakeup.length > 0 ? `
+      <div class="routine-block" style="border-top:1px solid var(--warm);padding-top:20px;margin-top:8px;">
+        <div class="routine-time"><span class="routine-time-label-bold">✦ PRE-MAKEUP PROTOCOL</span><div class="routine-time-line"></div></div>
+        ${preMakeup.map((s,i)=>`
+          <div class="routine-step">
+            <div class="step-num">${i+1}</div>
+            <div><div class="step-name">${s.name}</div><div class="step-why">${s.why}</div></div>
+          </div>`).join('')}
+      </div>` : ''}
+
+      ${spf.grade ? `
+      <div class="spf-block">
+        <div class="spf-label">Sunscreen Strategy — ${spf.grade}</div>
+        <div class="spf-row"><strong>Filter</strong> ${spf.filter_note || ''}</div>
+        <div class="spf-row"><strong>Formula</strong> ${spf.formula_note || ''}</div>
+        <div class="spf-row"><strong>Reapplication</strong> ${spf.reapplication || ''}</div>
+      </div>` : ''}
+    </div>
+
+    <!-- ── INGREDIENTS ── -->
+    <div class="report-section">
+      <div class="ing-main-title">YOUR INGREDIENT MATCH</div>
+      <div class="ing-sub-title">What your skin is most likely to respond well to right now</div>
+      <div style="margin-bottom:24px;">
+        <div class="ing-group-title good">✓ Best Fit</div>
+        ${goodIngs.map(i=>`
+          <div class="ing-item good" style="margin-bottom:8px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+              <div class="ing-name">${i.name}</div>
+              ${i.match ? `<span class="ing-match">${i.match}</span>` : ''}
+            </div>
+            <div class="ing-why">${i.why}</div>
+          </div>`).join('')}
+      </div>
+      <div>
+        <div class="ing-group-title bad">✕ Use Carefully</div>
+        ${badIngs.map(i=>`
+          <div class="ing-item bad" style="margin-bottom:8px;">
+            <div class="ing-name">${i.name}</div>
+            <div class="ing-why">${i.why}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- ── PRODUCTS ── -->
+    <div class="report-section">
+      <div class="product-main-title">PRODUCTS MATCHED TO YOUR SKIN</div>
+      <div class="product-sub-title">What tends to work best for your pattern</div>
+      ${prods.map(p=>`
+        <div class="product-card-v2">
+          <div class="product-card-layout">
+            <div class="product-img-placeholder">
+              <span class="product-img-icon">✦</span>
+            </div>
+            <div class="product-card-body">
+              <div class="product-card-top">
+                <span class="product-badge ${p.tier}">${p.tierLabel}</span>
+                <div class="product-name">${p.name}</div>
+              </div>
+              <div class="product-why">${p.why}</div>
+              <div class="product-details-grid">
+                <div class="product-detail-item">
+                  <span class="detail-label">Key ingredients</span>
+                  <span class="detail-val">${p.key}</span>
+                </div>
+                ${p.texture ? `<div class="product-detail-item">
+                  <span class="detail-label">Texture</span>
+                  <span class="detail-val">${p.texture}</span>
+                </div>` : ''}
+                ${p.useWhen ? `<div class="product-detail-item">
+                  <span class="detail-label">Use</span>
+                  <span class="detail-val">${p.useWhen}</span>
+                </div>` : ''}
+              </div>
+              ${p.affiliateUrl ? `
+              <a href="${p.affiliateUrl}" target="_blank" rel="noopener noreferrer" class="amazon-go-btn">
+                GO TO AMAZON →
+              </a>` : ''}
+            </div>
+          </div>
+        </div>`).join('')}
+    </div>
+
+    <!-- ── 14-DAY RESET ── -->
+    <div class="report-section">
+      <div class="section-eyebrow">Your 14-Day Reset Plan</div>
+      <div class="section-title">A simpler way to help your skin rebalance</div>
+      ${[reset.phase1, reset.phase2, reset.phase3].filter(Boolean).map(phase=>`
+        <div class="reset-phase">
+          <div class="reset-phase-header">
+            <span class="reset-days">${phase.days}</span>
+            <span class="reset-goal">${phase.goal}</span>
+          </div>
+          <div class="reset-body">
+            <ul class="reset-list">
+              ${(phase.focus||[]).map(f=>`<li>${f}</li>`).join('')}
+            </ul>
+            ${phase.success ? `<div class="reset-success">What success looks like — ${phase.success}</div>` : ''}
+          </div>
+        </div>`).join('')}
+      ${reset.coaching_note ? `<div class="critical-block" style="margin-top:16px;border-left-color:var(--bark);">${reset.coaching_note}</div>` : ''}
+    </div>
+
+    <!-- ── TIMELINE ── -->
+    <div class="report-section">
+      <div class="section-eyebrow">What to Expect, Week by Week</div>
+      <div class="section-title">What progress may actually look like for your skin</div>
+      <div class="timeline">
+        ${tl.map(t=>`
+          <div class="tl-item">
+            <div class="tl-dot">W${t.week}</div>
+            <div>
+              <div class="tl-week">Week ${t.week}</div>
+              <div class="tl-desc">${t.desc}</div>
+              ${t.dont_panic ? `<div class="tl-note">Don't panic if — ${t.dont_panic}</div>` : ''}
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- ── FINAL CLOSE ── -->
+    <div class="final-box">
+      <div class="section-eyebrow">Your Next Chapter Starts Here</div>
+      <div class="prose" style="color:rgba(212,196,168,0.85);max-width:460px;margin:0 auto 24px;">${finalTxt}</div>
+      <div class="retention-cta">Save your routine and revisit your skin in 30 days.</div>
+      <div class="cta-note" style="margin-top:16px;">Questions? hi@seoulskinatelier.com</div>
+    </div>
+  `;
+
+  // 새 스타일 주입
+  injectPaidStyles();
+  wrap.scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ══════════════════════════════════════════════
+   PAYWALL STYLES
+══════════════════════════════════════════════ */
+function injectPaywallStyles() {
+  if (document.getElementById('paywall-styles')) return;
+  const style = document.createElement('style');
+  style.id = 'paywall-styles';
+  style.textContent = `
+    .paywall-blur { position:relative; overflow:hidden; border-radius:2px; margin-top:4px; }
+    .blurred { filter:blur(4px); pointer-events:none; user-select:none; opacity:0.6; }
+    .paywall-overlay {
+      position:absolute; inset:0; z-index:2;
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+      background:rgba(249,245,239,0.85); backdrop-filter:blur(2px);
+      padding:20px;
+    }
+    .paywall-icon { font-size:22px; font-weight:500; color:var(--accent); font-family:'Cormorant Garamond',serif; font-style:italic; }
+    .paywall-label { font-size:12px; color:var(--bark); letter-spacing:0.05em; text-align:center; }
+    .paywall-badge {
+      font-size:11px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase;
+      padding:3px 10px; border-radius:2px;
+      background:rgba(184,134,78,0.1); color:var(--accent);
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+/* ══════════════════════════════════════════════
+   FREE REPORT LOCK STYLES
+══════════════════════════════════════════════ */
+function injectFreeStyles() {
+  if (document.getElementById('free-styles')) return;
+  const style = document.createElement('style');
+  style.id = 'free-styles';
+  style.textContent = `
+    /* Dashboard (무료에서도 사용) */
+    .dashboard-grid { display:flex; flex-direction:column; gap:14px; margin-bottom:20px; }
+    .dash-row { display:flex; flex-direction:column; gap:6px; }
+    .dash-meta { display:flex; justify-content:space-between; align-items:center; }
+    .dash-label { font-size:12px; color:var(--bark); letter-spacing:0.05em; }
+    .dash-val { font-size:11px; font-weight:500; color:var(--deep); letter-spacing:0.08em; text-transform:uppercase; }
+    .dash-bar { height:4px; background:var(--warm); border-radius:4px; overflow:hidden; }
+    .dash-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--rose)); border-radius:4px; transition:width 1s cubic-bezier(0.4,0,0.2,1); }
+    .dash-summary { font-size:13px; color:var(--ink); line-height:1.75; padding:16px 18px; background:rgba(44,36,22,0.04); border-left:2px solid var(--accent); border-radius:2px; }
+
+    /* Priority items */
+    .dash-p-num { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:300; color:var(--sand); flex-shrink:0; width:18px; }
+    .dash-p-val { font-size:13px; color:var(--deep); line-height:1.5; }
+    .dash-priority-item { display:flex; gap:14px; align-items:baseline; }
+    .dash-priority-item.primary { }
+    .dash-priority-item.secondary { }
+    .dash-priority-item.watch { }
+
+    /* Free lock */
+    .free-lock-section { position:relative; overflow:hidden; }
+    .free-peek { margin-bottom:0; }
+    .free-lock-overlay { position:relative; margin-top:0; }
+    .free-lock-overlay .blurred {
+      filter:blur(4px);
+      pointer-events:none;
+      user-select:none;
+      opacity:0.5;
+    }
+    .free-lock-content {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:8px;
+      padding:20px 16px;
+      background:rgba(249,245,239,0.92);
+      backdrop-filter:blur(4px);
+      border-top:1px solid var(--warm);
+      border-bottom:1px solid var(--warm);
+      margin:8px 0;
+      text-align:center;
+    }
+    .free-lock-icon { font-size:18px; }
+    .free-lock-title {
+      font-family:'Cormorant Garamond',serif;
+      font-size:18px;
+      font-weight:400;
+      color:var(--deep);
+      line-height:1.3;
+    }
+    .free-lock-label {
+      font-size:12px;
+      color:var(--bark);
+      letter-spacing:0.04em;
+      line-height:1.6;
+      max-width:260px;
+    }
+    .free-lock-btn {
+      margin-top:4px;
+      background:var(--deep);
+      border:none;
+      color:var(--cream);
+      font-family:'DM Sans',sans-serif;
+      font-size:12px;
+      font-weight:500;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      padding:11px 24px;
+      border-radius:2px;
+      cursor:pointer;
+      transition:background 0.2s ease;
+    }
+    .free-lock-btn:hover { background:var(--accent); }
+  `;
+  document.head.appendChild(style);
+}
+
+/* ══════════════════════════════════════════════
+   FREE REPORT STYLES v2
+══════════════════════════════════════════════ */
+function injectFreeReportStyles() {
+  if (document.getElementById('free-report-styles-v2')) return;
+  const style = document.createElement('style');
+  style.id = 'free-report-styles-v2';
+  style.textContent = `
+    /* Dashboard */
+    .dashboard-grid { display:flex; flex-direction:column; gap:14px; margin-bottom:24px; }
+    .dash-row { display:flex; flex-direction:column; gap:6px; }
+    .dash-meta { display:flex; justify-content:space-between; align-items:center; }
+    .dash-label { font-size:12px; color:var(--bark); letter-spacing:0.05em; }
+    .dash-val { font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; }
+    .dash-val-excellent { color:#4A90D9; }
+    .dash-val-good { color:#4A5E4A; }
+    .dash-val-attention { color:#A03A2A; }
+    .dash-bar { height:5px; background:var(--warm); border-radius:4px; overflow:hidden; }
+    .dash-fill { height:100%; border-radius:4px; transition:width 1s cubic-bezier(0.4,0,0.2,1); }
+    .dash-priorities { display:flex; flex-direction:column; gap:0; border:1px solid var(--warm); border-radius:2px; overflow:hidden; }
+    .dash-priority-header { font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--bark); padding:10px 14px; background:rgba(44,36,22,0.04); border-bottom:1px solid var(--warm); font-weight:500; }
+    .dash-priority-item { display:flex; gap:14px; align-items:baseline; padding:11px 14px; border-bottom:1px solid var(--warm); }
+    .dash-priority-item:last-child { border-bottom:none; }
+    .dash-priority-item.primary { background:rgba(184,134,78,0.04); }
+    .dash-p-num { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:300; color:var(--sand); flex-shrink:0; width:18px; }
+    .dash-p-val { font-size:13px; color:var(--deep); line-height:1.5; }
+    .dash-summary { font-size:13px; color:var(--bark); line-height:1.7; font-style:italic; padding:12px 0 0; border-top:1px solid var(--warm); margin-top:12px; }
+
+    /* Hero subtype */
+    .free-subtype-name { font-family:'Cormorant Garamond',serif; font-size:clamp(28px,6vw,42px); font-weight:300; color:var(--cream); font-style:italic; margin-bottom:14px; }
+    .report-hook { font-size:14px; color:rgba(212,196,168,0.88); line-height:1.85; font-style:italic; max-width:420px; margin:0 auto 20px; }
+
+    /* Subtype section */
+    .subtype-name { font-family:'Cormorant Garamond',serif; font-size:clamp(28px,6vw,40px); font-weight:400; color:var(--deep); margin-bottom:8px; }
+    .subtype-headline { font-size:14px; color:var(--bark); font-style:italic; margin-bottom:20px; line-height:1.6; }
+
+    /* Insight box */
+    .free-insight-box { background:var(--deep); border-radius:2px; padding:22px; margin-top:4px; }
+    .free-insight-label { font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--bark); margin-bottom:10px; font-weight:500; }
+    .free-insight-quote { font-family:'Cormorant Garamond',serif; font-size:17px; color:var(--cream); font-style:italic; line-height:1.85; margin-bottom:10px; }
+    .free-insight-sub { font-size:12px; color:rgba(212,196,168,0.6); line-height:1.7; }
+
+    /* Teaser section */
+    .free-teaser-section { background:rgba(255,255,255,0.7); }
+    .free-teaser-headline { font-family:'Cormorant Garamond',serif; font-size:clamp(20px,4vw,26px); font-weight:400; color:var(--deep); line-height:1.4; margin-bottom:8px; }
+    .free-teaser-sub { font-size:12px; color:var(--bark); margin-bottom:22px; padding-bottom:18px; border-bottom:1px solid var(--warm); line-height:1.6; }
+    .free-unlock-label { font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); font-weight:700; margin-bottom:12px; }
+    .free-unlock-box { border:1px solid var(--warm); border-radius:2px; overflow:hidden; margin-bottom:20px; }
+    .free-unlock-item { display:flex; align-items:flex-start; gap:12px; padding:12px 14px; border-bottom:1px solid var(--warm); }
+    .free-unlock-item:last-child { border-bottom:none; }
+    .free-unlock-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); flex-shrink:0; margin-top:5px; }
+    .free-unlock-txt { font-size:13px; color:var(--deep); line-height:1.5; }
+    .free-unlock-sub { font-size:11px; color:var(--bark); display:block; margin-top:2px; }
+    .free-progress-bar-wrap { background:var(--warm); height:4px; border-radius:4px; overflow:hidden; margin-bottom:8px; }
+    .free-progress-bar-fill { height:100%; background:linear-gradient(90deg,var(--accent),#D4A870); width:94%; border-radius:4px; }
+    .free-progress-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+    .free-progress-lbl { font-size:11px; color:var(--bark); }
+    .free-progress-pct { font-size:13px; font-weight:600; color:var(--accent); }
+    .free-follow-hint { font-size:13px; color:var(--bark); text-align:center; font-style:italic; padding:12px 0 0; border-top:1px solid var(--warm); line-height:1.7; }
+
+    /* Blur sections */
+    .free-blur-title { font-family:'Cormorant Garamond',serif; font-size:clamp(20px,4vw,28px); font-weight:400; color:var(--deep); margin-bottom:4px; }
+    .free-blur-sub { font-size:12px; color:var(--bark); margin-bottom:16px; }
+    .free-blur-wrap { position:relative; border-radius:2px; overflow:hidden; }
+    .free-blurred { filter:blur(5px); pointer-events:none; user-select:none; opacity:0.5; }
+    .free-blur-overlay { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; background:rgba(249,245,239,0.84); }
+    .free-blur-msg { font-size:12px; color:var(--bark); text-align:center; line-height:1.65; }
+    .free-blur-btn { font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; background:var(--deep); color:var(--cream); padding:9px 20px; border-radius:2px; border:none; cursor:pointer; transition:background 0.2s ease; }
+    .free-blur-btn:hover { background:var(--accent); }
+
+    /* K-Beauty blur preview */
+    .free-kb-ritual-name { display:inline-block; font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); background:rgba(184,134,78,0.1); padding:4px 12px; border-radius:2px; margin-bottom:16px; }
+    .free-kb-step-fake { border:1px solid var(--warm); border-radius:2px; overflow:hidden; margin-bottom:8px; }
+    .free-kb-step-head { display:flex; gap:12px; padding:11px 14px; background:rgba(44,36,22,0.04); border-bottom:1px solid var(--warm); }
+    .free-kb-num { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:300; color:var(--accent); line-height:1; flex-shrink:0; }
+    .free-kb-nm { font-size:12px; font-weight:600; color:var(--deep); }
+    .free-kb-badge { display:inline-block; font-size:9px; font-weight:700; color:#A03A2A; background:rgba(160,58,42,0.07); padding:2px 7px; border-radius:8px; margin-left:7px; }
+    .free-kb-dur { font-size:10px; color:var(--bark); margin-top:2px; }
+    .free-kb-body { padding:12px 14px; }
+    .free-kb-list { margin:0 0 10px 15px; }
+    .free-kb-list li { font-size:11px; color:var(--ink); line-height:1.7; margin-bottom:3px; }
+    .free-kb-why { font-size:11px; color:var(--bark); font-style:italic; background:rgba(184,134,78,0.04); padding:8px 10px; border-radius:2px; margin-bottom:10px; line-height:1.65; }
+    .free-kb-prods { border-top:1px solid var(--warm); padding-top:10px; }
+    .free-kb-prod-item { display:flex; align-items:center; justify-content:space-between; background:rgba(237,229,216,0.35); padding:7px 10px; border-radius:2px; margin-bottom:5px; }
+    .free-kb-prod-name { font-size:11px; color:var(--deep); font-weight:600; }
+    .free-kb-amz { font-size:9px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; background:var(--deep); color:var(--cream); padding:4px 10px; border-radius:2px; }
+
+    /* Routine note */
+    .free-routine-note { font-size:11px; color:var(--accent); padding:7px 12px; background:rgba(184,134,78,0.06); border-radius:2px; margin-bottom:18px; }
+
+    /* Sticky CTA */
+    .free-sticky-cta { position:fixed; bottom:0; left:0; right:0; background:var(--cream); border-top:1px solid var(--warm); padding:12px 20px 18px; z-index:9999; text-align:center; }
+    .free-sticky-inner { max-width:660px; margin:0 auto; }
+    .free-sticky-price { display:flex; align-items:baseline; gap:8px; justify-content:center; margin-bottom:8px; }
+    .free-sticky-launch { font-size:18px; font-weight:700; color:var(--deep); }
+    .free-sticky-regular { font-size:12px; color:var(--bark); text-decoration:line-through; }
+    .free-sticky-save { font-size:10px; font-weight:700; color:var(--green); background:rgba(74,94,74,0.1); padding:2px 8px; border-radius:10px; }
+    .free-sticky-btn { width:100%; max-width:400px; background:var(--deep); border:none; color:var(--cream); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:15px 24px; border-radius:2px; cursor:pointer; display:block; margin:0 auto 7px; transition:background 0.2s ease; }
+    .free-sticky-btn:hover { background:var(--accent); }
+    .free-sticky-note { font-size:10px; color:var(--bark); letter-spacing:0.03em; }
+
+    /* Responsive */
+    @media(max-width:480px) {
+      .free-subtype-name { font-size:28px; }
+      .free-teaser-headline { font-size:20px; }
+      .free-sticky-cta { padding:10px 16px 16px; }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function injectPaidStyles() {
+  if (document.getElementById('paid-styles')) return;
+  const style = document.createElement('style');
+  style.id = 'paid-styles';
+  style.textContent = `
+    /* Dashboard */
+    .dashboard-grid { display:flex; flex-direction:column; gap:14px; margin-bottom:24px; }
+    .dash-row { display:flex; flex-direction:column; gap:6px; }
+    .dash-meta { display:flex; justify-content:space-between; align-items:center; }
+    .dash-label { font-size:12px; color:var(--bark); letter-spacing:0.05em; }
+    .dash-val { font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; }
+    .dash-val-excellent { color:#4A90D9; }
+    .dash-val-good { color:#4A5E4A; }
+    .dash-val-attention { color:#A03A2A; }
+    .dash-bar { height:5px; background:var(--warm); border-radius:4px; overflow:hidden; }
+    .dash-fill { height:100%; border-radius:4px; transition:width 1s cubic-bezier(0.4,0,0.2,1); }
+
+    /* Subtype */
+    .subtype-name { font-family:'Cormorant Garamond',serif; font-size:clamp(28px,6vw,40px); font-weight:400; color:var(--deep); line-height:1.2; margin-bottom:10px; }
+    .subtype-headline { font-size:15px; color:var(--bark); font-style:italic; margin-bottom:20px; line-height:1.6; }
+    .subtype-bottom-line { font-size:14px; line-height:1.8; font-weight:500; }
+
+    /* Routine */
+    .routine-main-title { font-family:'Cormorant Garamond',serif; font-size:clamp(22px,5vw,32px); font-weight:400; color:var(--deep); letter-spacing:0.05em; margin-bottom:6px; }
+    .routine-sub-title { font-size:13px; color:var(--bark); margin-bottom:8px; }
+    .routine-product-note { font-size:12px; color:var(--accent); letter-spacing:0.04em; margin-bottom:28px; padding:8px 12px; background:rgba(184,134,78,0.06); border-radius:2px; }
+    .routine-time-label-bold { font-size:13px; letter-spacing:0.18em; text-transform:uppercase; color:var(--deep); font-weight:700; white-space:nowrap; }
+    .routine-focus-box { border-radius:2px; padding:12px 16px; margin-bottom:16px; font-size:13px; line-height:1.7; color:var(--deep); }
+    .routine-focus-box .focus-label { display:block; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; font-weight:600; margin-bottom:5px; }
+    .am-focus { background:rgba(74,94,74,0.07); border-left:3px solid var(--green); }
+    .am-focus .focus-label { color:var(--green); }
+    .pm-focus { background:rgba(74,94,74,0.07); border-left:3px solid var(--green); }
+    .pm-focus .focus-label { color:var(--green); }
+
+    /* Ingredient Match */
+    .ing-main-title { font-family:'Cormorant Garamond',serif; font-size:clamp(22px,5vw,32px); font-weight:400; color:var(--deep); margin-bottom:6px; }
+    .ing-sub-title { font-size:13px; color:var(--bark); margin-bottom:24px; }
+    .ing-group-title { font-size:18px; font-weight:600; margin-bottom:14px; letter-spacing:0.02em; }
+    .ing-group-title.good { color:var(--green); }
+    .ing-group-title.bad { color:#A03A2A; }
+
+    /* Products */
+    .product-main-title { font-family:'Cormorant Garamond',serif; font-size:clamp(22px,5vw,32px); font-weight:400; color:var(--deep); margin-bottom:6px; }
+    .product-sub-title { font-size:13px; color:var(--bark); margin-bottom:24px; }
+    .product-card-layout { display:flex; gap:16px; align-items:flex-start; }
+    .product-img-placeholder { width:72px; height:72px; min-width:72px; background:var(--warm); border-radius:4px; display:flex; align-items:center; justify-content:center; border:1px solid var(--sand); flex-shrink:0; }
+    .product-img-icon { font-size:20px; color:var(--sand); }
+    .product-card-body { flex:1; min-width:0; }
+    .amazon-go-btn { display:inline-flex; align-items:center; gap:6px; background:var(--deep); color:var(--cream); font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:10px 20px; border-radius:2px; text-decoration:none; transition:all 0.2s ease; margin-top:14px; }
+    .amazon-go-btn:hover { background:var(--accent); transform:translateY(-1px); }
+    @media(max-width:480px) {
+      .product-card-layout { flex-direction:column; }
+      .product-img-placeholder { width:100%; height:140px; }
+    }
+
+    /* Signals block */
+    .signals-block { background:rgba(44,36,22,0.04); border-radius:2px; padding:16px 18px; margin-bottom:20px; }
+    .signals-label { font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--bark); margin-bottom:10px; font-weight:500; }
+    .signal-item { font-size:13px; color:var(--ink); line-height:1.65; padding:3px 0; }
+
+    /* Priority box */
+    .dash-priorities { display:flex; flex-direction:column; gap:0; margin-bottom:16px; border:1px solid var(--warm); border-radius:2px; overflow:hidden; }
+    .dash-priority-header { font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--bark); padding:10px 14px; background:rgba(44,36,22,0.04); border-bottom:1px solid var(--warm); font-weight:500; }
+    .dash-priority-item { display:flex; gap:14px; align-items:baseline; padding:11px 14px; border-bottom:1px solid var(--warm); }
+    .dash-priority-item:last-child { border-bottom:none; }
+    .dash-priority-item.primary { background:rgba(184,134,78,0.04); }
+    .dash-priority-item.secondary { background:transparent; }
+    .dash-priority-item.watch { background:transparent; }
+    .dash-p-num { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:300; color:var(--sand); flex-shrink:0; width:18px; }
+    .dash-p-val { font-size:13px; color:var(--deep); line-height:1.5; }
+    .dash-summary { font-size:13px; color:var(--bark); line-height:1.7; font-style:italic; padding:12px 0 0; border-top:1px solid var(--warm); }
+
+    /* Hero hook */
+    .report-hook { font-size:15px; color:rgba(212,196,168,0.9); line-height:1.7; max-width:440px; margin:0 auto 20px; font-style:italic; }
+    .report-meta-line { font-size:11px; color:rgba(212,196,168,0.4); letter-spacing:0.05em; margin-top:12px; }
+
+    /* Routine summary */
+    .routine-summary { margin-top:12px; padding:10px 14px; background:rgba(184,134,78,0.06); border-radius:2px; font-size:13px; color:var(--bark); }
+    .routine-summary strong { color:var(--deep); }
+
+    /* SPF block */
+    .spf-block { margin-top:20px; background:rgba(74,94,74,0.06); border-left:2px solid var(--green); border-radius:2px; padding:16px 18px; }
+    .spf-label { font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--green); margin-bottom:10px; font-weight:500; }
+    .spf-row { font-size:13px; color:var(--ink); line-height:1.65; margin-bottom:6px; }
+    .spf-row:last-child { margin-bottom:0; }
+    .spf-row strong { color:var(--deep); margin-right:6px; }
+
+    /* Ingredient match badge */
+    .ing-match { font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:var(--green); background:rgba(74,94,74,0.08); padding:2px 7px; border-radius:10px; margin-left:6px; vertical-align:middle; }
+
+    /* Product card v2 */
+    .product-card-v2 { border:1px solid var(--warm); border-radius:2px; padding:20px; margin-bottom:12px; background:rgba(255,255,255,0.5); }
+    .product-card-v2:last-child { margin-bottom:0; }
+    .product-card-top { display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
+    .product-details-grid { display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:12px; margin-bottom:14px; }
+    .product-detail-item { display:flex; flex-direction:column; gap:2px; }
+    .detail-label { font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--bark); }
+    .detail-val { font-size:12px; color:var(--deep); }
+    .amazon-btn { display:inline-flex; align-items:center; gap:6px; background:var(--deep); color:var(--cream); font-size:12px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; padding:9px 18px; border-radius:2px; text-decoration:none; transition:background 0.2s ease; }
+    .amazon-btn:hover { background:var(--accent); }
+
+    /* Reset plan */
+    .reset-phase { margin-bottom:12px; border:1px solid var(--warm); border-radius:2px; overflow:hidden; }
+    .reset-phase:last-of-type { margin-bottom:0; }
+    .reset-phase-header { display:flex; align-items:center; gap:12px; padding:12px 16px; background:rgba(44,36,22,0.04); border-bottom:1px solid var(--warm); flex-wrap:wrap; }
+    .reset-days { font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); font-weight:500; white-space:nowrap; }
+    .reset-goal { font-size:13px; color:var(--deep); font-weight:500; }
+    .reset-body { padding:14px 16px; }
+    .reset-list { margin:0 0 0 16px; display:flex; flex-direction:column; gap:6px; }
+    .reset-list li { font-size:13px; color:var(--ink); line-height:1.6; }
+    .reset-success { margin-top:10px; font-size:12px; color:var(--green); font-style:italic; padding-top:8px; border-top:1px solid rgba(74,94,74,0.15); }
+
+    /* Timeline */
+    .tl-note { font-size:12px; color:var(--bark); font-style:italic; margin-top:4px; line-height:1.5; }
+
+
+    /* ── K-Beauty Ritual Section ── */
+    .kbeauty-section { border-left: 3px solid var(--accent); }
+    .kbeauty-main-title { font-family:'Cormorant Garamond',serif; font-size:clamp(22px,5vw,32px); font-weight:400; color:var(--deep); margin-bottom:6px; }
+    .kbeauty-sub-title { font-size:13px; color:var(--bark); margin-bottom:20px; line-height:1.6; }
+    .kbeauty-ritual-name { display:inline-block; font-size:13px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); background:rgba(184,134,78,0.08); padding:6px 14px; border-radius:2px; margin-bottom:24px; }
+
+    /* Steps */
+    .kbeauty-steps { display:flex; flex-direction:column; gap:16px; margin-bottom:20px; }
+    .kbeauty-step { border:1px solid var(--warm); border-radius:2px; overflow:hidden; }
+    .kbeauty-step-header { display:flex; gap:14px; align-items:flex-start; padding:14px 16px; background:rgba(44,36,22,0.04); border-bottom:1px solid var(--warm); }
+    .kbeauty-step-num { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:300; color:var(--accent); line-height:1; flex-shrink:0; }
+    .kbeauty-step-name { font-size:15px; font-weight:600; color:var(--deep); margin-bottom:3px; }
+    .kbeauty-step-name-en { font-size:12px; font-weight:400; color:var(--bark); margin-left:6px; }
+    .kbeauty-duration { font-size:11px; color:var(--bark); letter-spacing:0.05em; }
+    .kbeauty-step-body { padding:16px; }
+
+    /* How-to list */
+    .kbeauty-how-to { margin:0 0 12px 18px; display:flex; flex-direction:column; gap:6px; }
+    .kbeauty-how-to li { font-size:13px; color:var(--ink); line-height:1.65; }
+
+    /* Why */
+    .kbeauty-why { font-size:13px; color:var(--bark); line-height:1.7; font-style:italic; padding:10px 14px; background:rgba(184,134,78,0.04); border-radius:2px; margin-bottom:10px; }
+
+    /* Caution */
+    .kbeauty-caution { font-size:12px; color:#A03A2A; background:rgba(160,58,42,0.05); border-left:2px solid #A03A2A; padding:8px 12px; border-radius:2px; margin-bottom:10px; line-height:1.6; }
+
+    /* Products */
+    .kbeauty-freq-badge { display:inline-block; font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#A03A2A; background:rgba(160,58,42,0.07); padding:2px 8px; border-radius:10px; margin-left:8px; vertical-align:middle; }
+    .kbeauty-products-block { border-top:1px solid var(--warm); padding-top:12px; margin-top:4px; }
+    .kbeauty-products-label { font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--bark); display:block; margin-bottom:8px; }
+    .kbeauty-prod-list { display:flex; flex-direction:column; gap:6px; }
+    .kbeauty-prod-item { display:flex; align-items:center; justify-content:space-between; gap:10px; background:rgba(237,229,216,0.35); padding:8px 12px; border-radius:2px; }
+    .kbeauty-prod-name { font-size:12px; color:var(--deep); font-weight:500; flex:1; min-width:0; }
+    .kbeauty-amazon-btn { display:inline-flex; align-items:center; gap:4px; background:var(--deep); color:var(--cream); font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; padding:5px 12px; border-radius:2px; text-decoration:none; white-space:nowrap; flex-shrink:0; transition:background 0.2s ease; }
+    .kbeauty-amazon-btn:hover { background:var(--accent); }
+
+    /* Tips */
+    .kbeauty-tips { margin-bottom:16px; display:flex; flex-direction:column; gap:8px; }
+    .kbeauty-tip-item { font-size:13px; color:var(--green); line-height:1.65; padding:10px 14px; background:rgba(74,94,74,0.06); border-radius:2px; }
+
+    /* Frequency badge */
+    .kbeauty-frequency { display:flex; align-items:center; gap:10px; padding:12px 14px; border:1px solid var(--warm); border-radius:2px; }
+    .kbeauty-freq-label { font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--bark); }
+    .kbeauty-freq-val { font-size:13px; font-weight:500; color:var(--accent); }
+
+    /* Retention CTA */
+    .retention-cta { font-size:13px; color:rgba(212,196,168,0.6); letter-spacing:0.05em; margin-bottom:4px; }
+
+    @media(max-width:480px) {
+      .dashboard-grid { gap:12px; }
+      .dash-priorities { gap:0; }
+      .reset-phase-header { flex-direction:column; align-items:flex-start; gap:4px; }
+      .product-card-v2 { padding:16px; }
+      .product-card-top { flex-direction:column; align-items:flex-start; }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+/* ══════════════════════════════════════════════
+   PADDLE 결제 연동 (Paddle.js v2)
+══════════════════════════════════════════════ */
+window.initiatePaddleCheckout = function initiatePaddleCheckout(archetype) {
+  if (typeof Paddle === 'undefined') {
+    alert('Payment system loading... please try again in a moment.');
+    return;
+  }
+
+  const SESSION_ID = 'ssa_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+  sessionStorage.setItem('ssa_session_id', SESSION_ID);
+
+  Paddle.Checkout.open({
+    items: [{ priceId: 'pri_01knbhcxv9vk4ymjqm7f2q9ppv', quantity: 1 }],
+    discountId: 'dsc_01knbhh0eam258mb2v8kqa00hf',
+    customData: {
+      session_id: SESSION_ID,
+      archetype: archetype
+    },
+    settings: {
+      displayMode: 'overlay',
+      theme: 'light',
+      locale: 'en'
+    }
+  });
+}
+
+window.unlockPaidReport = async function unlockPaidReport(sessionId) {
+  // 결제 완료 → 유료 리포트 생성 요청
+  const loadingMsg = document.querySelector('.final-box');
+  if (loadingMsg) {
+    loadingMsg.innerHTML = `
+      <div style="text-align:center;padding:20px 0;">
+        <div style="width:32px;height:32px;border:1.5px solid rgba(212,196,168,0.3);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px;"></div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--cream);font-weight:300;">Generating your full report…</div>
+      </div>`;
+  }
+
+  try {
+    const profile = window._currentProfile; // showReport에서 저장한 참조
+    const paidData = await callReportAPI(profile, 'paid', sessionId);
+    renderPaidSections(profile, paidData);
+  } catch (err) {
+    console.error('Paid report error:', err);
+    alert('Something went wrong. Please email hi@seoulskinatelier.com with your order ID.');
+  }
+}
+
+/* ══════════════════════════════════════════════
+   DEV TEST HELPER
+   콘솔에서 unlockPaidReport('test-session-123') 으로
+   결제 없이 유료 리포트 테스트 가능
+   프로덕션에서도 유지해도 무방 — profile이 없으면 자동 안내
+══════════════════════════════════════════════ */
+window._testUnlock = function() {
+  if (!window._currentProfile) {
+    console.warn('[SSA] 먼저 설문을 완료해 무료 리포트를 생성한 후 실행하세요.');
+    console.info('[SSA] 사용법: 설문 완료 후 콘솔에서 unlockPaidReport("test-session-123") 실행');
+    return;
+  }
+  console.info('[SSA] 테스트 유료 리포트 생성 시작...');
+  window.unlockPaidReport('test-session-123');
+};
+
+console.info(
+  '%c[Seoul Skin Atelier] Dev mode\n' +
+  '%c설문 완료 후 유료 리포트 테스트:\n' +
+  'unlockPaidReport("test-session-123")',
+  'color:#B8864E;font-weight:bold;',
+  'color:#8C7355;'
+);
+
+/* ══════════════════════════════════════════════
+   LOADING ANIMATION
+══════════════════════════════════════════════ */
+function animateLoading() {
+  const ids = ['ls-1','ls-2','ls-3','ls-4','ls-5'];
+  const delays = [0, 700, 1400, 2100, 2800];
+  ids.forEach((id,i) => {
+    setTimeout(() => {
+      if (i > 0) {
+        document.getElementById(ids[i-1]).classList.remove('active');
+        document.getElementById(ids[i-1]).classList.add('done');
+      }
+      const el = document.getElementById(id);
+      if (el) el.classList.add('active');
+    }, delays[i]);
+  });
+}
+
+/* ══════════════════════════════════════════════
+   MAIN FLOW
+══════════════════════════════════════════════ */
+async function showReport() {
+  document.getElementById('survey-view').classList.add('hidden');
+  document.getElementById('loading-view').classList.remove('hidden');
+  animateLoading();
+
+  const profile = buildStructuredProfile(answers);
+  window._currentProfile = profile; // 결제 후 유료 섹션 생성에 필요
+  console.log('Structured Profile:', JSON.stringify(profile, null, 2));
+
+  try {
+    // 무료 섹션만 생성 (API Route 경유)
+    const freeData = await callReportAPI(profile, 'free');
+    document.getElementById('loading-view').classList.add('hidden');
+    document.getElementById('report-wrap').classList.remove('hidden');
+    renderFreeReport(profile, freeData);
+  } catch(err) {
+    console.error('Error:', err);
+    document.getElementById('loading-view').innerHTML = `
+      <div class="loading-wrap">
+        <div class="loading-brand">Seoul Skin Atelier</div>
+        <div class="loading-title">Something went <em>wrong</em></div>
+        <p style="color:var(--bark);font-size:14px;margin-top:16px;line-height:1.7">
+          ${err.message || 'Please try again.'}<br>
+          <a href="mailto:hi@seoulskinatelier.com" style="color:var(--accent);">hi@seoulskinatelier.com</a>
+        </p>
+        <button onclick="location.reload()" style="margin-top:24px;background:var(--accent);border:none;color:white;padding:12px 32px;border-radius:2px;cursor:pointer;font-family:inherit;font-size:13px;letter-spacing:0.1em;text-transform:uppercase">
+          Try Again
+        </button>
+      </div>`;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   SURVEY UI
+══════════════════════════════════════════════ */
+function renderQuestion() {
+  const q = questions[current];
+  const card = document.getElementById('question-card');
+  const sel = answers[q.id] || [];
+  card.className = 'question-card' + (q.type==='multi' ? ' multi' : '');
+  card.style.animation = 'none'; card.offsetHeight; card.style.animation = 'fadeUp 0.4s ease both';
+  card.innerHTML = `<div class="q-number">Question ${q.number}</div><div class="q-text">${q.text}</div><div class="q-hint">${q.hint}</div><div class="options" id="options"></div>`;
+  const opts = document.getElementById('options');
+  q.options.forEach(opt => {
+    const div = document.createElement('div');
+    div.className = 'option' + (sel.includes(opt) ? ' selected' : '');
+    div.innerHTML = `<div class="option-dot"></div><span class="option-label">${opt}</span>`;
+    div.onclick = () => selectOption(q, opt, div);
+    opts.appendChild(div);
+  });
+  const pct = Math.round(((current+1)/questions.length)*100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `Question ${current+1} of ${questions.length}`;
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('btn-back').style.visibility = current === 0 ? 'hidden' : 'visible';
+  updateNextBtn();
+}
+
+function selectOption(q, opt, div) {
+  let sel = answers[q.id] ? [...answers[q.id]] : [];
+  if (q.type === 'single') {
+    sel = [opt];
+    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    div.classList.add('selected');
+  } else {
+    if (sel.includes(opt)) { sel = sel.filter(s => s !== opt); div.classList.remove('selected'); }
+    else if (sel.length < q.max) { sel.push(opt); div.classList.add('selected'); }
+  }
+  answers[q.id] = sel;
+  updateNextBtn();
+}
+
+function updateNextBtn() {
+  const sel = answers[questions[current].id] || [];
+  const btn = document.getElementById('btn-next');
+  btn.disabled = sel.length === 0;
+  btn.textContent = current === questions.length-1 ? 'Analyze My Skin →' : 'Continue →';
+}
+
+function nextQ() { if (current < questions.length-1) { current++; renderQuestion(); } else showReport(); }
+function prevQ() { if (current > 0) { current--; renderQuestion(); } }
+
+renderQuestion();
+</script>
+</body>
+</html>
