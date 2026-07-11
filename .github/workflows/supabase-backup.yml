@@ -1,0 +1,33 @@
+# Supabase Backup — 무료 플랜은 자동 백업이 없습니다.
+# 리포트·이메일(=우리 서비스의 진짜 자산)이 사고로 통째로 사라지는 걸 막는 안전장치입니다.
+# 이 파일을 레포의 .github/workflows/supabase-backup.yml 경로에 저장하세요.
+#
+# ⚠️ 백업 파일에는 유저 이메일이 포함됩니다. 반드시 PRIVATE 저장소에서만 사용하세요.
+name: Supabase Backup
+
+on:
+  schedule:
+    - cron: '0 3 * * *'   # 매일 새벽 3시(UTC)
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Dump database
+        run: |
+          PGPASSWORD="${{ secrets.SUPABASE_DB_PASSWORD }}" pg_dump \
+            -h db.ijuavefvnfghnyzmyubh.supabase.co -U postgres -d postgres \
+            --no-owner --no-acl -f backup_$(date +%Y%m%d).sql
+
+      - name: Upload backup as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: supabase-backup-${{ github.run_number }}
+          path: backup_*.sql
+          retention-days: 30
