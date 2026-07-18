@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google Analytics GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7284F5EK50"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7284F5EK50');
+  function trackEvent(name, params) {
+    try { gtag('event', name, params || {}); } catch(e) {}
+  }
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>나에게 맞는 스킨제품 찾기 — 무료 1분 피부 타입 테스트</title>
+<meta name="description" content="1분만에 찾는 내 인생템. 지금 내 피부에 꼭 필요한 성분과 제품만 골라줘요. 로그인 없이 무료.">
+<meta property="og:title" content="나에게 맞는 스킨제품 찾기">
+<meta property="og:description" content="꼭 필요한 제품만 남기는 화장대 다이어트. 무료 · 1분 컷 · 로그인 없음.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#F5EFE3; --card:#FDFAF3; --line:#E7DCC8;
+  --gold:#B98A44; --gold-soft:#C9A15E; --brown:#6B5638; --soft:#A2917A;
+  --dark:#2A2118; --ink:#3A2E20;
+  --pink-bg:#F5DFD6; --pink-tx:#B4553F;
+  --live:#5FA05F;
+  --sans:'Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif;
+  --serif:'Noto Serif KR',serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.6;min-height:100vh;padding-bottom:118px;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;}
+a{color:inherit;text-decoration:none;}
+.page{max-width:480px;margin:0 auto;padding:0 22px 20px;}
+
+/* ── 1. 상단 ── */
+.free-badge{display:flex;justify-content:center;padding-top:40px;}
+.free-badge span{display:inline-flex;align-items:center;gap:6px;background:#EFE6D2;color:var(--brown);font-size:13px;font-weight:700;padding:9px 18px;border-radius:999px;letter-spacing:0.02em;}
+.mascot-wrap{text-align:center;margin-top:22px;}
+.speech{display:inline-block;background:#FDFAF3;border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-size:13px;color:var(--brown);position:relative;box-shadow:0 2px 8px rgba(107,86,56,0.06);}
+.speech::after{content:'';position:absolute;left:50%;bottom:-6px;transform:translateX(-50%) rotate(45deg);width:10px;height:10px;background:#FDFAF3;border-right:1px solid var(--line);border-bottom:1px solid var(--line);}
+.mascot-svg{margin:16px auto 0;display:block;}
+.hero-txt{text-align:center;margin-top:20px;}
+.hero-eyebrow{font-size:14px;font-weight:700;color:var(--gold);letter-spacing:0.02em;}
+.hero-title{font-size:clamp(30px,8.5vw,38px);font-weight:900;line-height:1.32;color:var(--ink);margin-top:8px;}
+.hero-title .accent{font-family:var(--serif);font-weight:700;color:var(--gold);}
+.hero-sub{font-size:14.5px;color:var(--brown);margin-top:16px;line-height:1.75;}
+.hero-sub b{font-weight:700;color:var(--ink);}
+.diet-strip{margin-top:20px;background:var(--pink-bg);color:var(--pink-tx);border-radius:12px;padding:13px 16px;text-align:center;font-size:13.5px;font-weight:700;}
+
+/* ── 2. 타입 6종 그리드 (최상단 훅) ── */
+.types-head{text-align:center;font-size:15px;font-weight:900;color:var(--ink);margin:40px 0 16px;}
+.types-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.type-card{position:relative;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 6px 16px;text-align:center;}
+.type-card .no{position:absolute;top:8px;right:10px;font-size:10px;color:var(--soft);font-weight:500;letter-spacing:0.05em;}
+.type-card .q{font-family:var(--serif);font-size:24px;color:var(--gold-soft);line-height:1;}
+.type-card .nm{font-size:12.5px;font-weight:700;color:var(--ink);margin-top:10px;}
+.type-card.feature{background:var(--dark);border-color:var(--dark);}
+.type-card.feature .nm{color:#F5EFE3;}
+.types-tease{text-align:center;font-size:13px;color:var(--brown);margin-top:14px;}
+
+/* ── 3. 주인장 스토리 (공감) ── */
+.story-card{margin-top:36px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px 22px;}
+.card-head{display:flex;align-items:center;gap:13px;}
+.card-avatar{flex-shrink:0;width:48px;height:48px;border-radius:50%;background:#EFE6D2;display:flex;align-items:center;justify-content:center;}
+.card-title{font-size:15px;font-weight:900;color:var(--ink);}
+.card-subtitle{font-size:12.5px;color:var(--gold);font-weight:700;margin-top:2px;}
+.story-body{font-size:15px;font-weight:700;color:var(--ink);line-height:1.85;margin-top:14px;}
+
+/* ── 4. 근거 기반 (신뢰) ── */
+.evidence-card{margin-top:14px;background:var(--card);border:1px solid var(--gold-soft);border-radius:18px;padding:24px 22px;}
+.evidence-body{font-size:13.5px;color:var(--brown);line-height:1.85;margin-top:14px;}
+.evidence-body b{color:var(--ink);}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);margin-top:18px;padding-top:16px;}
+.metric{text-align:center;position:relative;}
+.metric + .metric::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:var(--line);}
+.metric b{display:block;font-family:var(--serif);font-size:26px;font-weight:700;color:var(--gold);line-height:1.1;}
+.metric span{font-size:11px;color:var(--brown);}
+
+/* ── 5. 주인장의 선서 (다크) ── */
+.oath-card{margin-top:14px;background:var(--dark);border-radius:18px;padding:26px 24px;color:#F5EFE3;}
+.oath-top{display:flex;justify-content:space-between;align-items:center;}
+.oath-title{font-size:15px;font-weight:900;letter-spacing:0.04em;}
+.oath-cat{font-size:22px;line-height:1;}
+.oath-list{margin-top:14px;display:flex;flex-direction:column;gap:9px;font-size:13.5px;color:rgba(245,239,227,0.9);line-height:1.6;}
+.oath-list .chk{color:var(--gold-soft);font-weight:700;margin-right:7px;}
+.oath-list b{color:#fff;}
+.oath-sign{margin-top:18px;text-align:right;font-family:var(--serif);font-size:12.5px;color:rgba(245,239,227,0.65);}
+
+/* ── 6. 업데이트 영역 (LIVE) ── */
+.live-card{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 22px;}
+.live-top{display:flex;align-items:center;gap:8px;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--live);animation:livePulse 1.8s ease-in-out infinite;}
+@keyframes livePulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.live-label{font-size:11px;font-weight:900;letter-spacing:0.16em;color:var(--live);}
+.live-head{font-size:15.5px;font-weight:900;color:var(--ink);line-height:1.55;margin-top:10px;}
+.live-dates{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:12px;margin-top:16px;overflow:hidden;}
+.live-date{padding:13px 10px;text-align:center;}
+.live-date + .live-date{border-left:1px solid var(--line);}
+.live-date .lb{font-size:11px;color:var(--soft);}
+.live-date .vl{font-size:14.5px;font-weight:900;color:var(--ink);margin-top:3px;}
+.live-heart{margin-top:14px;border-top:1px solid var(--line);padding-top:13px;font-size:13px;color:var(--brown);text-align:center;}
+
+/* ── 7. 카운터 / 8. 푸터 ── */
+.count-line{text-align:center;font-size:13.5px;color:var(--brown);margin-top:38px;min-height:22px;}
+.count-line b{color:var(--gold);font-weight:900;}
+.footer-line{text-align:center;font-size:11px;color:var(--soft);margin-top:28px;line-height:1.8;}
+.footer-line a{text-decoration:underline;text-underline-offset:2px;}
+
+/* ── 9. 고정 CTA 바 ── */
+.cta-bar{position:fixed;left:0;right:0;bottom:0;z-index:90;background:rgba(245,239,227,0.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:12px 22px calc(12px + env(safe-area-inset-bottom));}
+.cta-inner{max-width:480px;margin:0 auto;}
+.cta-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:var(--dark);color:#F5EFE3;font-size:16.5px;font-weight:700;padding:17px 10px;border-radius:999px;box-shadow:0 8px 20px rgba(42,33,24,0.22);transition:transform .15s ease;}
+.cta-btn:active{transform:scale(0.98);}
+.cta-note{text-align:center;font-size:11.5px;color:var(--soft);margin-top:8px;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── 1. 상단 ── -->
+  <div class="free-badge"><span>✨ 무료 · 1분 컷</span></div>
+  <div class="mascot-wrap">
+    <div class="speech">화장대, 다이어트 갈까?</div>
+    <svg class="mascot-svg" width="88" height="88" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="고양이 마스코트">
+      <path d="M32 3 L33.4 7.6 L38 9 L33.4 10.4 L32 15 L30.6 10.4 L26 9 L30.6 7.6 Z" fill="#B98A44"/>
+      <path d="M16 24 L10 10 L26 19" stroke="#B98A44" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+      <path d="M48 24 L54 10 L38 19" stroke="#B98A44" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+      <rect x="13" y="20" width="38" height="33" rx="16" stroke="#B98A44" stroke-width="2"/>
+      <circle cx="25" cy="35" r="1.8" fill="#3A2E20"/>
+      <circle cx="39" cy="35" r="1.8" fill="#3A2E20"/>
+      <path d="M27 42 Q32 46 37 42" stroke="#B98A44" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+      <path d="M13 34 L4 32 M13 39 L4 41" stroke="#B98A44" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M51 34 L60 32 M51 39 L60 41" stroke="#B98A44" stroke-width="1.4" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="hero-txt">
+    <div class="hero-eyebrow">1분만에 찾는 내 인생템</div>
+    <h1 class="hero-title">나에게 맞는<br><span class="accent">스킨제품 찾기</span></h1>
+    <p class="hero-sub">지금 내 피부에 <b>꼭 필요한 성분과 제품</b>을 찾아줘요.<br>많이 말고, 딱 필요한 것만.</p>
+  </div>
+  <div class="diet-strip">🧴 꼭 필요한 제품만 남기는 화장대 다이어트</div>
+
+  <!-- ── 2. 타입 6종 그리드 (호기심 훅) ── -->
+  <div class="types-head">나는 6가지 중 어떤 타입?</div>
+  <div class="types-grid">
+    <div class="type-card"><span class="no">01</span><div class="q">?</div><div class="nm">겉번속건형</div></div>
+    <div class="type-card feature"><span class="no" style="color:rgba(245,239,227,0.4);">02</span><div class="q">?</div><div class="nm">번들번들형</div></div>
+    <div class="type-card"><span class="no">03</span><div class="q">?</div><div class="nm">파사삭형</div></div>
+    <div class="type-card"><span class="no">04</span><div class="q">?</div><div class="nm">화들짝형</div></div>
+    <div class="type-card"><span class="no">05</span><div class="q">?</div><div class="nm">반반형</div></div>
+    <div class="type-card"><span class="no">06</span><div class="q">?</div><div class="nm">이상형</div></div>
+  </div>
+  <div class="types-tease">1분이면 내 타입이 나와요 👀</div>
+
+  <!-- ── 3. 주인장 스토리 (공감 먼저) ── -->
+  <div class="story-card">
+    <div class="card-head">
+      <div class="card-avatar">
+        <svg width="30" height="30" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 24 L10 10 L26 19" stroke="#B98A44" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+          <path d="M48 24 L54 10 L38 19" stroke="#B98A44" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+          <rect x="13" y="20" width="38" height="33" rx="16" stroke="#B98A44" stroke-width="2.4"/>
+          <circle cx="25" cy="35" r="2" fill="#3A2E20"/>
+          <circle cx="39" cy="35" r="2" fill="#3A2E20"/>
+          <path d="M27 42 Q32 46 37 42" stroke="#B98A44" stroke-width="2" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <div>
+        <div class="card-title">주인장 이야기</div>
+        <div class="card-subtitle">🐱 화들짝형 · 성분 파고드는 사람</div>
+      </div>
+    </div>
+    <p class="story-body">화들짝형 주인장이, 뭘 발라도 뒤집어지는 피부 때문에 성분을 파다 파다 이 테스트까지 만들었어요.</p>
+  </div>
+
+  <!-- ── 4. 근거 기반 (신뢰) ── -->
+  <div class="evidence-card">
+    <div class="card-head">
+      <div class="card-avatar">📖</div>
+      <div>
+        <div class="card-title">피부과학에 근거해서 골라요</div>
+      </div>
+    </div>
+    <p class="evidence-body">유행이 아니라 <b>피부과 가이드라인</b>에 맞춰 순서를 짜요. 장벽부터 챙기고, 그다음 유수분, 그다음 고민 해결. 제품은 <b>판매 랭킹과 실사용 후기</b>에 근거해서만 골라요.</p>
+    <div class="metrics">
+      <div class="metric"><b>6</b><span>피부 타입</span></div>
+      <div class="metric"><b>4</b><span>개선 단계</span></div>
+      <!-- TODO(하이롱): "30+" 실제 성분앵커 수 확인 후 확정 -->
+      <div class="metric"><b>30+</b><span>검증 성분</span></div>
+    </div>
+  </div>
+
+  <!-- ── 5. 주인장의 선서 (다크) ── -->
+  <div class="oath-card">
+    <div class="oath-top">
+      <span class="oath-title">주인장의 선서</span>
+      <span class="oath-cat">🐱</span>
+    </div>
+    <div class="oath-list">
+      <div><span class="chk">✓</span>광고와 협찬은 <b>절대</b> 넣지 않아요</div>
+      <div><span class="chk">✓</span>돈 받고 특정 브랜드를 밀지 않아요</div>
+      <div><span class="chk">✓</span>제품은 오직 성분과 검증만 보고 골라요</div>
+    </div>
+    <div class="oath-sign">— 서울 스킨 아뜰리에 주인장 올림</div>
+  </div>
+
+  <!-- ── 6. 업데이트 영역 (지속성) ── -->
+  <div class="live-card">
+    <div class="live-top"><span class="live-dot"></span><span class="live-label">LIVE · 제품 DB</span></div>
+    <div class="live-head">주인장이 계절마다<br>제품 데이터를 새로 업데이트해요.</div>
+    <div class="live-dates">
+      <div class="live-date"><div class="lb">최근 업데이트</div><div class="vl" id="db-last">2026. 7. 11.</div></div>
+      <div class="live-date"><div class="lb">다음 예정</div><div class="vl" id="db-next">2026년 가을</div></div>
+    </div>
+    <div class="live-heart">💛 여러분의 관심이 이 채널을 살아있게 해요.</div>
+  </div>
+
+  <!-- ── 7. 카운터 (Supabase 실제 count · 50 미만이면 대체 문구) ── -->
+  <div class="count-line" id="count-line" style="display:none;"></div>
+
+  <!-- ── 8. 푸터 ── -->
+  <div class="footer-line">
+    © 2026 서울 스킨 아뜰리에 · <a href="/privacy.html">개인정보 처리방침</a><br>
+    제품 링크로 구매 시 주인장에게 소정의 수수료가 지급되며, 전액 서버 유지에 쓰여요.
+  </div>
+</div>
+
+<!-- ── 9. 고정 CTA 바 (항상 보임) ── -->
+<div class="cta-bar">
+  <div class="cta-inner">
+    <a class="cta-btn" href="kr-survey.html" onclick="trackEvent('kr_test_start',{from:'main'})">테스트 시작하기 <span>→</span></a>
+    <div class="cta-note">로그인 없이 바로 · 결과까지 60초</div>
+  </div>
+</div>
+
+<script>
+/* ── N명 카운터: Supabase 실제 count(locale='ko') ──
+   50 미만 → 베타 문구 / 조회 실패 → 숨김 */
+(function(){
+  var SUPABASE_URL = 'https://ijuavefvnfghnyzmyubh.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_QWqB--f9D37gHt3BwPHupA_htZCCkvk';
+  var line = document.getElementById('count-line');
+  fetch(SUPABASE_URL + '/rest/v1/reports?select=id&locale=eq.ko', {
+    method: 'HEAD',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Prefer': 'count=exact' }
+  }).then(function(res){
+    if (!res.ok) return; /* 실패 시 숨김 유지 */
+    var range = res.headers.get('content-range') || '';
+    var total = parseInt(range.split('/')[1], 10);
+    if (isNaN(total)) return;
+    if (total >= 50) {
+      line.innerHTML = '지금까지 <b id="count-n">' + total.toLocaleString('ko-KR') + '</b>명이 자기 타입을 찾았어요';
+      line.style.display = 'block';
+    } else {
+      line.innerHTML = '베타 오픈 · 지금 바로 첫 결과를 받아보세요';
+      line.style.display = 'block';
+    }
+  }).catch(function(){ /* 숨김 유지 */ });
+})();
+</script>
+</body>
+</html>
