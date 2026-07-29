@@ -45,11 +45,11 @@ window.KR_PRODUCTS = {
 
   /* ── 클렌저 (세안 규칙 카드의 "클렌저 추천 받기" 접기/펴기용) ──────── */
   '라운드랩 1025 독도 클렌저':
-    { price:15000, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:15000, coupangUrl:'https://link.coupang.com/a/fMu7sqwN4e', coupangSellerType:'brand_official', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'저자극 약산성 젤 클렌저예요. 뽀득거림 없이 씻겨서, 이 가격이면 충분해요.',
       tier:'commodity', texture:'light', sensitive_safe:true },
   '일리윤 세라마이드 아토 클렌저':
-    { price:13000, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:14900, coupangUrl:'https://link.coupang.com/a/fMvyu64XfM', coupangSellerType:'brand_official', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'세라마이드 함유 약산성 클렌저. 씻은 후 당김이 적어 이 가격이 적정해요.',
       tier:'commodity', texture:'light', sensitive_safe:true },
   '스킨1004 마다가스카르 센텔라 클렌징 폼':
@@ -59,7 +59,7 @@ window.KR_PRODUCTS = {
 
   /* ── 토너 / 결 정돈 ─────────────────────────────────────────────── */
   '라운드랩 1025 독도 토너':
-    { price:14000, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:14000, coupangUrl:'https://link.coupang.com/a/fMvNIWbe9Y', coupangSellerType:'brand_official', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'판테놀·수분 위주라 성분값이 크지 않아요. 이 가격이 정답이에요.',
       tier:'commodity', texture:'light', sensitive_safe:true, emergency_safe:true },
   '라운드랩 자작나무 수분 토너':
@@ -73,7 +73,7 @@ window.KR_PRODUCTS = {
 
   /* ── 피지·각질 (BHA) ────────────────────────────────────────────── */
   '폴라초이스 2% BHA 리퀴드':
-    { price:39000, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:27600, coupangUrl:'https://link.coupang.com/a/fMv6Uamhem', coupangSellerType:'', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'FORMULATION_VALUE', priceReason:'살리실산 자체는 흔해요. 다만 효과를 좌우하는 pH 설계가 안정적이라 값을 해요. 예산이 2만원 이하면 아래 코스알엑스로 자동으로 바뀌어요.',
       tier:'commodity', texture:'light', active_type:'bha' },
 
@@ -86,19 +86,19 @@ window.KR_PRODUCTS = {
 
   /* ── 피지 조절 / 톤 (나이아신아마이드) ───────────────────────────── */
   '디오디너리 나이아신아마이드 10% + 징크 1%':
-    { price:13000, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:8700, coupangUrl:'https://link.coupang.com/a/fMwhymdeRE', coupangSellerType:'brand_official', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'같은 성분을 가장 싸게 담은 대표 가성비예요.',
       tier:'commodity', texture:'light', active_type:'none', brightening:'niacinamide', sensitive_safe:true },
 
   /* ── 수분 충전 (히알루론산) ──────────────────────────────────────── */
   '토리든 다이브인 저분자 히알루론산 세럼':
-    { price:18000, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:13560, coupangUrl:'https://link.coupang.com/a/fMwpotHtZY', coupangSellerType:'rocket', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'히알루론산은 흔한 성분이라 이 가격이 적정해요. (2025 올영 세럼 어워즈 1위)',
       tier:'commodity', texture:'light', active_type:'none', sensitive_safe:true, emergency_safe:true },
 
   /* ── 진정·장벽 앰플 (세라마이드 / 센텔라) ────────────────────────── */
   '일리윤 세라마이드 아토 컨센트레이트 앰플':
-    { price:25000, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:25000, coupangUrl:'https://link.coupang.com/a/fMwwt5HHlQ', coupangSellerType:'brand_official', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'세라마이드 앰플치고 가격이 착해요.',
       tier:'commodity', texture:'medium', sensitive_safe:true, emergency_safe:true },
   '스킨1004 마다가스카르 센텔라 앰플':
@@ -108,27 +108,27 @@ window.KR_PRODUCTS = {
 
   /* ── 마무리 보습 (세라마이드) ────────────────────────────────────── */
   '에스트라 아토베리어365 크림':
-    { price:28000, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:23900, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
       verdict:'FORMULATION_VALUE', priceReason:'세라마이드는 흔하지만 저자극 장벽 처방으로 값을 해요. (올영 1등 크림)',
       tier:'commodity', texture:'rich', sensitive_safe:true, emergency_safe:true },
-  '에스트라 아토베리어365 젤크림':
-    { price:30000, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+  '에스트라 아토베리어365 수딩젤':
+    { price:12400, coupangUrl:'https://link.coupang.com/a/fMwEacpc04', coupangSellerType:'brand_official', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'가벼운 세라마이드 보습. 지성용으로 이 가격이면 충분해요.',
       tier:'commodity', texture:'light', sensitive_safe:true, emergency_safe:true },
-  '에스트라 아토베리어365 로션':
-    { price:26000, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+  '에스트라 아토베리어365 로션 플러스':
+    { price:29790, coupangUrl:'https://link.coupang.com/a/fMwLV5kuPI', coupangSellerType:'rocket', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'세라마이드 로션 제형. 부담 없는 가격이에요.',
       tier:'commodity', texture:'light', sensitive_safe:true, emergency_safe:true },
   '에스트라 아토베리어365 하이드로 에센스':
-    { price:25000, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:19360, coupangUrl:'https://link.coupang.com/a/fMwSBmUaiG', coupangSellerType:'rocket', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'가벼운 수분 에센스. 성분 대비 적정가예요.',
       tier:'commodity', texture:'light', sensitive_safe:true, emergency_safe:true },
   '일리윤 세라마이드 아토 로션':
-    { price:20000, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:15000, coupangUrl:'https://link.coupang.com/a/fMwXJSsUa4', coupangSellerType:'brand_official', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'무향 세라마이드 로션. 가성비 장벽 보습이에요.',
       tier:'commodity', texture:'light', sensitive_safe:true, emergency_safe:true },
-  '일리윤 세라마이드 아토 크림':
-    { price:23000, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+  '일리윤 세라마이드 아토 집중크림':
+    { price:23900, coupangUrl:'https://link.coupang.com/a/fMxah6YnLM', coupangSellerType:'brand_official', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'같은 라인 리치 버전. 여전히 착한 가격이에요.',
       tier:'commodity', texture:'rich', sensitive_safe:true, emergency_safe:true },
 
@@ -142,7 +142,7 @@ window.KR_PRODUCTS = {
       verdict:'BEST_VALUE', priceReason:'매일 쓰는 수분 선크림. 커머디티 처방이라 이 가격이면 충분해요.',
       tier:'commodity', texture:'light', sunscreen_filter:'hybrid', sensitive_safe:true, makeup_friendly:true },
   '닥터지 그린 마일드 업 선 플러스':
-    { price:19900, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:19900, coupangUrl:'https://link.coupang.com/a/fMxiXRKHRI', coupangSellerType:'brand_official', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'무기자차 민감 선크림 스테디셀러(올영 어워즈). 순한데 백탁이 적어요.',
       tier:'commodity', texture:'light', sunscreen_filter:'inorganic', whitecast:'low', sensitive_safe:true, emergency_safe:true },
   '메이크프렘 수딩 핑크 톤업 선크림':
@@ -157,7 +157,7 @@ window.KR_PRODUCTS = {
   /* ── PIE(붉은 자국) 진정 / 액티브 대체(PHA·BHA 대신) ───────────────
      붉은 여드름 자국은 미백이 아니라 진정. PHA는 BHA 불내성 대체로도 씀 */
   '에스트라 에이시카365 흔적진정세럼':
-    { price:27000, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:23060, coupangUrl:'https://link.coupang.com/a/fMxpRrOYA8', coupangSellerType:'rocket', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'FORMULATION_VALUE', priceReason:'PHA로 순하게 각질 정리 + 시카 진정. 붉은 자국(PIE)·BHA 대체에 좋아요.',
       tier:'commodity', texture:'light', active_type:'pha', sensitive_safe:true },
 
@@ -169,28 +169,28 @@ window.KR_PRODUCTS = {
       verdict:'HIDDEN_GEM', priceReason:'바쿠치올은 원료 자체가 비싼 편인데, 5000ppm을 2만원대에 담아 이례적으로 저렴해요.',
       tier:'premium', texture:'light', active_type:'bakuchiol', sensitive_safe:true },
   '구달 청귤 비타C 잡티세럼 알파':
-    { price:28000, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:21900, coupangUrl:'https://link.coupang.com/a/fMxAdQk7DE', coupangSellerType:'brand_official', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'FORMULATION_VALUE', priceReason:'비타민C 유도체 자체는 흔하지만, 안정화 처방 덕에 순하면서도 효과가 유지돼 값을 해요.',
       tier:'commodity', texture:'light', active_type:'vitc_derivative', sensitive_safe:true },
 
   /* ── 기미(멜라스마) 전담 — 트라넥삼산 ──
      ⚠️ 2026-07-29 신규 리서치 제품 — 가격은 리서치 기준 추정치, 쿠팡 실제가·판매자 확인 필요(하이롱) */
   '더마팩토리 트라넥삼산 6% 크림':
-    { price:13000, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:8000, coupangUrl:'https://link.coupang.com/a/fMxHWCTayy', coupangSellerType:'brand_official', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'트라넥삼산은 원료 자체가 저렴한 편이라, 저가 브랜드가 담아도 효과 농도(6%)면 충분해요. 비쌀 이유가 없어요.',
       tier:'commodity', texture:'light', sensitive_safe:true },
 
   /* ── 액티브 0 루틴용 — 순한 효소 각질 (산·스크럽 없이 각질만 정리) ──
      ⚠️ 2026-07-29 신규 리서치 제품 — 가격은 리서치 기준 추정치, 쿠팡 실제가·판매자 확인 필요(하이롱) */
   '파파레서피 가지 효소 파우더 클렌저':
-    { price:19000, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:12680, coupangUrl:'https://link.coupang.com/a/fMxMtOLvc5', coupangSellerType:'brand_official', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'효소 파우더는 흔한 제형이라 이 가격이면 합리적이에요. 산 성분이 아니라 물에 녹여 쓰는 방식이라 훨씬 순해요.',
       tier:'commodity', texture:'light', active_type:'none', sensitive_safe:true },
 
   /* ── 아토피 대표 제품 (한계 고지와 함께 조심스럽게 안내) ──
      ⚠️ 2026-07-29 신규 리서치 제품 — 가격은 리서치 기준 추정치, 쿠팡 실제가·판매자 확인 필요(하이롱) */
   '일리윤 세라마이드 아토 집중크림':
-    { price:13500, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:23900, coupangUrl:'https://link.coupang.com/a/fMxah6YnLM', coupangSellerType:'brand_official', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'세라마이드 집중 처방인데도 가격은 로션·크림 라인과 같아요. 흔한 원료라 비쌀 이유가 없어요.',
       tier:'commodity', texture:'rich', sensitive_safe:true, emergency_safe:true }
 
