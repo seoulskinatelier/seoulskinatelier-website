@@ -58,7 +58,7 @@ window.KR_PRODUCTS = {
       verdict:'BEST_VALUE', priceReason:'세라마이드 함유 약산성 클렌저. 씻은 후 당김이 적어 이 가격이 적정해요.',
       tier:'commodity', texture:'light', sensitive_safe:true },
   '스킨1004 마다가스카르 센텔라 클렌징 폼':
-    { price:12000, coupangUrl:'', coupangSearchUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:12000, coupangUrl:'', coupangSearchUrl:'https://link.coupang.com/a/fMCsxGb5Fc', coupangSellerType:'', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'무향·저자극 약산성 폼. 진정 성분 위주라 이 가격이면 착해요.',
       tier:'commodity', texture:'light', sensitive_safe:true, emergency_safe:true },
 
@@ -68,11 +68,11 @@ window.KR_PRODUCTS = {
       verdict:'BEST_VALUE', priceReason:'판테놀·수분 위주라 성분값이 크지 않아요. 이 가격이 정답이에요.',
       tier:'commodity', texture:'light', sensitive_safe:true, emergency_safe:true },
   '라운드랩 자작나무 수분 토너':
-    { price:16000, coupangUrl:'', coupangSearchUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:16000, coupangUrl:'', coupangSearchUrl:'https://link.coupang.com/a/fMCyMOGBhI', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'2026-07-29',
       verdict:'BEST_VALUE', priceReason:'수분·진정 위주 커머디티 처방. 더 비쌀 이유가 없어요.',
       tier:'commodity', texture:'light', sensitive_safe:true, emergency_safe:true },
   '스킨1004 마다가스카르 센텔라 토닝 토너':
-    { price:18000, coupangUrl:'', coupangSearchUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:18000, coupangUrl:'', coupangSearchUrl:'https://link.coupang.com/a/fMCCoQPVBI', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'센텔라 진정 토너. 커머디티 성분이라 적정가예요.',
       tier:'commodity', texture:'light', sensitive_safe:true, emergency_safe:true },
 
@@ -85,7 +85,7 @@ window.KR_PRODUCTS = {
   /* ── BHA 예산형 대안 (2만원 이하) ──
      ⚠️ 2026-07-29 신규 리서치 제품 — 가격은 리서치 기준 추정치, 쿠팡 실제가·판매자 확인 필요(하이롱) */
   '코스알엑스 BHA 블랙헤드 파워 리퀴드':
-    { price:18000, coupangUrl:'', coupangSearchUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:18000, coupangUrl:'', coupangSearchUrl:'https://link.coupang.com/a/fMCEPqbDrw', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'살리실산 자체는 커머디티 원료라, 이 가격이면 충분해요. 전 세계적으로 검증된 스테디셀러예요.',
       tier:'commodity', texture:'light', active_type:'bha' },
 
@@ -107,13 +107,13 @@ window.KR_PRODUCTS = {
       verdict:'BEST_VALUE', priceReason:'세라마이드 앰플치고 가격이 착해요.',
       tier:'commodity', texture:'medium', sensitive_safe:true, emergency_safe:true },
   '스킨1004 마다가스카르 센텔라 앰플':
-    { price:18000, coupangUrl:'', coupangSearchUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:18000, coupangUrl:'', coupangSearchUrl:'https://link.coupang.com/a/fMCHOPm90e', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'병풀 진정 앰플. 이 가격이면 부담 없어요. (올영 누적판매 1700만)',
       tier:'commodity', texture:'light', sensitive_safe:true, emergency_safe:true },
 
   /* ── 마무리 보습 (세라마이드) ────────────────────────────────────── */
   '에스트라 아토베리어365 크림':
-    { price:23900, coupangUrl:'', coupangSearchUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:23900, coupangUrl:'', coupangSearchUrl:'https://link.coupang.com/a/fMCKGHrCXQ', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
       verdict:'FORMULATION_VALUE', priceReason:'세라마이드는 흔하지만 저자극 장벽 처방으로 값을 해요. (올영 1등 크림)',
       tier:'commodity', texture:'rich', sensitive_safe:true, emergency_safe:true },
   /* ⚠️ 2026-07-29 하이롱 확인 — 제품명이 '에스트라 아토베리어365 젤크림'에서 '수딩젤'로 변경(쿠팡 실제 판매명 기준) */
@@ -141,7 +141,7 @@ window.KR_PRODUCTS = {
      finish=toneup → 메이크프렘 수딩 핑크 톤업(무기자차 톤업)
      실외 3시간+ → 닥터지 그린 마일드 업 선스틱(덧바르기 팁) */
   '라운드랩 자작나무 수분 선크림':
-    { price:22000, coupangUrl:'', coupangSearchUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:22000, coupangUrl:'', coupangSearchUrl:'https://link.coupang.com/a/fMCMXPcRsy', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'매일 쓰는 수분 선크림. 커머디티 처방이라 이 가격이면 충분해요.',
       tier:'commodity', texture:'light', sunscreen_filter:'hybrid', sensitive_safe:true, makeup_friendly:true },
   '닥터지 그린 마일드 업 선 플러스':
@@ -149,11 +149,11 @@ window.KR_PRODUCTS = {
       verdict:'BEST_VALUE', priceReason:'무기자차 민감 선크림 스테디셀러(올영 어워즈). 순한데 백탁이 적어요.',
       tier:'commodity', texture:'light', sunscreen_filter:'inorganic', whitecast:'low', sensitive_safe:true, emergency_safe:true },
   '메이크프렘 수딩 핑크 톤업 선크림':
-    { price:20000, coupangUrl:'', coupangSearchUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:20000, coupangUrl:'', coupangSearchUrl:'https://link.coupang.com/a/fMCPoVQqNU', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'무기자차 톤업 선크림. 파데 없이 이것만 발라도 화사해요.',
       tier:'commodity', texture:'light', sunscreen_filter:'inorganic', toneup:true, sensitive_safe:true },
   '닥터지 그린 마일드 업 선스틱':
-    { price:16000, coupangUrl:'', coupangSearchUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:16000, coupangUrl:'', coupangSearchUrl:'https://link.coupang.com/a/fMCRbZPte0', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'덧바르기용 무기자차 스틱. 화장 위에도 발려요.',
       tier:'commodity', texture:'light', sunscreen_filter:'inorganic', sensitive_safe:true },
 
@@ -168,7 +168,7 @@ window.KR_PRODUCTS = {
      ⚠️ 2026-07-29 신규 리서치 제품 — 가격은 리서치 기준 추정치, 쿠팡 실제가·판매자
      확인 필요(하이롱). 레티놀·순수 비타민C 불내성일 때만 코드가 이 제품들로 안내해요. */
   '반코르 바쿠치올 세럼 5000ppm':
-    { price:22220, coupangUrl:'', coupangSearchUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:22220, coupangUrl:'', coupangSearchUrl:'https://link.coupang.com/a/fMCSSNBm4O', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
       verdict:'HIDDEN_GEM', priceReason:'바쿠치올은 원료 자체가 비싼 편인데, 5000ppm을 2만원대에 담아 이례적으로 저렴해요.',
       tier:'premium', texture:'light', active_type:'bakuchiol', sensitive_safe:true },
   '구달 청귤 비타C 잡티세럼 알파':
