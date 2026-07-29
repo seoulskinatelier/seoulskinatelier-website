@@ -67,7 +67,7 @@ window.KR_PRODUCTS = {
       verdict:'BEST_VALUE', priceReason:'수분·진정 위주 커머디티 처방. 더 비쌀 이유가 없어요.',
       tier:'commodity', texture:'light', sensitive_safe:true, emergency_safe:true },
   '스킨1004 마다가스카르 센텔라 토닝 토너':
-    { price:18000, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:18000, coupangUrl:'https://link.coupang.com/a/fMyHjvtEc0', coupangSellerType:'', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'센텔라 진정 토너. 커머디티 성분이라 적정가예요.',
       tier:'commodity', texture:'light', sensitive_safe:true, emergency_safe:true },
 
@@ -102,7 +102,7 @@ window.KR_PRODUCTS = {
       verdict:'BEST_VALUE', priceReason:'세라마이드 앰플치고 가격이 착해요.',
       tier:'commodity', texture:'medium', sensitive_safe:true, emergency_safe:true },
   '스킨1004 마다가스카르 센텔라 앰플':
-    { price:18000, coupangUrl:'', coupangSellerType:'', coupangVerifiedAt:'', oyCuratorUrl:'',
+    { price:18000, coupangUrl:'https://link.coupang.com/a/fMyACP4NkO', coupangSellerType:'', coupangVerifiedAt:'2026-07-29', oyCuratorUrl:'',
       verdict:'BEST_VALUE', priceReason:'병풀 진정 앰플. 이 가격이면 부담 없어요. (올영 누적판매 1700만)',
       tier:'commodity', texture:'light', sensitive_safe:true, emergency_safe:true },
 
